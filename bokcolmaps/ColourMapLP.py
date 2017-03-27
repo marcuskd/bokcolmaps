@@ -1,6 +1,11 @@
+'''ColourMapLP class definition'''
+
+import numpy
+
 from bokeh.plotting import Figure
 
-from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, NumeralTickFormatter
+from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, \
+    NumeralTickFormatter
 
 from bokeh.models.widgets import Button
 from bokeh.models.layouts import Column, Row
@@ -11,13 +16,12 @@ from bokeh.core.properties import Instance, String
 
 from .ColourMap import ColourMap
 
-import numpy
 
 class ColourMapLP(Row):
 
     '''
-    A ColourMap and a line plot of the data against z at the x and y coordinates linked to a
-    custom hover tool.
+    A ColourMap and a line plot of the data against z at the x and y
+    coordinates linked to a custom hover tool.
     '''
 
     __view_model__ = 'Row'
@@ -30,39 +34,42 @@ class ColourMapLP(Row):
     lpds = Instance(ColumnDataSource)
     cmxlab = String
     cmylab = String
-    jsCode = String
+    js_code = String
 
-    def __init__(self,x,y,z,D,palette = 'Viridis256',cfile = 'jet.txt',
-                 xlab = 'x',ylab = 'y',zlab = 'Index',Dlab = 'Data',
-                 cmheight = 575,cmwidth = 500,lpheight = 500,lpwidth = 300,
-                 rMin = None,rMax = None,xran = None,yran = None,
-                 revz = False,hoverdisp = True):
+    def __init__(self, x, y, z, D, palette='Viridis256', cfile='jet.txt',
+                 xlab='x', ylab='y', zlab='Index', Dlab='Data',
+                 cmheight=575, cmwidth=500, lpheight=500, lpwidth=300,
+                 rmin=None, rmax=None, xran=None, yran=None,
+                 revz=False, hoverdisp=True):
 
         '''
-        All init arguments same as for ColourMap except for additional arguments:
+        All init arguments same as for ColourMap except for additional ones:
         cmheight and cmwidth correspond to height and width in ColourMap.
         lpheight and lpwidth: line plot height and width (pixels).
         revz: reverse z axis in line plot if True.
-        hoverdisp: display the hover tool readout if True (the line plot update will work anyway).
-        NB: The readout is useful but it seems to slow down the line plot update. Investigation TBD.
+        hoverdisp: display the hover tool readout if True
+        (the line plot update will work anyway).
+        NB: The readout is useful but it seems to slow down the
+        line plot update. Investigation TBD.
         '''
 
         super().__init__()
-
-        self.lpds = ColumnDataSource(data={'x':[],'y':[]}) # Data source for the line plot
+        # Data source for the line plot
+        self.lpds = ColumnDataSource(data={'x': [], 'y': []})
 
         self.lpds.data['y'] = z
         xi = round(x.size/2)
         yi = round(y.size/2)
-        self.lpds.data['x'] = D[:,yi,xi]
+        self.lpds.data['x'] = D[:, yi, xi]
 
-        self.cmplot = ColourMap(x,y,z,D,palette=palette,cfile=cfile,xlab=xlab,ylab=ylab,zlab=zlab,Dlab=Dlab,
-                                  height=cmheight,width=cmwidth,rMin=rMin,rMax=rMax,
-                                  xran=xran,yran=yran,hover=False)
+        self.cmplot = ColourMap(x, y, z, D, palette=palette, cfile=cfile,
+                                xlab=xlab, ylab=ylab, zlab=zlab, Dlab=Dlab,
+                                height=cmheight, width=cmwidth, rmin=rmin,
+                                rmax=rmax, xran=xran, yran=yran, hover=False)
 
-        # Add custom hover tool to render profile at cursor position in line plot
+        # Custom hover tool to render profile at cursor position in line plot
 
-        self.jsCode = self.cmplot.jsCode + '''
+        self.js_code = self.cmplot.js_code + '''
         var lpdata = lpsrc.get('data');
 
         if ((xind < x.length) && (yind < y.length)) {
@@ -80,20 +87,23 @@ class ColourMapLP(Row):
         }
         '''
 
-        cJS = CustomJS(args = {'datasrc':self.cmplot.datasrc,'lpsrc':self.lpds},
-                       code = self.jsCode)
+        cjs = CustomJS(args={'datasrc': self.cmplot.datasrc,
+                             'lpsrc': self.lpds},
+                       code=self.js_code)
         if hoverdisp:
-            htool = HoverTool(tooltips=[(xlab,'@xp{0.00}'),(ylab,'@yp{0.00}'),(Dlab,'@dp{0.00}')],
-                              callback = cJS,point_policy = 'follow_mouse')
+            htool = HoverTool(tooltips=[(xlab, '@xp{0.00}'),
+                                        (ylab, '@yp{0.00}'),
+                                        (Dlab, '@dp{0.00}')],
+                              callback=cjs, point_policy='follow_mouse')
         else:
-            htool = HoverTool(tooltips = None,callback = cJS)
+            htool = HoverTool(tooltips=None, callback=cjs)
 
         self.cmplot.plot.add_tools(htool)
 
-        self.lplot = Figure(x_axis_label = Dlab,y_axis_label = zlab,
-                           plot_height = lpheight,plot_width = lpwidth,
-                           tools=['reset,pan,resize,wheel_zoom,box_zoom,save'],
-                           toolbar_location='right')
+        self.lplot = Figure(x_axis_label=Dlab, y_axis_label=zlab,
+                            plot_height=lpheight, plot_width=lpwidth,
+                            tools=['reset,pan,resize,wheel_zoom,box_zoom,save'],
+                            toolbar_location='right')
 
         if revz:
             self.lplot.y_range.start = z[-1]
@@ -101,27 +111,28 @@ class ColourMapLP(Row):
         else:
             self.lplot.y_range.start = z[0]
             self.lplot.y_range.end = z[-1]
-        if (rMin is not None) and (rMax is not None):
-            self.lplot.x_range.start = rMin
-            self.lplot.x_range.end = rMax
+        if (rmin is not None) and (rmax is not None):
+            self.lplot.x_range.start = rmin
+            self.lplot.x_range.end = rmax
 
-        self.lplot.line('x','y',source = self.lpds,line_color='blue',line_width=2,line_alpha=1)
+        self.lplot.line('x', 'y', source=self.lpds, line_color='blue',
+                        line_width=2, line_alpha=1)
 
         self.lplot.xaxis.axis_label_text_font = 'garamond'
         self.lplot.xaxis.axis_label_text_font_size = '10pt'
         self.lplot.xaxis.axis_label_text_font_style = 'bold'
-        
-        self.lplot.xaxis[0].ticker = AdaptiveTicker(desired_num_ticks = 5)
+
+        self.lplot.xaxis[0].ticker = AdaptiveTicker(desired_num_ticks=5)
         self.lplot.xaxis[0].formatter = NumeralTickFormatter(format="0.00")
 
         self.lplot.yaxis.axis_label_text_font = 'garamond'
         self.lplot.yaxis.axis_label_text_font_size = '10pt'
         self.lplot.yaxis.axis_label_text_font_style = 'bold'
-        
-        self.btn = Button(label = 'Snap to centre')
+
+        self.btn = Button(label='Snap to centre')
         self.btn.on_click(self.centreLP)
-        
-        self.lpcon = Column(self.lplot,self.btn)
+
+        self.lpcon = Column(self.lplot, self.btn)
 
         self.children.append(self.cmplot)
         self.children.append(self.lpcon)
@@ -134,7 +145,8 @@ class ColourMapLP(Row):
     def centreLP(self):
 
         '''
-        When the button is clicked, update the line plot to correspond to the centre of the image.
+        When the button is clicked, update the line plot to correspond to the
+        centre of the image.
         '''
 
         # Get current colourmap axes centre points
@@ -148,15 +160,17 @@ class ColourMapLP(Row):
         xa = ds['x'][0]
         ya = ds['y'][0]
         xi, = numpy.where(xa >= x)
-        if (xi.size > 0):
+        if xi.size > 0:
             xind = xi[0]
             if xind > 0:
-                if abs(xa[xind - 1] - x) < abs(xa[xind] - x): xind = xind - 1
+                if abs(xa[xind - 1] - x) < abs(xa[xind] - x):
+                    xind = xind - 1
         yi, = numpy.where(ya >= y)
-        if (yi.size > 0):
+        if yi.size > 0:
             yind = yi[0]
             if yind > 0:
-                if abs(ya[yind - 1] - y) < abs(ya[yind] - y): yind = yind - 1
+                if abs(ya[yind - 1] - y) < abs(ya[yind] - y):
+                    yind = yind - 1
 
         # Update line plot source
 
