@@ -16,7 +16,8 @@ cm = ColourMap(x, y, z, D, cfile='../jet.txt',
                xlab='x val', ylab='y val', zlab='power val',
                Dlab='Function val')
 
-cm.changed(0)  # Not needed, only for code coverage test
-cm.update_cbar()  # Not needed, only for code coverage test
+# Calls below not needed, only added for code coverage test
+cm.changed(0)
+cm.update_cbar()
 
 show(cm)
