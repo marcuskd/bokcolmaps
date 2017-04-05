@@ -83,6 +83,7 @@ class ColourMap(Column):
 
         if len(D.shape) == 2:
             self.ysize, self.xsize = D.shape
+            self.zsize = 1
         elif len(D.shape) == 3:
             self.zsize, self.ysize, self.xsize = D.shape
 
@@ -249,7 +250,7 @@ class ColourMap(Column):
         Change the 2D slice of D being displayed (i.e. a different value of z)
         '''
 
-        if (zind >= 0) and (zind < self.zsize):
+        if (self.zsize > 1) and (zind >= 0) and (zind < self.zsize):
             zindl = zind*self.xsize*self.ysize
             data = self.datasrc.data
             d = self.datasrc.data['image'][0]

@@ -34,6 +34,7 @@ sp = SpotPlot(x, y, z, D, cfile='../jet.txt',
               xlab='x val', ylab='y val', zlab='power val',
               Dlab='Function val')
 
+sp.changed(0)  # Not needed, only for code coverage test
 sp.update_cbar()  # Not needed, only for code coverage test
 
 show(sp)

@@ -193,12 +193,13 @@ class SpotPlot(Column):
         Change the row of D being displayed (i.e. a different value of z)
         '''
 
-        if (zind >= 0) & (zind < self.datasrc.data['D'][0].shape[0]):
-            data = self.datasrc.data
-            newdata = data
-            d = data['D'][0][zind]
-            newdata['d'] = [d]
-            self.datasrc.trigger('data', data, newdata)
+        if len(self.datasrc.data['D'][0].shape) > 1:
+            if (zind >= 0) and (zind < self.datasrc.data['D'][0].shape[0]):
+                data = self.datasrc.data
+                newdata = data
+                d = data['D'][0][zind]
+                newdata['d'] = [d]
+                self.datasrc.trigger('data', data, newdata)
 
     def update_cbar(self):
 
