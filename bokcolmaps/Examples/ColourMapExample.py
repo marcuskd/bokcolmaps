@@ -6,9 +6,9 @@ import numpy
 from bokeh.plotting import show
 
 from bokcolmaps import ColourMap
-from bokcolmaps.Examples import ExampleData
+from bokcolmaps.Examples import example_data
 
-x, y, z, D = ExampleData()
+x, y, z, D = example_data()
 D = D[0]  # Data for first value of z
 z = numpy.array([z[0]])  # First value of z
 

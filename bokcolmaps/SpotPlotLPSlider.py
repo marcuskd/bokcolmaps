@@ -7,6 +7,8 @@ from bokeh.core.properties import Instance
 
 from .SpotPlotLP import SpotPlotLP
 
+from .get_common_kwargs import get_common_kwargs
+
 
 class SpotPlotLPSlider(Column):
 
@@ -21,14 +23,20 @@ class SpotPlotLPSlider(Column):
     splotlp = Instance(SpotPlotLP)
     zslider = Instance(Slider)
 
-    def __init__(self, x, y, z, D, palette='Viridis256', cfile='jet.txt',
-                 xlab='x', ylab='y', zlab='Index', Dlab='Data',
-                 spheight=575, spwidth=500, lpheight=500, lpwidth=300,
-                 rmin=None, rmax=None, xran=None, yran=None, revz=False):
+    def __init__(self, x, y, z, D, **kwargs):
 
         '''
         All init arguments same as for SpotPlotLP.
         '''
+
+        palette, cfile, xlab, ylab, zlab,\
+            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+
+        spheight = kwargs.get('spheight', 575)
+        spwidth = kwargs.get('spwidth', 500)
+        lpheight = kwargs.get('lpheight', 500)
+        lpwidth = kwargs.get('lpwidth', 300)
+        revz = kwargs.get('revz', False)
 
         super(SpotPlotLPSlider, self).__init__()
 

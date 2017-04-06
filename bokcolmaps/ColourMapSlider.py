@@ -7,6 +7,8 @@ from bokeh.core.properties import Instance
 
 from .ColourMap import ColourMap
 
+from .get_common_kwargs import get_common_kwargs
+
 
 class ColourMapSlider(Column):
 
@@ -21,14 +23,18 @@ class ColourMapSlider(Column):
     cmap = Instance(ColourMap)
     zslider = Instance(Slider)
 
-    def __init__(self, x, y, z, D, palette='Viridis256', cfile='jet.txt',
-                 xlab='x', ylab='y', zlab='Index', Dlab='Data',
-                 height=575, width=500, rmin=None, rmax=None,
-                 xran=None, yran=None, hover=True):
+    def __init__(self, x, y, z, D, **kwargs):
 
         '''
         All init arguments same as for ColourMap.
         '''
+
+        palette, cfile, xlab, ylab, zlab,\
+            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+
+        height = kwargs.get('height', 575)
+        width = kwargs.get('width', 500)
+        hover = kwargs.get('hover', True)
 
         super().__init__()
 

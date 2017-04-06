@@ -7,6 +7,8 @@ from bokeh.core.properties import Instance
 
 from .ColourMapLP import ColourMapLP
 
+from .get_common_kwargs import get_common_kwargs
+
 
 class ColourMapLPSlider(Column):
 
@@ -21,15 +23,21 @@ class ColourMapLPSlider(Column):
     cmaplp = Instance(ColourMapLP)
     zslider = Instance(Slider)
 
-    def __init__(self, x, y, z, D, palette='Viridis256', cfile='jet.txt',
-                 xlab='x', ylab='y', zlab='Index', Dlab='Data',
-                 cmheight=575, cmwidth=500, lpheight=500, lpwidth=300,
-                 rmin=None, rmax=None, xran=None, yran=None,
-                 revz=False, hoverdisp=True):
+    def __init__(self, x, y, z, D, **kwargs):
 
         '''
         All init arguments same as for ColourMapLP.
         '''
+
+        palette, cfile, xlab, ylab, zlab,\
+            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+
+        cmheight = kwargs.get('cmheight', 575)
+        cmwidth = kwargs.get('cmwidth', 500)
+        lpheight = kwargs.get('lpheight', 500)
+        lpwidth = kwargs.get('lpwidth', 300)
+        revz = kwargs.get('revz', False)
+        hoverdisp = kwargs.get('hoverdisp', True)
 
         super().__init__()
 

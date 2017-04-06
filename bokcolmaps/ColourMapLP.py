@@ -16,6 +16,8 @@ from bokeh.core.properties import Instance, String
 
 from .ColourMap import ColourMap
 
+from .get_common_kwargs import get_common_kwargs
+
 
 class ColourMapLP(Row):
 
@@ -36,11 +38,17 @@ class ColourMapLP(Row):
     cmylab = String
     js_code = String
 
-    def __init__(self, x, y, z, D, palette='Viridis256', cfile='jet.txt',
-                 xlab='x', ylab='y', zlab='Index', Dlab='Data',
-                 cmheight=575, cmwidth=500, lpheight=500, lpwidth=300,
-                 rmin=None, rmax=None, xran=None, yran=None,
-                 revz=False, hoverdisp=True):
+    def __init__(self, x, y, z, D, **kwargs):
+
+        palette, cfile, xlab, ylab, zlab,\
+            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+
+        cmheight = kwargs.get('cmheight', 575)
+        cmwidth = kwargs.get('cmwidth', 500)
+        lpheight = kwargs.get('lpheight', 500)
+        lpwidth = kwargs.get('lpwidth', 300)
+        revz = kwargs.get('revz', False)
+        hoverdisp = kwargs.get('hoverdisp', True)
 
         '''
         All init arguments same as for ColourMap except for additional ones:

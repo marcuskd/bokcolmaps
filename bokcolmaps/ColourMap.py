@@ -7,11 +7,14 @@ from bokeh.plotting import Figure
 from bokeh.models import ColumnDataSource, Plot, ColorBar, HoverTool
 from bokeh.models.mappers import LinearColorMapper
 from bokeh.models.ranges import Range1d
-from bokeh.models.tickers import AdaptiveTicker
 from bokeh.models.layouts import Column
 from bokeh.models.callbacks import CustomJS
 
 from bokeh.core.properties import Instance, String, Float, Bool, Int
+
+from .get_common_kwargs import get_common_kwargs
+from .generate_colourbar import generate_colourbar
+from .read_colourmap import read_colourmap
 
 
 class ColourMap(Column):
@@ -49,10 +52,7 @@ class ColourMap(Column):
 
     js_code = String
 
-    def __init__(self, x, y, z, D, palette='Viridis256', cfile='jet.txt',
-                 xlab='x', ylab='y', zlab='Index', Dlab='Data',
-                 height=575, width=500, rmin=None, rmax=None,
-                 xran=None, yran=None, hover=True):
+    def __init__(self, x, y, z, D, **kwargs):
 
         '''
         x,y and z are 1D NumPy arrays for the 3D grid dimensions.
@@ -67,6 +67,13 @@ class ColourMap(Column):
         another plot).
         hover: enable hover tool readout.
         '''
+
+        palette, cfile, xlab, ylab, zlab,\
+            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+
+        height = kwargs.get('height', 575)
+        width = kwargs.get('width', 500)
+        hover = kwargs.get('hover', True)
 
         super().__init__()
 
@@ -216,14 +223,11 @@ class ColourMap(Column):
         self.children.append(self.plot)
 
     def generate_colorbar(self, cbarwidth=25):
+        '''
+        Generate the colourbar
+        '''
 
-        self.cbar = ColorBar(color_mapper=self.cmap, location=(0, 0),
-                             label_standoff=5, orientation='horizontal',
-                             height=cbarwidth, ticker=AdaptiveTicker(),
-                             border_line_color=None, bar_line_color='black',
-                             major_tick_line_color='black',
-                             minor_tick_line_color=None)
-
+        self.cbar = generate_colourbar(self.cmap, cbarwidth)
         self.plot.add_layout(self.cbar, 'below')
 
     def read_cmap(self, fname):
@@ -232,17 +236,7 @@ class ColourMap(Column):
         Read in the colour scale.
         '''
 
-        f = open(fname, 'rt')
-        cmap = []
-        for l in f:
-            valstrs = l[:-1].split(',')
-            vals = []
-            for s in valstrs[:-1]:
-                vals.append(round(255*float(s)))
-            vtup = tuple(vals)
-            cmap.append('#%02x%02x%02x' % vtup)  # Format as hex triple
-        f.close()
-        self.cvals = ColumnDataSource(data={'colours': cmap})
+        self.cvals = read_colourmap(fname)
 
     def changed(self, zind):
 

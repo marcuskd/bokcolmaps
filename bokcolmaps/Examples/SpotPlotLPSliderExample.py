@@ -14,9 +14,9 @@ import numpy
 from bokeh.io import curdoc
 
 from bokcolmaps import SpotPlotLPSlider
-from bokcolmaps.Examples import ExampleData
+from bokcolmaps.Examples import example_data
 
-xg, yg, z, Dg = ExampleData()
+xg, yg, z, Dg = example_data()
 
 ns = 20  # Number of grid samples
 # Select random x and y coordinates

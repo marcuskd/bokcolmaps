@@ -11,9 +11,9 @@ This seems to speed up the line plot updates (TBD - find out why)
 from bokeh.io import curdoc
 
 from bokcolmaps import ColourMapLPSlider
-from bokcolmaps.Examples import ExampleData
+from bokcolmaps.Examples import example_data
 
-x, y, z, D = ExampleData()
+x, y, z, D = example_data()
 
 cm = ColourMapLPSlider(x, y, z, D, cfile='../jet.txt',
                        xlab='x val', ylab='y val', zlab='power val',

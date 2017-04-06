@@ -13,6 +13,8 @@ from bokeh.core.properties import Instance, String
 
 from .SpotPlot import SpotPlot
 
+from .get_common_kwargs import get_common_kwargs
+
 
 class SpotPlotLP(Row):
 
@@ -32,10 +34,7 @@ class SpotPlotLP(Row):
     cmylab = String
     tstr = String
 
-    def __init__(self, x, y, z, D, palette='Viridis256', cfile='jet.txt',
-                 xlab='x', ylab='y', zlab='Index', Dlab='Data',
-                 spheight=575, spwidth=500, lpheight=500, lpwidth=300,
-                 rmin=None, rmax=None, xran=None, yran=None, revz=False):
+    def __init__(self, x, y, z, D, **kwargs):
 
         '''
         All init arguments same as for SpotPlot except for additional ones:
@@ -43,6 +42,15 @@ class SpotPlotLP(Row):
         lpheight and lpwidth: line plot height and width (pixels).
         revz: reverse z axis in line plot if True.
         '''
+
+        palette, cfile, xlab, ylab, zlab,\
+            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+
+        spheight = kwargs.get('spheight', 575)
+        spwidth = kwargs.get('spwidth', 500)
+        lpheight = kwargs.get('lpheight', 500)
+        lpwidth = kwargs.get('lpwidth', 300)
+        revz = kwargs.get('revz', False)
 
         super().__init__()
 

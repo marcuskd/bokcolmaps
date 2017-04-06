@@ -1,1 +1,1 @@
-from .ExampleData import ExampleData
+from bokcolmaps.Examples.example_data import example_data
