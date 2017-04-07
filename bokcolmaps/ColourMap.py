@@ -106,19 +106,7 @@ class ColourMap(Column):
                                               'image': [d], 'dm': [dm],
                                               'xp': [0], 'yp': [0], 'dp': [0]})
 
-        if self.autoscale:
-            min_val, max_val = get_min_max(d, self.cbdelta)
-        else:
-            min_val = self.rmin
-            max_val = self.rmax
-
-        if cfile is not None:
-            self.read_cmap(cfile)
-            self.cmap = LinearColorMapper(palette=self.cvals.data['colours'])
-        else:
-            self.cmap = LinearColorMapper(palette=palette)
-        self.cmap.low = min_val
-        self.cmap.high = max_val
+        self.get_cmap(cfile, palette)
 
         if xran is None:  # Default to whole range unless externally controlled
             xran = Range1d(start=x[0], end=x[-1])
@@ -212,6 +200,25 @@ class ColourMap(Column):
         self.generate_colorbar(cbarwidth=round(width/20))
 
         self.children.append(self.plot)
+
+    def get_cmap(self, cfile, palette):
+
+        '''Get the colour mapper'''
+
+        if self.autoscale:
+            min_val, max_val = get_min_max(self.datasrc.data['image'][0],
+                                           self.cbdelta)
+        else:
+            min_val = self.rmin
+            max_val = self.rmax
+
+        if cfile is not None:
+            self.read_cmap(cfile)
+            self.cmap = LinearColorMapper(palette=self.cvals.data['colours'])
+        else:
+            self.cmap = LinearColorMapper(palette=palette)
+        self.cmap.low = min_val
+        self.cmap.high = max_val
 
     def generate_colorbar(self, cbarwidth=25):
         '''
