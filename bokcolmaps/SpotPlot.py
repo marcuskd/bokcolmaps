@@ -55,7 +55,7 @@ class SpotPlot(Column):
         z.size by x.size (or y.size).
         Supply a bokeh palette name or a file of RGBA floats;
         the file will be used if provided.
-        xlab,ylab,zlab,Dlab: labels for the axes and data.
+        xlab,ylab,zlab,dmlab: labels for the axes and data.
         height and width for the plot are in pixels.
         rmin and rmax are fixed limits for the colour scale
         (i.e. it won't autoscale if either of these is not None).
@@ -65,7 +65,7 @@ class SpotPlot(Column):
         '''
 
         palette, cfile, xlab, ylab, zlab,\
-            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
@@ -75,7 +75,7 @@ class SpotPlot(Column):
 
         self.cbdelta = 0.01  # Min colourbar range (used if values are equal)
 
-        self.title_root = Dlab
+        self.title_root = dmlab
         self.zlab = zlab
 
         self.rmin = rmin

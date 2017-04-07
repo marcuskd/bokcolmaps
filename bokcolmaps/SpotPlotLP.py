@@ -44,7 +44,7 @@ class SpotPlotLP(Row):
         '''
 
         palette, cfile, xlab, ylab, zlab,\
-            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         spheight = kwargs.get('spheight', 575)
         spwidth = kwargs.get('spwidth', 500)
@@ -77,11 +77,11 @@ class SpotPlotLP(Row):
         ttool = TapTool(callback=update_lp)
 
         self.spplot = SpotPlot(x, y, z, dm, palette=palette, cfile=cfile,
-                               xlab=xlab, ylab=ylab, zlab=zlab, Dlab=Dlab,
+                               xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                height=spheight, width=spwidth, rmin=rmin,
                                rmax=rmax, xran=xran, yran=yran, ttool=ttool)
 
-        self.lplot = Figure(x_axis_label=Dlab, y_axis_label=zlab,
+        self.lplot = Figure(x_axis_label=dmlab, y_axis_label=zlab,
                             plot_height=lpheight, plot_width=lpwidth,
                             tools=["reset,pan,resize,wheel_zoom,box_zoom,save"],
                             toolbar_location='right')

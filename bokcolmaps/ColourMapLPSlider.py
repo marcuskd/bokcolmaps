@@ -30,7 +30,7 @@ class ColourMapLPSlider(Column):
         '''
 
         palette, cfile, xlab, ylab, zlab,\
-            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         cmheight = kwargs.get('cmheight', 575)
         cmwidth = kwargs.get('cmwidth', 500)
@@ -45,7 +45,7 @@ class ColourMapLPSlider(Column):
         self.width = int((cmwidth + lpwidth)*1.1)
 
         self.cmaplp = ColourMapLP(x, y, z, dm, palette=palette, cfile=cfile,
-                                  xlab=xlab, ylab=ylab, zlab=zlab, Dlab=Dlab,
+                                  xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                   cmheight=cmheight, cmwidth=cmwidth,
                                   lpheight=lpheight, lpwidth=lpwidth,
                                   rmin=rmin, rmax=rmax, xran=xran, yran=yran,

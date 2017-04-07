@@ -1,7 +1,5 @@
 '''ColourMap class definition'''
 
-import numpy
-
 from bokeh.plotting import Figure
 
 from bokeh.models import ColumnDataSource, Plot, ColorBar, HoverTool
@@ -60,7 +58,7 @@ class ColourMap(Column):
         dm is a 3D NumPy array.
         Supply a bokeh palette name or a file of RGBA floats -
         this will be used if provided.
-        xlab,ylab,zlab,Dlab: labels for the axes and data.
+        xlab,ylab,zlab,dmlab: labels for the axes and data.
         height and width for the plot are in pixels.
         rmin and rmax are fixed limits for the colour scale
         (i.e. it won't autoscale if they are both not None).
@@ -70,7 +68,7 @@ class ColourMap(Column):
         '''
 
         palette, cfile, xlab, ylab, zlab,\
-            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
@@ -80,7 +78,7 @@ class ColourMap(Column):
 
         self.cbdelta = 0.01  # Min colourbar range (used if values are equal)
 
-        self.title_root = Dlab
+        self.title_root = dmlab
         self.zlab = zlab
 
         self.rmin = rmin
@@ -160,7 +158,7 @@ class ColourMap(Column):
             cjs = CustomJS(args={'datasrc': self.datasrc}, code=self.js_code)
             htool = HoverTool(tooltips=[(xlab, '@xp{0.00}'),
                                         (ylab, '@yp{0.00}'),
-                                        (Dlab, '@dp{0.00}')],
+                                        (dmlab, '@dp{0.00}')],
                               callback=cjs, point_policy='follow_mouse')
             ptools.append(htool)
 

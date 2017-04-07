@@ -41,7 +41,7 @@ class ColourMapLP(Row):
     def __init__(self, x, y, z, dm, **kwargs):
 
         palette, cfile, xlab, ylab, zlab,\
-            Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         cmheight = kwargs.get('cmheight', 575)
         cmwidth = kwargs.get('cmwidth', 500)
@@ -71,7 +71,7 @@ class ColourMapLP(Row):
         self.lpds.data['x'] = dm[:, yi, xi]
 
         self.cmplot = ColourMap(x, y, z, dm, palette=palette, cfile=cfile,
-                                xlab=xlab, ylab=ylab, zlab=zlab, Dlab=Dlab,
+                                xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                 height=cmheight, width=cmwidth, rmin=rmin,
                                 rmax=rmax, xran=xran, yran=yran, hover=False)
 
@@ -101,14 +101,14 @@ class ColourMapLP(Row):
         if hoverdisp:
             htool = HoverTool(tooltips=[(xlab, '@xp{0.00}'),
                                         (ylab, '@yp{0.00}'),
-                                        (Dlab, '@dp{0.00}')],
+                                        (dmlab, '@dp{0.00}')],
                               callback=cjs, point_policy='follow_mouse')
         else:
             htool = HoverTool(tooltips=None, callback=cjs)
 
         self.cmplot.plot.add_tools(htool)
 
-        self.lplot = Figure(x_axis_label=Dlab, y_axis_label=zlab,
+        self.lplot = Figure(x_axis_label=dmlab, y_axis_label=zlab,
                             plot_height=lpheight, plot_width=lpwidth,
                             tools=['reset,pan,resize,wheel_zoom,box_zoom,save'],
                             toolbar_location='right')
