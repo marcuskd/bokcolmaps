@@ -23,7 +23,7 @@ class SpotPlotSlider(Column):
     __view_model__ = "Column"
     __subtype__ = "SpotPlotSlider"
 
-    def __init__(self, x, y, z, D, **kwargs):
+    def __init__(self, x, y, z, dm, **kwargs):
 
         '''
         All init arguments same as for SpotPlot.
@@ -40,7 +40,7 @@ class SpotPlotSlider(Column):
         self.height = height
         self.width = int(width*1.1)
 
-        self.splot = SpotPlot(x, y, z, D, palette=palette, cfile=cfile,
+        self.splot = SpotPlot(x, y, z, dm, palette=palette, cfile=cfile,
                               xlab=xlab, ylab=ylab, zlab=zlab, Dlab=Dlab,
                               height=height, width=width, rmin=rmin,
                               rmax=rmax, xran=xran, yran=yran)

@@ -34,7 +34,7 @@ class SpotPlotLP(Row):
     cmylab = String
     tstr = String
 
-    def __init__(self, x, y, z, D, **kwargs):
+    def __init__(self, x, y, z, dm, **kwargs):
 
         '''
         All init arguments same as for SpotPlot except for additional ones:
@@ -55,7 +55,7 @@ class SpotPlotLP(Row):
         super().__init__()
 
         xi = round(x.size/2)
-        self.lpds = ColumnDataSource(data={'x': D[:, xi], 'y': z, 'D': D})
+        self.lpds = ColumnDataSource(data={'x': dm[:, xi], 'y': z, 'dm': dm})
 
         jscode = '''
         var inds = cb_obj.get('selected')['1d'].indices;
@@ -64,10 +64,10 @@ class SpotPlotLP(Row):
             var data = source.get('data');
             var x = data['x'];
             var y = data['y'];
-            D = data['D'];
-            var skip = D.length/y.length;
+            dm = data['dm'];
+            var skip = dm.length/y.length;
             for (i = 0; i < y.length; i++) {
-                x[i] = D[ind + i*skip];
+                x[i] = dm[ind + i*skip];
             }
             source.trigger('change');
         }
@@ -76,7 +76,7 @@ class SpotPlotLP(Row):
         update_lp = CustomJS(args={'source': self.lpds}, code=jscode)
         ttool = TapTool(callback=update_lp)
 
-        self.spplot = SpotPlot(x, y, z, D, palette=palette, cfile=cfile,
+        self.spplot = SpotPlot(x, y, z, dm, palette=palette, cfile=cfile,
                                xlab=xlab, ylab=ylab, zlab=zlab, Dlab=Dlab,
                                height=spheight, width=spwidth, rmin=rmin,
                                rmax=rmax, xran=xran, yran=yran, ttool=ttool)

@@ -23,7 +23,7 @@ class ColourMapSlider(Column):
     cmap = Instance(ColourMap)
     zslider = Instance(Slider)
 
-    def __init__(self, x, y, z, D, **kwargs):
+    def __init__(self, x, y, z, dm, **kwargs):
 
         '''
         All init arguments same as for ColourMap.
@@ -41,7 +41,7 @@ class ColourMapSlider(Column):
         self.height = height
         self.width = int(width*1.1)
 
-        self.cmap = ColourMap(x, y, z, D, palette=palette, cfile=cfile,
+        self.cmap = ColourMap(x, y, z, dm, palette=palette, cfile=cfile,
                               xlab=xlab, ylab=ylab, zlab=zlab, Dlab=Dlab,
                               height=height, width=width, rmin=rmin, rmax=rmax,
                               xran=xran, yran=yran, hover=hover)

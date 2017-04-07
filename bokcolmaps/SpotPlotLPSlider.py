@@ -23,7 +23,7 @@ class SpotPlotLPSlider(Column):
     splotlp = Instance(SpotPlotLP)
     zslider = Instance(Slider)
 
-    def __init__(self, x, y, z, D, **kwargs):
+    def __init__(self, x, y, z, dm, **kwargs):
 
         '''
         All init arguments same as for SpotPlotLP.
@@ -43,7 +43,7 @@ class SpotPlotLPSlider(Column):
         self.height = spheight
         self.width = int((spwidth + lpwidth)*1.1)
 
-        self.splotlp = SpotPlotLP(x, y, z, D, palette=palette, cfile=cfile,
+        self.splotlp = SpotPlotLP(x, y, z, dm, palette=palette, cfile=cfile,
                                   xlab=xlab, ylab=ylab, zlab=zlab, Dlab=Dlab,
                                   spheight=spheight, spwidth=spwidth,
                                   lpheight=lpheight, lpwidth=lpwidth,

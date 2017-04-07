@@ -38,7 +38,7 @@ class ColourMapLP(Row):
     cmylab = String
     js_code = String
 
-    def __init__(self, x, y, z, D, **kwargs):
+    def __init__(self, x, y, z, dm, **kwargs):
 
         palette, cfile, xlab, ylab, zlab,\
             Dlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
@@ -68,9 +68,9 @@ class ColourMapLP(Row):
         self.lpds.data['y'] = z
         xi = round(x.size/2)
         yi = round(y.size/2)
-        self.lpds.data['x'] = D[:, yi, xi]
+        self.lpds.data['x'] = dm[:, yi, xi]
 
-        self.cmplot = ColourMap(x, y, z, D, palette=palette, cfile=cfile,
+        self.cmplot = ColourMap(x, y, z, dm, palette=palette, cfile=cfile,
                                 xlab=xlab, ylab=ylab, zlab=zlab, Dlab=Dlab,
                                 height=cmheight, width=cmwidth, rmin=rmin,
                                 rmax=rmax, xran=xran, yran=yran, hover=False)
@@ -81,12 +81,12 @@ class ColourMapLP(Row):
         var lpdata = lpsrc.get('data');
 
         if ((xind < x.length) && (yind < y.length)) {
-            var D = data['D'][0];
+            var dm = data['dm'][0];
             var lx = lpdata['x'];
 
             var skip = x.length*y.length;
             for (i = 0; i < lx.length; i++) {
-                lx[i] = D[zind + i*skip];
+                lx[i] = dm[zind + i*skip];
             }
 
             lpdata['x'] = lx;
@@ -170,18 +170,16 @@ class ColourMapLP(Row):
         xi, = numpy.where(xa >= x)
         if xi.size > 0:
             xind = xi[0]
-            if xind > 0:
-                if abs(xa[xind - 1] - x) < abs(xa[xind] - x):
-                    xind = xind - 1
+            if (xind > 0) and (abs(xa[xind - 1] - x) < abs(xa[xind] - x)):
+                xind = xind - 1
         yi, = numpy.where(ya >= y)
         if yi.size > 0:
             yind = yi[0]
-            if yind > 0:
-                if abs(ya[yind - 1] - y) < abs(ya[yind] - y):
-                    yind = yind - 1
+            if (yind > 0) and (abs(ya[yind - 1] - y) < abs(ya[yind] - y)):
+                yind = yind - 1
 
         # Update line plot source
 
         if (xi.size > 0) and (yi.size > 0):
             skip = xa.size*ya.size
-            self.lpds.data['x'] = ds['D'][0][yind*xa.size + xind::skip]
+            self.lpds.data['x'] = ds['dm'][0][yind*xa.size + xind::skip]

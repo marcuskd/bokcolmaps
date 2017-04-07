@@ -23,7 +23,7 @@ class ColourMapLPSlider(Column):
     cmaplp = Instance(ColourMapLP)
     zslider = Instance(Slider)
 
-    def __init__(self, x, y, z, D, **kwargs):
+    def __init__(self, x, y, z, dm, **kwargs):
 
         '''
         All init arguments same as for ColourMapLP.
@@ -44,7 +44,7 @@ class ColourMapLPSlider(Column):
         self.height = cmheight
         self.width = int((cmwidth + lpwidth)*1.1)
 
-        self.cmaplp = ColourMapLP(x, y, z, D, palette=palette, cfile=cfile,
+        self.cmaplp = ColourMapLP(x, y, z, dm, palette=palette, cfile=cfile,
                                   xlab=xlab, ylab=ylab, zlab=zlab, Dlab=Dlab,
                                   cmheight=cmheight, cmwidth=cmwidth,
                                   lpheight=lpheight, lpwidth=lpwidth,

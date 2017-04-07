@@ -16,4 +16,4 @@ def example_data():
             for k in range(nx):
                 D[i, j, k] = (y[j]*x[k])**z[i]
 
-    return (x, y, z, D)
+    return x, y, z, D

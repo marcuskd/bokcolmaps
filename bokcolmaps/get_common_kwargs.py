@@ -16,5 +16,5 @@ def get_common_kwargs(**kwargs):
     xran = kwargs.get('xran', None)
     yran = kwargs.get('yran', None)
 
-    return (palette, cfile, xlab, ylab, zlab,
-            Dlab, rmin, rmax, xran, yran)
+    return palette, cfile, xlab, ylab, zlab,\
+        Dlab, rmin, rmax, xran, yran

@@ -15,6 +15,7 @@ from bokeh.core.properties import Instance, String, Float, Bool, Int
 from .get_common_kwargs import get_common_kwargs
 from .generate_colourbar import generate_colourbar
 from .read_colourmap import read_colourmap
+from .get_min_max import get_min_max
 
 
 class ColourMap(Column):
@@ -52,11 +53,11 @@ class ColourMap(Column):
 
     js_code = String
 
-    def __init__(self, x, y, z, D, **kwargs):
+    def __init__(self, x, y, z, dm, **kwargs):
 
         '''
         x,y and z are 1D NumPy arrays for the 3D grid dimensions.
-        D is a 3D NumPy array.
+        dm is a 3D NumPy array.
         Supply a bokeh palette name or a file of RGBA floats -
         this will be used if provided.
         xlab,ylab,zlab,Dlab: labels for the axes and data.
@@ -88,35 +89,27 @@ class ColourMap(Column):
         if (self.rmin is not None) and (self.rmax is not None):
             self.autoscale = False
 
-        if len(D.shape) == 2:
-            self.ysize, self.xsize = D.shape
+        if len(dm.shape) == 2:
+            self.ysize, self.xsize = dm.shape
             self.zsize = 1
-        elif len(D.shape) == 3:
-            self.zsize, self.ysize, self.xsize = D.shape
+        elif len(dm.shape) == 3:
+            self.zsize, self.ysize, self.xsize = dm.shape
 
-        if len(D.shape) > 2:  # Default to first slice
-            d = D[0]
+        if len(dm.shape) > 2:  # Default to first slice
+            d = dm[0]
         else:
-            d = D
+            d = dm
 
-        D = D.flatten()
+        dm = dm.flatten()
 
         # All variables stored as single item lists in order to be the same
         # length (as required by ColumnDataSource)
         self.datasrc = ColumnDataSource(data={'x': [x], 'y': [y], 'z': [z],
-                                              'image': [d], 'D': [D],
+                                              'image': [d], 'dm': [dm],
                                               'xp': [0], 'yp': [0], 'dp': [0]})
 
         if self.autoscale:
-            dfi = d[numpy.isfinite(d)]
-            if dfi.size > 0:
-                min_val = dfi.min()
-                max_val = dfi.max()
-                if max_val == min_val:
-                    max_val += self.cbdelta
-            else:
-                min_val = 0
-                max_val = self.cbdelta
+            min_val, max_val = get_min_max(d, self.cbdelta)
         else:
             min_val = self.rmin
             max_val = self.rmax
@@ -241,15 +234,15 @@ class ColourMap(Column):
     def changed(self, zind):
 
         '''
-        Change the 2D slice of D being displayed (i.e. a different value of z)
+        Change the 2D slice of dm being displayed (i.e. a different value of z)
         '''
 
         if (self.zsize > 1) and (zind >= 0) and (zind < self.zsize):
             zindl = zind*self.xsize*self.ysize
             data = self.datasrc.data
             d = self.datasrc.data['image'][0]
-            D = data['D'][0]
-            d = D[zindl:zindl + self.xsize*self.ysize]
+            dm = data['dm'][0]
+            d = dm[zindl:zindl + self.xsize*self.ysize]
             d = d.reshape((self.ysize, self.xsize))
             data['image'] = [d]
 
@@ -261,15 +254,7 @@ class ColourMap(Column):
 
         if self.autoscale:
             d = self.datasrc.data['image'][0]
-            dfi = d[numpy.isfinite(d)]
-            if dfi.size > 0:
-                min_val = dfi.min()
-                max_val = dfi.max()
-                if max_val == min_val:
-                    max_val += self.cbdelta
-            else:
-                min_val = 0
-                max_val = self.cbdelta
+            min_val, max_val = get_min_max(d, self.cbdelta)
             self.cmap.low = min_val
             self.cmap.high = max_val
 

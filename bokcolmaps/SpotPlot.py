@@ -13,6 +13,7 @@ from bokeh.core.properties import Instance, String, Int, Float, Bool
 from .get_common_kwargs import get_common_kwargs
 from .generate_colourbar import generate_colourbar
 from .read_colourmap import read_colourmap
+from .get_min_max import get_min_max
 
 
 class SpotPlot(Column):
@@ -45,12 +46,12 @@ class SpotPlot(Column):
     autoscale = Bool
     cbdelta = Float
 
-    def __init__(self, x, y, z, D, **kwargs):
+    def __init__(self, x, y, z, dm, **kwargs):
 
         '''
         x and y (same length) give the spot locations, z is the
         (common) z axis. All are 1D NumPy arrays.
-        D is a 2D NumPy array of the data for display, dimensions
+        dm is a 2D NumPy array of the data for display, dimensions
         z.size by x.size (or y.size).
         Supply a bokeh palette name or a file of RGBA floats;
         the file will be used if provided.
@@ -84,20 +85,12 @@ class SpotPlot(Column):
             self.autoscale = False
 
         if z.size > 1:  # Default to first 'slice'
-            d = D[0]
+            d = dm[0]
         else:
-            d = D
+            d = dm
 
-        dfi = d[numpy.isfinite(d)]
         if self.autoscale:
-            if dfi.size > 0:
-                min_val = dfi.min()
-                max_val = dfi.max()
-                if max_val == min_val:
-                    max_val += self.cbdelta
-            else:
-                min_val = 0
-                max_val = self.cbdelta
+            min_val, max_val = get_min_max(d, self.cbdelta)
         else:
             min_val = self.rmin
             max_val = self.rmax
@@ -116,7 +109,7 @@ class SpotPlot(Column):
         self.sp_size = int(min(height, width)/25)
 
         cols = [self.nan_col]*d.size  # Initially empty
-        self.datasrc = ColumnDataSource(data={'z': [z], 'd': [d], 'D': [D]})
+        self.datasrc = ColumnDataSource(data={'z': [z], 'd': [d], 'dm': [dm]})
         self.coldatasrc = ColumnDataSource(data={'x': x, 'y': y, 'cols': cols})
 
         ptools = ["reset,pan,resize,wheel_zoom,box_zoom,save"]
@@ -184,14 +177,14 @@ class SpotPlot(Column):
     def changed(self, zind):
 
         '''
-        Change the row of D being displayed (i.e. a different value of z)
+        Change the row of dm being displayed (i.e. a different value of z)
         '''
 
-        if len(self.datasrc.data['D'][0].shape) > 1:
-            if (zind >= 0) and (zind < self.datasrc.data['D'][0].shape[0]):
+        if len(self.datasrc.data['dm'][0].shape) > 1:
+            if (zind >= 0) and (zind < self.datasrc.data['dm'][0].shape[0]):
                 data = self.datasrc.data
                 newdata = data
-                d = data['D'][0][zind]
+                d = data['dm'][0][zind]
                 newdata['d'] = [d]
                 self.datasrc.trigger('data', data, newdata)
 
@@ -203,15 +196,7 @@ class SpotPlot(Column):
 
         if self.autoscale:
             d = self.datasrc.data['d'][0]
-            dfi = d[numpy.isfinite(d)]
-            if dfi.size > 0:
-                min_val = dfi.min()
-                max_val = dfi.max()
-                if max_val == min_val:
-                    max_val += self.cbdelta
-            else:
-                min_val = 0
-                max_val = self.cbdelta
+            min_val, max_val = get_min_max(d, self.cbdelta)
             self.cmap.low = min_val
             self.cmap.high = max_val
 
@@ -276,6 +261,6 @@ class SpotPlot(Column):
 
         data = self.datasrc.data
         newdata = data
-        for k in ['z', 'd', 'D']:
+        for k in ['z', 'd', 'dm']:
             if type(newdata[k][0]) is list:
                 newdata[k][0] = numpy.array(newdata[k][0])
