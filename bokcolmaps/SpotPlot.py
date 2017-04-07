@@ -180,13 +180,13 @@ class SpotPlot(Column):
         Change the row of dm being displayed (i.e. a different value of z)
         '''
 
-        if len(self.datasrc.data['dm'][0].shape) > 1:
-            if (zind >= 0) and (zind < self.datasrc.data['dm'][0].shape[0]):
-                data = self.datasrc.data
-                newdata = data
-                d = data['dm'][0][zind]
-                newdata['d'] = [d]
-                self.datasrc.trigger('data', data, newdata)
+        if (len(self.datasrc.data['dm'][0].shape) > 1) and \
+           (zind >= 0) and (zind < self.datasrc.data['dm'][0].shape[0]):
+            data = self.datasrc.data
+            newdata = data
+            d = data['dm'][0][zind]
+            newdata['d'] = [d]
+            self.datasrc.trigger('data', data, newdata)
 
     def update_cbar(self):
 
@@ -209,7 +209,7 @@ class SpotPlot(Column):
         self.plot.title.text = self.title_root + ', ' + \
             self.zlab + ' = ' + str(val)
 
-    def inputChange(self, attrname, old, new):
+    def input_change(self, attrname, old, new):
 
         '''
         Callback for use with e.g. sliders.

@@ -138,7 +138,7 @@ class ColourMapLP(Row):
         self.lplot.yaxis.axis_label_text_font_style = 'bold'
 
         self.btn = Button(label='Snap to centre')
-        self.btn.on_click(self.centreLP)
+        self.btn.on_click(self.centre_lp)
 
         self.lpcon = Column(self.lplot, self.btn)
 
@@ -148,9 +148,9 @@ class ColourMapLP(Row):
         self.cmxlab = xlab
         self.cmylab = ylab
 
-        self.centreLP()
+        self.centre_lp()
 
-    def centreLP(self):
+    def centre_lp(self):
 
         '''
         When the button is clicked, update the line plot to correspond to the

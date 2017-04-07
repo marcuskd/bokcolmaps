@@ -48,7 +48,7 @@ class SpotPlotSlider(Column):
         self.zslider = Slider(title='z index', start=0, end=z.size-1,
                               step=1, value=0, orientation='horizontal')
 
-        self.zslider.on_change('value', self.splot.inputChange)
+        self.zslider.on_change('value', self.splot.input_change)
 
         self.children.append(WidgetBox(self.zslider, width=self.width))
         self.children.append(self.splot)

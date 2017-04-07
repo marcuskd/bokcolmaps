@@ -53,7 +53,7 @@ class SpotPlotLPSlider(Column):
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size-1,
                               step=1, value=0, orientation='horizontal')
 
-        self.zslider.on_change('value', self.splotlp.spplot.inputChange)
+        self.zslider.on_change('value', self.splotlp.spplot.input_change)
 
         self.children.append(WidgetBox(self.zslider, width=self.width))
         self.children.append(self.splotlp)
