@@ -19,8 +19,8 @@ setup(name = 'bokcolmaps',
                   '3D Plot'
                   ],
       packages = find_packages(),
-      install_requires = ['bokeh >= 0.12.4',
-                          'numpy >= 1.12'
+      install_requires = ['numpy >= 1.12',
+                          'bokeh >= 0.12.5'
                           ],
       package_data = {'bokcolmaps':['jet.txt'],
                       },
