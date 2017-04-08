@@ -20,7 +20,8 @@ class ColourMap(Column):
 
     '''
     Plots an image as a colour map with a user-defined colour scale and
-    creates a hover readout.
+    creates a hover readout. The image must be on a uniform grid to be
+    rendered correctly and for the data cursor to provide correct readout.
     '''
 
     __view_model__ = 'Column'
