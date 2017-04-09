@@ -32,7 +32,7 @@ z = z[0]  # First value of z
 
 sp = SpotPlot(x, y, z, D, cfile='../jet.txt',
               xlab='x val', ylab='y val', zlab='power val',
-              Dlab='Function val')
+              dmlab='Function val')
 
 # Calls below not needed, only added for code coverage test
 sp.convert_data()

@@ -34,6 +34,6 @@ for n in range(ns):
 
 sp = SpotPlotLPSlider(x, y, z, D, cfile='../jet.txt',
                       xlab='x val', ylab='y val', zlab='power val',
-                      Dlab='Function val')
+                      dmlab='Function val')
 
 curdoc().add_root(sp)

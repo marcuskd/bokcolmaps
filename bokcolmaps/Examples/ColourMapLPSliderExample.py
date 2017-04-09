@@ -17,6 +17,6 @@ x, y, z, D = example_data()
 
 cm = ColourMapLPSlider(x, y, z, D, cfile='../jet.txt',
                        xlab='x val', ylab='y val', zlab='power val',
-                       Dlab='Function val', hoverdisp=False)
+                       dmlab='Function val', hoverdisp=False)
 
 curdoc().add_root(cm)
