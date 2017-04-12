@@ -246,7 +246,6 @@ class ColourMap(Column):
         if (self.zsize > 1) and (zind >= 0) and (zind < self.zsize):
             zindl = zind*self.xsize*self.ysize
             data = self.datasrc.data
-            d = self.datasrc.data['image'][0]
             dm = data['dm'][0]
             d = dm[zindl:zindl + self.xsize*self.ysize]
             d = d.reshape((self.ysize, self.xsize))
