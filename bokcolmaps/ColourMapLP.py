@@ -62,13 +62,11 @@ class ColourMapLP(Row):
         '''
 
         super().__init__()
-        # Data source for the line plot
-        self.lpds = ColumnDataSource(data={'x': [], 'y': []})
 
-        self.lpds.data['y'] = z
+        # Data source for the line plot
         xi = round(x.size/2)
         yi = round(y.size/2)
-        self.lpds.data['x'] = dm[:, yi, xi]
+        self.lpds = ColumnDataSource(data={'x': dm[:, yi, xi], 'y': z})
 
         self.cmplot = ColourMap(x, y, z, dm, palette=palette, cfile=cfile,
                                 xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
