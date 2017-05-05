@@ -50,7 +50,9 @@ class ColourMap(Column):
 
     cbdelta = Float
 
-    js_code = String
+    js_hover = String
+
+    cjs_slider = Instance(CustomJS)
 
     def __init__(self, x, y, z, dm, **kwargs):
 
@@ -107,6 +109,32 @@ class ColourMap(Column):
                                               'image': [d], 'dm': [dm],
                                               'xp': [0], 'yp': [0], 'dp': [0]})
 
+        # JS code for slider in classes ColourMapSlider
+        # and ColourMapLPSlider
+
+        js_slider = '''
+        var dind = cb_obj['value'];
+        var data = datasrc.get('data');
+
+        var x = data['x'][0];
+        var y = data['y'][0];
+        var d = data['image'][0];
+        var dm = data['dm'][0];
+
+        var nx = x.length;
+        var ny = y.length;
+
+        var sind = dind*nx*ny;
+        for (i=0; i<nx*ny; i++) {
+            d[i] = dm[sind+i];
+        }
+
+        datasrc.trigger('change');
+        '''
+
+        self.cjs_slider = CustomJS(args={'datasrc': self.datasrc},
+                                   code=js_slider)
+
         self.get_cmap(cfile, palette)
 
         if xran is None:  # Default to whole range unless externally controlled
@@ -117,9 +145,9 @@ class ColourMap(Column):
         ptools = ['reset,pan,resize,wheel_zoom,box_zoom,save']
 
         # JS code defined whether or not hover tool used as may be needed in
-        # derived class ColourMapLP
+        # class ColourMapLP
 
-        self.js_code = '''
+        self.js_hover = '''
         var geom = cb_data['geometry'];
         var data = datasrc.get('data');
 
@@ -144,11 +172,12 @@ class ColourMap(Column):
         '''
 
         if hover:
-            cjs = CustomJS(args={'datasrc': self.datasrc}, code=self.js_code)
+            cjs_hover = CustomJS(args={'datasrc': self.datasrc},
+                                 code=self.js_hover)
             htool = HoverTool(tooltips=[(xlab, '@xp{0.00}'),
                                         (ylab, '@yp{0.00}'),
                                         (dmlab, '@dp{0.00}')],
-                              callback=cjs, point_policy='follow_mouse')
+                              callback=cjs_hover, point_policy='follow_mouse')
             ptools.append(htool)
 
         self.plot = Figure(x_axis_label=xlab, y_axis_label=ylab,
@@ -237,28 +266,15 @@ class ColourMap(Column):
 
         self.cvals = read_colourmap(fname)
 
-    def changed(self, zind):
-
-        '''
-        Change the 2D slice of dm being displayed (i.e. a different value of z)
-        '''
-
-        if (self.zsize > 1) and (zind >= 0) and (zind < self.zsize):
-            zindl = zind*self.xsize*self.ysize
-            data = self.datasrc.data
-            dm = data['dm'][0]
-            d = dm[zindl:zindl + self.xsize*self.ysize]
-            d = d.reshape((self.ysize, self.xsize))
-            data['image'] = [d]
-
-    def update_cbar(self):
+    def update_cbar(self, zind):
 
         '''
         Update the colour scale (needed when the data for display changes).
         '''
 
         if self.autoscale:
-            d = self.datasrc.data['image'][0]
+            d = self.datasrc.data['dm'][0][zind*self.xsize*self.ysize:
+                                           (zind+1)*self.xsize*self.ysize]
             min_val, max_val = get_min_max(d, self.cbdelta)
             self.cmap.low = min_val
             self.cmap.high = max_val
@@ -277,6 +293,5 @@ class ColourMap(Column):
         Callback for use with e.g. sliders.
         '''
 
-        self.changed(new)
-        self.update_cbar()
+        self.update_cbar(new)
         self.update_title(new)

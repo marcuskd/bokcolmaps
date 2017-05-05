@@ -36,7 +36,7 @@ class ColourMapLP(Row):
     lpds = Instance(ColumnDataSource)
     cmxlab = String
     cmylab = String
-    js_code = String
+    js_hover = String
 
     def __init__(self, x, y, z, dm, **kwargs):
 
@@ -75,7 +75,7 @@ class ColourMapLP(Row):
 
         # Custom hover tool to render profile at cursor position in line plot
 
-        self.js_code = self.cmplot.js_code + '''
+        self.js_hover = self.cmplot.js_hover + '''
         var lpdata = lpsrc.get('data');
 
         if ((xind < x.length) && (yind < y.length)) {
@@ -87,15 +87,13 @@ class ColourMapLP(Row):
                 lx[i] = dm[zind + i*skip];
             }
 
-            lpdata['x'] = lx;
-            lpsrc.set('data',lpdata);
             lpsrc.trigger('change');
         }
         '''
 
         cjs = CustomJS(args={'datasrc': self.cmplot.datasrc,
                              'lpsrc': self.lpds},
-                       code=self.js_code)
+                       code=self.js_hover)
         if hoverdisp:
             htool = HoverTool(tooltips=[(xlab, '@xp{0.00}'),
                                         (ylab, '@yp{0.00}'),
