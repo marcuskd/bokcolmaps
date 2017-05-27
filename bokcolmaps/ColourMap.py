@@ -227,7 +227,8 @@ class ColourMap(Column):
         self.plot.yaxis.axis_label_text_font_size = '10pt'
         self.plot.yaxis.axis_label_text_font_style = 'bold'
 
-        self.generate_colorbar(cbarwidth=round(width/20))
+        self.cbar = generate_colourbar(self.cmap, cbarwidth=round(height/20))
+        self.plot.add_layout(self.cbar, 'below')
 
         self.children.append(self.plot)
 
@@ -249,14 +250,6 @@ class ColourMap(Column):
             self.cmap = LinearColorMapper(palette=palette)
         self.cmap.low = min_val
         self.cmap.high = max_val
-
-    def generate_colorbar(self, cbarwidth=25):
-        '''
-        Generate the colourbar
-        '''
-
-        self.cbar = generate_colourbar(self.cmap, cbarwidth)
-        self.plot.add_layout(self.cbar, 'below')
 
     def read_cmap(self, fname):
 

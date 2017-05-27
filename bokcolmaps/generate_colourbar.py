@@ -4,7 +4,7 @@ from bokeh.models import ColorBar
 from bokeh.models.tickers import AdaptiveTicker
 
 
-def generate_colourbar(cmap, cbarwidth):
+def generate_colourbar(cmap, cbarwidth=25):
 
     '''Generate a colourbar for the the ColourMap and SpotPlot classes'''
 
