@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name = 'bokcolmaps',
-      version = '0.2.1',
+      version = '0.3.0',
       description = 'Colourmap plots based on the Bokeh visualisation library',
       author = 'Systems Engineering & Assessment Ltd.',
       author_email = 'Marcus.Donnelly@sea.co.uk',
@@ -19,9 +19,9 @@ setup(name = 'bokcolmaps',
                   '3D Plot'
                   ],
       packages = find_packages(),
-      install_requires = ['numpy >= 1.12',
-                          'tornado == 4.4.2',
-                          'bokeh >= 0.12.5'
+      install_requires = ['numpy >= 1.13',
+                          'tornado >= 4.5',
+                          'bokeh >= 0.12.6'
                           ],
       package_data = {'bokcolmaps':['jet.txt'],
                       },

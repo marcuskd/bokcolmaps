@@ -109,32 +109,6 @@ class ColourMap(Column):
                                               'image': [d], 'dm': [dm],
                                               'xp': [0], 'yp': [0], 'dp': [0]})
 
-        # JS code for slider in classes ColourMapSlider
-        # and ColourMapLPSlider
-
-        js_slider = '''
-        var dind = cb_obj['value'];
-        var data = datasrc.get('data');
-
-        var x = data['x'][0];
-        var y = data['y'][0];
-        var d = data['image'][0];
-        var dm = data['dm'][0];
-
-        var nx = x.length;
-        var ny = y.length;
-
-        var sind = dind*nx*ny;
-        for (i=0; i<nx*ny; i++) {
-            d[i] = dm[sind+i];
-        }
-
-        datasrc.trigger('change');
-        '''
-
-        self.cjs_slider = CustomJS(args={'datasrc': self.datasrc},
-                                   code=js_slider)
-
         self.get_cmap(cfile, palette)
 
         if xran is None:  # Default to whole range unless externally controlled
@@ -259,6 +233,17 @@ class ColourMap(Column):
 
         self.cvals = read_colourmap(fname)
 
+    def change_slice(self, zind):
+
+        '''
+        Change the 2D slice of D being displayed (i.e. a different value of z)
+        '''
+
+        if (self.zsize > 1) and (zind >= 0) and (zind < self.zsize):
+            zindl = zind*self.xsize*self.ysize
+            dms = self.datasrc.data['dm'][0][zindl:zindl+self.xsize*self.ysize]
+            self.datasrc.patch({'image': [(0, dms)]})
+
     def update_cbar(self, zind):
 
         '''
@@ -286,5 +271,6 @@ class ColourMap(Column):
         Callback for use with e.g. sliders.
         '''
 
+        self.change_slice(new)
         self.update_cbar(new)
         self.update_title(new)

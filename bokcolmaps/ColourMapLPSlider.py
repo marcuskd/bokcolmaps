@@ -52,8 +52,7 @@ class ColourMapLPSlider(Column):
                                   revz=revz, hoverdisp=hoverdisp)
 
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size-1,
-                              step=1, value=0, orientation='horizontal',
-                              callback=self.cmaplp.cmplot.cjs_slider)
+                              step=1, value=0, orientation='horizontal')
 
         self.zslider.on_change('value', self.cmaplp.cmplot.input_change)
 
