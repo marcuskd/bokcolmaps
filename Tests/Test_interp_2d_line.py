@@ -16,7 +16,7 @@ class Test_interp_2d_line(unittest.TestCase):
         c_i = numpy.array([[0.25, 2.75]])
         f_i_ref = 5.75
 
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertEqual(f_i[0], f_i_ref)
 
     def test_single_2d_dec(self):
@@ -28,7 +28,7 @@ class Test_interp_2d_line(unittest.TestCase):
         c_i = numpy.array([[0.25, 2.75]])
         f_i_ref = 5.25
 
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertEqual(f_i[0], f_i_ref)
 
     def test_single_2d_inc_dec(self):
@@ -40,7 +40,7 @@ class Test_interp_2d_line(unittest.TestCase):
         c_i = numpy.array([[0.75, 2.25]])
         f_i_ref = 6.25
 
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertEqual(f_i[0], f_i_ref)
 
     def test_single_2d_dec_inc(self):
@@ -52,7 +52,7 @@ class Test_interp_2d_line(unittest.TestCase):
         c_i = numpy.array([[0.75, 2.25]])
         f_i_ref = 4.75
 
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertEqual(f_i[0], f_i_ref)
 
     def test_single_2d_inc_dec_neg_vals(self):
@@ -64,7 +64,7 @@ class Test_interp_2d_line(unittest.TestCase):
         c_i = numpy.array([[0.75, 2.25]])
         f_i_ref = -6.25
 
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertEqual(f_i[0], f_i_ref)
 
     def test_single_2d_dec_inc_neg_vals_axes(self):
@@ -76,7 +76,7 @@ class Test_interp_2d_line(unittest.TestCase):
         c_i = numpy.array([[-0.75, -2.25]])
         f_i_ref = -4.75
 
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertEqual(f_i[0], f_i_ref)
 
     def test_2by2_2d_inside(self):
@@ -89,7 +89,7 @@ class Test_interp_2d_line(unittest.TestCase):
                            [0.5, 2.75]])
         f_i_ref = numpy.array([5.25, 6])
 
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertTrue(numpy.array_equal(f_i, f_i_ref))
 
     def test_2by3_2d_outside(self):
@@ -102,7 +102,7 @@ class Test_interp_2d_line(unittest.TestCase):
                            [0.5, 2.75]])
         f_i_ref = numpy.array([5.25, 6])
 
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertTrue(numpy.array_equal(f_i, f_i_ref))
 
     def test_3by3_3d(self):
@@ -125,7 +125,7 @@ class Test_interp_2d_line(unittest.TestCase):
         f_i_ref = numpy.zeros([5, 2])
         f_i_ref[:, 0] = seq + 0.75
         f_i_ref[:, 1] = seq + 2.25
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertTrue(numpy.array_equal(f_i, f_i_ref))
 
     def test_4by4_3d(self):
@@ -155,7 +155,7 @@ class Test_interp_2d_line(unittest.TestCase):
         f_i_ref = numpy.zeros([5, 2])
         f_i_ref[:, 0] = seq + 0.75
         f_i_ref[:, 1] = seq + 3.75
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertTrue(numpy.array_equal(f_i, f_i_ref))
 
     def test_4by4_3d_not_aligned_inc(self):
@@ -185,7 +185,7 @@ class Test_interp_2d_line(unittest.TestCase):
         f_i_ref = numpy.zeros([5, 2])
         f_i_ref[:, 0] = seq + 3.75
         f_i_ref[:, 1] = seq + 0.75
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertTrue(numpy.array_equal(f_i, f_i_ref))
 
     def test_4by4_3d_not_aligned_dec(self):
@@ -220,7 +220,7 @@ class Test_interp_2d_line(unittest.TestCase):
         f_i_ref = numpy.zeros([5, 2])
         f_i_ref[:, 0] = seq + 0.75
         f_i_ref[:, 1] = seq + 3.75
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertTrue(numpy.array_equal(f_i, f_i_ref))
 
     def test_3by3_3d_neg_vals_yaxes(self):
@@ -245,7 +245,7 @@ class Test_interp_2d_line(unittest.TestCase):
         f_i_ref[:, 0] = seq
         f_i_ref[:, 1] = seq - 1.75
         f_i_ref[:, 2] = seq - 1.25
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertTrue(numpy.array_equal(f_i, f_i_ref))
 
     def test_single_2d_invalid(self):
@@ -256,7 +256,7 @@ class Test_interp_2d_line(unittest.TestCase):
                          [5, 7]])
         c_i = numpy.array([[1.25, 2.75]])
 
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertTrue(numpy.isnan(f_i[0]))
 
     def test_3by3_3d_invalid(self):
@@ -266,7 +266,7 @@ class Test_interp_2d_line(unittest.TestCase):
         f = numpy.random.rand(5, 3, 3)
         c_i = numpy.array([[0.25, 3.00001],
                            [-1, 2.25]])
-        f_i = interp_2d_line(x, y, f, c_i)
+        f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertTrue(numpy.all(numpy.isnan(f_i)))
 
 if __name__ == "__main__":

@@ -116,7 +116,7 @@ class ColourMap(Column):
         if yran is None:
             yran = Range1d(start=y[0], end=y[-1])
 
-        ptools = ['reset,pan,resize,wheel_zoom,box_zoom,save']
+        ptools = ['reset,pan,wheel_zoom,box_zoom,save']
 
         # JS code defined whether or not hover tool used as may be needed in
         # class ColourMapLP

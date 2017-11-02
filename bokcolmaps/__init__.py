@@ -6,3 +6,4 @@ from .SpotPlot import SpotPlot
 from .SpotPlotLP import SpotPlotLP
 from .SpotPlotSlider import SpotPlotSlider
 from .SpotPlotLPSlider import SpotPlotLPSlider
+from .CMSlicer import CMSlicer

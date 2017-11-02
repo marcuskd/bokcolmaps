@@ -106,7 +106,7 @@ class ColourMapLP(Row):
 
         self.lplot = Figure(x_axis_label=dmlab, y_axis_label=zlab,
                             plot_height=lpheight, plot_width=lpwidth,
-                            tools=['reset,pan,resize,wheel_zoom,box_zoom,save'],
+                            tools=['reset,pan,wheel_zoom,box_zoom,save'],
                             toolbar_location='right')
 
         if revz:

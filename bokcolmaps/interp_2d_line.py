@@ -1,9 +1,10 @@
 '''interp_2d_line function definition'''
 
 import numpy
+from .interp_data import interp_data
 
 
-def interp_2d_line(x, y, f, c_i):
+def interp_2d_line(x, y, f, c_i, z=None, ax_int=None):
 
     '''
     Performs 2D linear interpolation from a grid along a line.
@@ -22,11 +23,18 @@ def interp_2d_line(x, y, f, c_i):
     Both columns of c_i can be non-uniform but must be ordered in the same
         sense as x and y respectively for optimum speed. If not, the
         interpolation will still work but will be slower.
+    ---------
+    kwargs...
+    ---------
+    z is the 1D axis array for the first dimension of f. If z is None or
+    f is 2D, interpolation over z will not be performed.
+    ax_int is the interval for interpolation over z. If equal to None,
+    the minimum interval in z will be used for interpolation.
     ----------
     returns...
     ----------
-    f_i, Numpy 2D array with dimensions (N, M) if f is a 3D array, otherwise
-        1D array, length M.
+    f_i, Numpy 2D array with dimensions (I, M) if f is a 3D array, otherwise
+        1D array, length M.  I = N if ax_int is None.
     '''
 
     #  Check inputs
@@ -39,6 +47,8 @@ def interp_2d_line(x, y, f, c_i):
     is3d = False
     if len(fdims) == 3:
         is3d = True
+        if (z is not None) and (z.size != fdims[0]):
+            raise ValueError('Length of z not equal to length of first dimension in f')
         nz = fdims[0]
         check_dims = fdims[1:]
         out_dims = (nz, nc)
@@ -149,4 +159,9 @@ def interp_2d_line(x, y, f, c_i):
 
         cn += 1
 
-    return f_i
+    if z is not None:
+        _, z_i, f_i = interp_data(numpy.arange(nc), z, f_i)
+    else:
+        z_i = z
+
+    return f_i, z_i
