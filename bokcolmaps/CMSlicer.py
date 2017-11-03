@@ -82,7 +82,7 @@ class CMSlicer(Row):
         self.sl_src = ColumnDataSource(data={'x': [x0, x1], 'y': [y0, y1]})
 
         self.lr = cmap.line('x', 'y', source=self.sl_src, line_color='white',
-                            line_width=5, line_dash='dashed', line_alpha=0.8)
+                            line_width=5, line_dash='dashed', line_alpha=1)
 
         self.children.append(self.cmap_lps)
         self.children.append(Column(children=[Div(text='', width=cmwidth,
@@ -98,7 +98,8 @@ class CMSlicer(Row):
                                                   'rmin': [rmin],
                                                   'rmax': [rmax],
                                                   'xran': [xran],
-                                                  'yran': [yran]})
+                                                  'yran': [yran],
+                                                  'revy': [revz]})
         self.change_slice()
 
         self.is_selecting = False
@@ -130,10 +131,15 @@ class CMSlicer(Row):
 
         r_i = numpy.sqrt((x_i - x_i[0])**2 + (y_i - y_i[0])**2)
 
+        revy = self.cmap_params.data['revy']
+        if revy:
+            z_i = numpy.flipud(z_i)
+            dm_i = numpy.flipud(dm_i)
+
         cmap = ColourMap(r_i, z_i, [0], dm_i,
                          palette=self.cmap_params.data['palette'][0],
                          cfile=self.cmap_params.data['cfile'][0],
-                         xlab=' ', ylab=self.cmap_params.data['zlab'][0],
+                         xlab='Units', ylab=self.cmap_params.data['zlab'][0],
                          dmlab=self.cmap_params.data['dmlab'][0],
                          height=self.cmap_params.data['cmheight'][0],
                          width=self.cmap_params.data['cmwidth'][0],
@@ -141,6 +147,7 @@ class CMSlicer(Row):
                          rmax=self.cmap_params.data['rmax'][0],
                          xran=self.cmap_params.data['xran'][0],
                          yran=self.cmap_params.data['yran'][0])
+
         self.children[1].children[1] = cmap
 
     def toggle_select(self, event):
