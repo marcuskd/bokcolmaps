@@ -24,14 +24,15 @@ class CMSlicer(Row):
     '''
     A ColourMapLPSlider with the ability to slice the plot with a line
     through the x-y plane which gives the profile against z along the line
-    as a separate ColourMap.
+    as a separate ColourMap. For 2D input data, creates a ColourMap and
+    the slice is a line plot.
     '''
 
     __view_model__ = "Row"
     __subtype__ = "CMSlicer"
 
-    cmap_lps = Instance(ColourMapLPSlider)
-    cmap = Instance(ColourMap)
+    cmap2D = Instance(ColourMap)
+    cmap3D = Instance(ColourMapLPSlider)
     cm_src = Instance(ColumnDataSource)
     sl_src = Instance(ColumnDataSource)
     cmap_params = Instance(ColumnDataSource)
@@ -42,6 +43,7 @@ class CMSlicer(Row):
     ystart = Float
     yend = Float
     is_selecting = Bool
+    is_3d = Bool
 
     def __init__(self, x, y, z, dm, **kwargs):
 
@@ -64,29 +66,47 @@ class CMSlicer(Row):
         self.height = cmheight
         self.width = int((2*cmwidth + lpwidth)*1.1)
 
-        self.cmap_lps = ColourMapLPSlider(x, y, z, dm, palette=palette,
-                                          cfile=cfile, xlab=xlab, ylab=ylab,
-                                          zlab=zlab, dmlab=dmlab,
-                                          cmheight=cmheight, cmwidth=cmwidth,
-                                          lpheight=lpheight, lpwidth=lpwidth,
-                                          rmin=rmin, rmax=rmax, xran=xran,
-                                          yran=yran, revz=revz,
-                                          hoverdisp=hoverdisp)
+        self.is_3d = True
+        if len(dm.shape) == 2:
+            self.is_3d = False
 
-        cmap = self.cmap_lps.cmaplp.cmplot.plot
-        cmap.on_event(Tap, self.toggle_select)
+        if self.is_3d:
+            self.cmap3D = ColourMapLPSlider(x, y, z, dm, palette=palette,
+                                            cfile=cfile, xlab=xlab, ylab=ylab,
+                                            zlab=zlab, dmlab=dmlab,
+                                            cmheight=cmheight, cmwidth=cmwidth,
+                                            lpheight=lpheight, lpwidth=lpwidth,
+                                            rmin=rmin, rmax=rmax, xran=xran,
+                                            yran=yran, revz=revz,
+                                            hoverdisp=hoverdisp)
+            iplot = self.cmap3D.cmaplp.cmplot.plot
+        else:
+            self.cmap2D = ColourMap(x, y, z, dm, palette=palette,
+                                    cfile=cfile, xlab=xlab, ylab=ylab,
+                                    zlab=zlab, dmlab=dmlab,
+                                    height=cmheight, width=cmwidth,
+                                    rmin=rmin, rmax=rmax, xran=xran, yran=yran)
+            iplot = self.cmap2D.plot
+
+        iplot.on_event(Tap, self.toggle_select)
 
         x0, x1 = x[0], x[-1]
         ymean = (y[0] + y[-1])/2
         y0, y1 = ymean, ymean
         self.sl_src = ColumnDataSource(data={'x': [x0, x1], 'y': [y0, y1]})
 
-        self.lr = cmap.line('x', 'y', source=self.sl_src, line_color='white',
-                            line_width=5, line_dash='dashed', line_alpha=1)
+        self.lr = iplot.line('x', 'y', source=self.sl_src, line_color='white',
+                             line_width=5, line_dash='dashed', line_alpha=1)
 
-        self.children.append(self.cmap_lps)
+        if self.is_3d:
+            self.children.append(self.cmap3D)
+            divh = 35
+        else:
+            self.children.append(self.cmap2D)
+            divh = 0
+
         self.children.append(Column(children=[Div(text='', width=cmwidth,
-                                                  height=35),
+                                                  height=divh),
                                               Figure(toolbar_location=None)]))
 
         self.cmap_params = ColumnDataSource(data={'palette': [palette],
@@ -106,12 +126,20 @@ class CMSlicer(Row):
 
     def change_slice(self):
 
-        datasrc = self.cmap_lps.cmaplp.cmplot.datasrc
+        if self.is_3d:
+            datasrc = self.cmap3D.cmaplp.cmplot.datasrc
+        else:
+            datasrc = self.cmap2D.datasrc
+
         x = datasrc.data['x'][0]
         y = datasrc.data['y'][0]
         z = datasrc.data['z'][0]
         dm = datasrc.data['dm'][0].copy()
-        dm = numpy.reshape(dm, [z.size, y.size, x.size])
+
+        if self.is_3d:
+            dm = numpy.reshape(dm, [z.size, y.size, x.size])
+        else:
+            dm = numpy.reshape(dm, [y.size, x.size])
 
         dx = numpy.min(numpy.abs(numpy.diff(x)))
         dy = numpy.min(numpy.abs(numpy.diff(y)))
@@ -131,24 +159,39 @@ class CMSlicer(Row):
 
         r_i = numpy.sqrt((x_i - x_i[0])**2 + (y_i - y_i[0])**2)
 
-        revy = self.cmap_params.data['revy']
-        if revy:
-            z_i = numpy.flipud(z_i)
-            dm_i = numpy.flipud(dm_i)
+        if self.is_3d:
 
-        cmap = ColourMap(r_i, z_i, [0], dm_i,
-                         palette=self.cmap_params.data['palette'][0],
-                         cfile=self.cmap_params.data['cfile'][0],
-                         xlab='Units', ylab=self.cmap_params.data['zlab'][0],
-                         dmlab=self.cmap_params.data['dmlab'][0],
-                         height=self.cmap_params.data['cmheight'][0],
-                         width=self.cmap_params.data['cmwidth'][0],
-                         rmin=self.cmap_params.data['rmin'][0],
-                         rmax=self.cmap_params.data['rmax'][0],
-                         xran=self.cmap_params.data['xran'][0],
-                         yran=self.cmap_params.data['yran'][0])
+            revy = self.cmap_params.data['revy'][0]
+            if revy:
+                z_i = numpy.flipud(z_i)
+                dm_i = numpy.flipud(dm_i)
 
-        self.children[1].children[1] = cmap
+            iplot = ColourMap(r_i, z_i, [0], dm_i,
+                              palette=self.cmap_params.data['palette'][0],
+                              cfile=self.cmap_params.data['cfile'][0],
+                              xlab='Units',
+                              ylab=self.cmap_params.data['zlab'][0],
+                              dmlab=self.cmap_params.data['dmlab'][0],
+                              height=self.cmap_params.data['cmheight'][0],
+                              width=self.cmap_params.data['cmwidth'][0],
+                              rmin=self.cmap_params.data['rmin'][0],
+                              rmax=self.cmap_params.data['rmax'][0],
+                              xran=self.cmap_params.data['xran'][0],
+                              yran=self.cmap_params.data['yran'][0])
+
+        else:
+
+            iplot = Figure(x_axis_label='Units',
+                           y_axis_label=self.cmap_params.data['zlab'][0],
+                           x_range=self.cmap_params.data['xran'][0],
+                           y_range=self.cmap_params.data['yran'][0],
+                           plot_height=self.cmap_params.data['cmheight'][0],
+                           plot_width=self.cmap_params.data['cmwidth'][0],
+                           toolbar_location='right')
+            iplot.line(r_i, dm_i, line_color='blue',
+                       line_width=2, line_alpha=1)
+
+        self.children[1].children[1] = iplot
 
     def toggle_select(self, event):
 
@@ -157,8 +200,12 @@ class CMSlicer(Row):
             self.is_selecting = False
             self.sl_src.data['x'][1] = event.x
             self.sl_src.data['y'][1] = event.y
-            self.cmap_lps.cmaplp.cmplot.plot.renderers.remove(self.lr)
-            self.cmap_lps.cmaplp.cmplot.plot.renderers.append(self.lr)
+            if self.is_3d:
+                cmap = self.cmap3D.cmaplp.cmplot.plot
+            else:
+                cmap = self.cmap2D.plot
+            cmap.renderers.remove(self.lr)
+            cmap.renderers.append(self.lr)
             self.change_slice()
 
         else:

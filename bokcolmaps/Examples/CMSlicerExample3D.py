@@ -1,6 +1,6 @@
 ''' This class needs the Bokeh server,
 i.e. to run this example at the command line enter:
-bokeh serve --show CMSlicerExample.py
+bokeh serve --show CMSlicerExample3D.py
 '''
 
 from bokeh.io import curdoc
