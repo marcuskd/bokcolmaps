@@ -117,8 +117,6 @@ class CMSlicer(Row):
                                                   'cmwidth': [cmwidth],
                                                   'rmin': [rmin],
                                                   'rmax': [rmax],
-                                                  'xran': [xran],
-                                                  'yran': [yran],
                                                   'revy': [revz]})
         self.change_slice()
 
@@ -175,16 +173,12 @@ class CMSlicer(Row):
                               height=self.cmap_params.data['cmheight'][0],
                               width=self.cmap_params.data['cmwidth'][0],
                               rmin=self.cmap_params.data['rmin'][0],
-                              rmax=self.cmap_params.data['rmax'][0],
-                              xran=self.cmap_params.data['xran'][0],
-                              yran=self.cmap_params.data['yran'][0])
+                              rmax=self.cmap_params.data['rmax'][0])
 
         else:
 
             iplot = Figure(x_axis_label='Units',
                            y_axis_label=self.cmap_params.data['zlab'][0],
-                           x_range=self.cmap_params.data['xran'][0],
-                           y_range=self.cmap_params.data['yran'][0],
                            plot_height=self.cmap_params.data['cmheight'][0],
                            plot_width=self.cmap_params.data['cmwidth'][0],
                            toolbar_location='right')
