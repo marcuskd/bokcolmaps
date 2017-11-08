@@ -86,14 +86,14 @@ def interp_data(x_t, y_t, data_t, nu_tol=0,
         ax_neg = False
 
     if interp_auto:
-        if ax_int is None:
-            ax_int = numpy.min(numpy.abs(numpy.diff(ax_v)))
-        n_pts = int(numpy.round((ax_v[-1] - ax_v[0])/ax_int)) + 1
-        ax_v_i = numpy.linspace(ax_v[0], ax_v[-1], n_pts)
-        ax_int = ax_v_i[1] - ax_v_i[0]
+        ax_int = numpy.min(numpy.abs(numpy.diff(ax_v)))
         if stat_box is not None:
             stat_box.text = '<font color="blue">No interval specified: interpolating \
             using minimum available interval...</font>'
+
+    n_pts = int(numpy.round((ax_v[-1] - ax_v[0])/ax_int)) + 1
+    ax_v_i = numpy.linspace(ax_v[0], ax_v[-1], n_pts)
+    ax_int = ax_v_i[1] - ax_v_i[0]
 
     if interp_int_box is not None:
         interp_int_box.value = str(ax_int)
