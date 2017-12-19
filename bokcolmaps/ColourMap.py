@@ -123,7 +123,7 @@ class ColourMap(Column):
 
         self.js_hover = '''
         var geom = cb_data['geometry'];
-        var data = datasrc.get('data');
+        var data = datasrc.data;
 
         var hx = geom.x;
         var hy = geom.y;

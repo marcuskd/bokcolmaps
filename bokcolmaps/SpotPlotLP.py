@@ -61,7 +61,7 @@ class SpotPlotLP(Row):
         var inds = cb_obj.get('selected')['1d'].indices;
         if (inds.length > 0) {
             var ind = inds[0];
-            var data = source.get('data');
+            var data = source.data;
             var x = data['x'];
             var y = data['y'];
             dm = data['dm'];
@@ -69,7 +69,7 @@ class SpotPlotLP(Row):
             for (i = 0; i < y.length; i++) {
                 x[i] = dm[ind + i*skip];
             }
-            source.trigger('change');
+            source.change.emit();
         }
         '''
 
@@ -83,7 +83,7 @@ class SpotPlotLP(Row):
 
         self.lplot = Figure(x_axis_label=dmlab, y_axis_label=zlab,
                             plot_height=lpheight, plot_width=lpwidth,
-                            tools=["reset,pan,resize,wheel_zoom,box_zoom,save"],
+                            tools=["reset,pan,wheel_zoom,box_zoom,save"],
                             toolbar_location='right')
 
         self.lplot.line('x', 'y', source=self.lpds, line_color='blue',

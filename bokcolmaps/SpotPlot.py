@@ -112,7 +112,7 @@ class SpotPlot(Column):
         self.datasrc = ColumnDataSource(data={'z': [z], 'd': [d], 'dm': [dm]})
         self.coldatasrc = ColumnDataSource(data={'x': x, 'y': y, 'cols': cols})
 
-        ptools = ["reset,pan,resize,wheel_zoom,box_zoom,save"]
+        ptools = ["reset,pan,wheel_zoom,box_zoom,save"]
         if ttool is not None:
             ptools.append(ttool)
 

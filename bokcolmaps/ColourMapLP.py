@@ -76,7 +76,7 @@ class ColourMapLP(Row):
         # Custom hover tool to render profile at cursor position in line plot
 
         self.js_hover = self.cmplot.js_hover + '''
-        var lpdata = lpsrc.get('data');
+        var lpdata = lpsrc.data;
 
         if ((xind < x.length) && (yind < y.length)) {
             var dm = data['dm'][0];
@@ -87,7 +87,7 @@ class ColourMapLP(Row):
                 lx[i] = dm[zind + i*skip];
             }
 
-            lpsrc.trigger('change');
+            lpsrc.change.emit();
         }
         '''
 
