@@ -176,12 +176,16 @@ class ColourMap(Column):
         # correspond to the centres of rectangles
 
         xs = xran.start
-        if xran.end > xran.start:
+        if xs is None:
+            xs = 0
+        elif xran.end > xran.start:
             xs -= dx/2
         else:
             xs += dx/2
         ys = yran.start
-        if yran.end > yran.start:
+        if ys is None:
+            ys = 0
+        elif yran.end > yran.start:
             ys -= dy/2
         else:
             ys += dy/2
