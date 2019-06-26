@@ -9,6 +9,7 @@ from bokeh.events import Tap
 from bokeh.core.properties import Instance, Float, Bool
 from bokeh.plotting import Figure
 from bokeh.models.renderers import GlyphRenderer
+from bokeh.models.glyphs import Line
 
 from .ColourMapLPSlider import ColourMapLPSlider
 from .ColourMap import ColourMap
@@ -64,7 +65,7 @@ class CMSlicer(Row):
         super().__init__()
 
         self.height = cmheight
-        self.width = int((2*cmwidth + lpwidth)*1.1)
+        self.width = int((2 * cmwidth + lpwidth) * 1.1)
 
         self.is_3d = True
         if len(dm.shape) == 2:
@@ -91,12 +92,9 @@ class CMSlicer(Row):
         iplot.on_event(Tap, self.toggle_select)
 
         x0, x1 = x[0], x[-1]
-        ymean = (y[0] + y[-1])/2
+        ymean = (y[0] + y[-1]) / 2
         y0, y1 = ymean, ymean
         self.sl_src = ColumnDataSource(data={'x': [x0, x1], 'y': [y0, y1]})
-
-        self.lr = iplot.line('x', 'y', source=self.sl_src, line_color='white',
-                             line_width=5, line_dash='dashed', line_alpha=1)
 
         if self.is_3d:
             self.children.append(self.cmap3D)
@@ -121,6 +119,7 @@ class CMSlicer(Row):
         self.change_slice()
 
         self.is_selecting = False
+        self.lr = None
 
     def change_slice(self):
 
@@ -145,8 +144,8 @@ class CMSlicer(Row):
         x0, x1 = self.sl_src.data['x'][0], self.sl_src.data['x'][1]
         y0, y1 = self.sl_src.data['y'][0], self.sl_src.data['y'][1]
 
-        nx = int(numpy.floor(numpy.abs(x1 - x0)/dx)) + 1
-        ny = int(numpy.floor(numpy.abs(y1 - y0)/dy)) + 1
+        nx = int(numpy.floor(numpy.abs(x1 - x0) / dx)) + 1
+        ny = int(numpy.floor(numpy.abs(y1 - y0) / dy)) + 1
         nc = numpy.max([nx, ny])
 
         x_i = numpy.linspace(x0, x1, nc)
@@ -198,8 +197,10 @@ class CMSlicer(Row):
                 cmap = self.cmap3D.cmaplp.cmplot.plot
             else:
                 cmap = self.cmap2D.plot
-            cmap.renderers.remove(self.lr)
-            cmap.renderers.append(self.lr)
+            if self.lr is not None:
+                cmap.renderers.remove(self.lr)
+            self.lr = cmap.add_glyph(self.sl_src, glyph=Line(x='x', y='y', line_color='white',
+                                                             line_width=5, line_dash='dashed', line_alpha=1))
             self.change_slice()
 
         else:
