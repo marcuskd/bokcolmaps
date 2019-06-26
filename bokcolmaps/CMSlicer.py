@@ -95,6 +95,8 @@ class CMSlicer(Row):
         ymean = (y[0] + y[-1]) / 2
         y0, y1 = ymean, ymean
         self.sl_src = ColumnDataSource(data={'x': [x0, x1], 'y': [y0, y1]})
+        self.lr = iplot.add_glyph(self.sl_src, glyph=Line(x='x', y='y', line_color='white',
+                                                          line_width=5, line_dash='dashed', line_alpha=1))
 
         if self.is_3d:
             self.children.append(self.cmap3D)
@@ -119,7 +121,6 @@ class CMSlicer(Row):
         self.change_slice()
 
         self.is_selecting = False
-        self.lr = None
 
     def change_slice(self):
 
@@ -193,14 +194,16 @@ class CMSlicer(Row):
             self.is_selecting = False
             self.sl_src.data['x'][1] = event.x
             self.sl_src.data['y'][1] = event.y
+
             if self.is_3d:
                 cmap = self.cmap3D.cmaplp.cmplot.plot
             else:
                 cmap = self.cmap2D.plot
-            if self.lr is not None:
-                cmap.renderers.remove(self.lr)
+
+            cmap.renderers.remove(self.lr)
             self.lr = cmap.add_glyph(self.sl_src, glyph=Line(x='x', y='y', line_color='white',
                                                              line_width=5, line_dash='dashed', line_alpha=1))
+
             self.change_slice()
 
         else:
