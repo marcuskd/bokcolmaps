@@ -132,7 +132,7 @@ class CMSlicer(Row):
         x = datasrc.data['x'][0]
         y = datasrc.data['y'][0]
         z = datasrc.data['z'][0]
-        dm = datasrc.data['dm'][0].copy()
+        dm = datasrc.data['dm'][0]
 
         if self.is_3d:
             dm = numpy.reshape(dm, [z.size, y.size, x.size])
@@ -154,6 +154,8 @@ class CMSlicer(Row):
         c_i = numpy.array(list(zip(y_i, x_i)))
 
         dm_i, z_i = interp_2d_line(y, x, dm, c_i, z=z)
+
+        dm = dm.ravel()
 
         r_i = numpy.sqrt((x_i - x_i[0])**2 + (y_i - y_i[0])**2)
 

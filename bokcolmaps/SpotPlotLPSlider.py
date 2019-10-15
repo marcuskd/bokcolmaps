@@ -41,7 +41,7 @@ class SpotPlotLPSlider(Column):
         super(SpotPlotLPSlider, self).__init__()
 
         self.height = spheight
-        self.width = int((spwidth + lpwidth)*1.1)
+        self.width = int((spwidth + lpwidth) * 1.1)
 
         self.splotlp = SpotPlotLP(x, y, z, dm, palette=palette, cfile=cfile,
                                   xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
@@ -50,7 +50,7 @@ class SpotPlotLPSlider(Column):
                                   rmin=rmin, rmax=rmax, xran=xran, yran=yran,
                                   revz=revz)
 
-        self.zslider = Slider(title=zlab + ' index', start=0, end=z.size-1,
+        self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal')
 
         self.zslider.on_change('value', self.splotlp.spplot.input_change)

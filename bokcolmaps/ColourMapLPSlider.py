@@ -42,7 +42,7 @@ class ColourMapLPSlider(Column):
         super().__init__()
 
         self.height = cmheight
-        self.width = int((cmwidth + lpwidth)*1.1)
+        self.width = int((cmwidth + lpwidth) * 1.1)
 
         self.cmaplp = ColourMapLP(x, y, z, dm, palette=palette, cfile=cfile,
                                   xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
@@ -51,7 +51,7 @@ class ColourMapLPSlider(Column):
                                   rmin=rmin, rmax=rmax, xran=xran, yran=yran,
                                   revz=revz, hoverdisp=hoverdisp)
 
-        self.zslider = Slider(title=zlab + ' index', start=0, end=z.size-1,
+        self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal')
 
         self.zslider.on_change('value', self.cmaplp.cmplot.input_change)

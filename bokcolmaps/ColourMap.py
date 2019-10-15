@@ -169,8 +169,8 @@ class ColourMap(Column):
         dx = abs(x[1] - x[0])
         dy = abs(y[1] - y[0])
 
-        pw = abs(x[-1]-x[0])+dx
-        ph = abs(y[-1]-y[0])+dy
+        pw = abs(x[-1] - x[0]) + dx
+        ph = abs(y[-1] - y[0]) + dy
 
         # The image is displayed such that x and y coordinate values
         # correspond to the centres of rectangles
@@ -179,22 +179,22 @@ class ColourMap(Column):
         if xs is None:
             xs = 0
         elif xran.end > xran.start:
-            xs -= dx/2
+            xs -= dx / 2
         else:
-            xs += dx/2
+            xs += dx / 2
         ys = yran.start
         if ys is None:
             ys = 0
         elif yran.end > yran.start:
-            ys -= dy/2
+            ys -= dy / 2
         else:
-            ys += dy/2
+            ys += dy / 2
 
         self.plot.image('image', source=self.datasrc, x=xs, y=ys,
                         dw=pw, dh=ph, color_mapper=self.cmap)
 
         # Needed for HoverTool...
-        self.plot.rect(x=(x[0]+x[-1])/2, y=(y[0]+y[-1])/2, width=pw, height=ph,
+        self.plot.rect(x=(x[0] + x[-1]) / 2, y=(y[0] + y[-1]) / 2, width=pw, height=ph,
                        line_alpha=0, fill_alpha=0, source=self.datasrc)
 
         self.plot.xaxis.axis_label_text_font = 'garamond'
@@ -205,7 +205,7 @@ class ColourMap(Column):
         self.plot.yaxis.axis_label_text_font_size = '10pt'
         self.plot.yaxis.axis_label_text_font_style = 'bold'
 
-        self.cbar = generate_colourbar(self.cmap, cbarwidth=round(height/20))
+        self.cbar = generate_colourbar(self.cmap, cbarwidth=round(height / 20))
         self.plot.add_layout(self.cbar, 'below')
 
         self.children.append(self.plot)
@@ -244,8 +244,8 @@ class ColourMap(Column):
         '''
 
         if (self.zsize > 1) and (zind >= 0) and (zind < self.zsize):
-            zindl = zind*self.xsize*self.ysize
-            dms = self.datasrc.data['dm'][0][zindl:zindl+self.xsize*self.ysize]
+            zindl = zind * self.xsize * self.ysize
+            dms = self.datasrc.data['dm'][0][zindl:zindl + self.xsize * self.ysize]
             self.datasrc.patch({'image': [(0, dms)]})
 
     def update_cbar(self, zind):
@@ -255,8 +255,8 @@ class ColourMap(Column):
         '''
 
         if self.autoscale:
-            d = self.datasrc.data['dm'][0][zind*self.xsize*self.ysize:
-                                           (zind+1)*self.xsize*self.ysize]
+            d = self.datasrc.data['dm'][0][zind * self.xsize * self.ysize:
+                                           (zind + 1) * self.xsize * self.ysize]
             min_val, max_val = get_min_max(d, self.cbdelta)
             self.cmap.low = min_val
             self.cmap.high = max_val

@@ -54,7 +54,7 @@ class SpotPlotLP(Row):
 
         super().__init__()
 
-        xi = round(x.size/2)
+        xi = round(x.size / 2)
         self.lpds = ColumnDataSource(data={'x': dm[:, xi], 'y': z, 'dm': dm})
 
         jscode = '''

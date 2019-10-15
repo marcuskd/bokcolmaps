@@ -106,9 +106,9 @@ class SpotPlot(Column):
 
         self.bg_col = 'black'
         self.nan_col = 'grey'
-        self.sp_size = int(min(height, width)/25)
+        self.sp_size = int(min(height, width) / 25)
 
-        cols = [self.nan_col]*d.size  # Initially empty
+        cols = [self.nan_col] * d.size  # Initially empty
         self.datasrc = ColumnDataSource(data={'z': [z], 'd': [d], 'dm': [dm]})
         self.coldatasrc = ColumnDataSource(data={'x': x, 'y': y, 'cols': cols})
 
@@ -154,7 +154,7 @@ class SpotPlot(Column):
 
         self.update_colours()
 
-        self.generate_colorbar(cbarwidth=round(width/20))
+        self.generate_colorbar(cbarwidth=round(width / 20))
 
         self.children.append(self.plot)
 
@@ -241,7 +241,7 @@ class SpotPlot(Column):
 
         for s in range(d.size):
             if numpy.isfinite(d[s]):
-                cind = int(round(ncols*(d[s] - min_val)/(max_val - min_val)))
+                cind = int(round(ncols * (d[s] - min_val) / (max_val - min_val)))
                 if cind < 0:
                     cind = 0
                 if cind >= ncols:

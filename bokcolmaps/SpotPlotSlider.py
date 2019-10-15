@@ -38,14 +38,14 @@ class SpotPlotSlider(Column):
         super().__init__()
 
         self.height = height
-        self.width = int(width*1.1)
+        self.width = int(width * 1.1)
 
         self.splot = SpotPlot(x, y, z, dm, palette=palette, cfile=cfile,
                               xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                               height=height, width=width, rmin=rmin,
                               rmax=rmax, xran=xran, yran=yran)
 
-        self.zslider = Slider(title='z index', start=0, end=z.size-1,
+        self.zslider = Slider(title='z index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal')
 
         self.zslider.on_change('value', self.splot.input_change)

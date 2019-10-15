@@ -64,8 +64,8 @@ class ColourMapLP(Row):
         super().__init__()
 
         # Data source for the line plot
-        xi = round(x.size/2)
-        yi = round(y.size/2)
+        xi = round(x.size / 2)
+        yi = round(y.size / 2)
         self.lpds = ColumnDataSource(data={'x': dm[:, yi, xi], 'y': z})
 
         self.cmplot = ColourMap(x, y, z, dm, palette=palette, cfile=cfile,
@@ -155,8 +155,8 @@ class ColourMapLP(Row):
 
         # Get current colourmap axes centre points
 
-        x = (self.cmplot.plot.x_range.start + self.cmplot.plot.x_range.end)/2
-        y = (self.cmplot.plot.y_range.start + self.cmplot.plot.y_range.end)/2
+        x = (self.cmplot.plot.x_range.start + self.cmplot.plot.x_range.end) / 2
+        y = (self.cmplot.plot.y_range.start + self.cmplot.plot.y_range.end) / 2
 
         # Find closet x and y indexes to centre of ranges
 
@@ -177,5 +177,5 @@ class ColourMapLP(Row):
         # Update line plot source
 
         if (xi.size > 0) and (yi.size > 0):
-            skip = xa.size*ya.size
-            self.lpds.data['x'] = ds['dm'][0][yind*xa.size + xind::skip]
+            skip = xa.size * ya.size
+            self.lpds.data['x'] = ds['dm'][0][yind * xa.size + xind::skip]

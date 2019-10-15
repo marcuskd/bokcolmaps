@@ -15,7 +15,7 @@ def read_colourmap(fname):
         valstrs = l[:-1].split(',')
         vals = []
         for s in valstrs[:-1]:
-            vals.append(round(255*float(s)))
+            vals.append(round(255 * float(s)))
         vtup = tuple(vals)
         cmap.append('#%02x%02x%02x' % vtup)  # Format as hex triple
     f.close()

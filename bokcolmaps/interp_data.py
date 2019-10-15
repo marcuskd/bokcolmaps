@@ -14,11 +14,11 @@ def interp_data(x_t, y_t, data_t, nu_tol=0,
     interp_x = interp_y = False
     if x_t.size > 1:
         dx_t = numpy.abs(numpy.diff(x_t))
-        if 100*(dx_t.max() - dx_t.min())/dx_t.mean() > nu_tol:
+        if 100 * (dx_t.max() - dx_t.min()) / dx_t.mean() > nu_tol:
             interp_x = True
     if y_t.size > 1:
         dy_t = numpy.abs(numpy.diff(y_t))
-        if 100*(dy_t.max() - dy_t.min())/dy_t.mean() > nu_tol:
+        if 100 * (dy_t.max() - dy_t.min()) / dy_t.mean() > nu_tol:
             interp_y = True
 
     if not (interp_x or interp_y):  # Nothing to do
@@ -91,7 +91,7 @@ def interp_data(x_t, y_t, data_t, nu_tol=0,
             stat_box.text = '<font color="blue">No interval specified: interpolating \
             using minimum available interval...</font>'
 
-    n_pts = int(numpy.round((ax_v[-1] - ax_v[0])/ax_int)) + 1
+    n_pts = int(numpy.round((ax_v[-1] - ax_v[0]) / ax_int)) + 1
     ax_v_i = numpy.linspace(ax_v[0], ax_v[-1], n_pts)
     ax_int = ax_v_i[1] - ax_v_i[0]
 
@@ -104,15 +104,15 @@ def interp_data(x_t, y_t, data_t, nu_tol=0,
 
     # Interpolate
 
-    nreps = int(data_t.size/ax_v.size)
+    nreps = int(data_t.size / ax_v.size)
     olen = ax_v.size
     ilen = ax_v_i.size
-    data_t = numpy.zeros(ilen*nreps)
+    data_t = numpy.zeros(ilen * nreps)
     for rep in range(nreps):
-        ostart = rep*olen
-        istart = rep*ilen
-        data_t[istart:istart+ilen] = numpy.interp(ax_v_i, ax_v,
-                                                  data_v[ostart:ostart+olen])
+        ostart = rep * olen
+        istart = rep * ilen
+        data_t[istart:istart + ilen] = numpy.interp(ax_v_i, ax_v,
+                                                    data_v[ostart:ostart + olen])
 
     # Reshape and re-transpose
 
