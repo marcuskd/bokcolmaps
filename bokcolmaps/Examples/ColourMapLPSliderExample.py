@@ -10,7 +10,7 @@ This seems to speed up the line plot updates (TBD - find out why)
 
 from bokeh.io import curdoc
 
-from bokcolmaps import ColourMapLPSlider
+from bokcolmaps.ColourMapLPSlider import ColourMapLPSlider
 from bokcolmaps.Examples import example_data
 
 x, y, z, D = example_data()

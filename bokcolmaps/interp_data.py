@@ -1,7 +1,7 @@
 '''interp_data function definition'''
 
 import numpy
-from .flip_data import flip_data
+from bokcolmaps.flip_data import flip_data
 
 
 def interp_data(x_t, y_t, data_t, nu_tol=0,

@@ -5,9 +5,9 @@ from bokeh.models.layouts import Column, WidgetBox
 
 from bokeh.core.properties import Instance
 
-from .SpotPlot import SpotPlot
+from bokcolmaps.SpotPlot import SpotPlot
 
-from .get_common_kwargs import get_common_kwargs
+from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
 class SpotPlotSlider(Column):

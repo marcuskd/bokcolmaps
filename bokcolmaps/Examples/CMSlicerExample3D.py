@@ -5,7 +5,7 @@ bokeh serve --show CMSlicerExample3D.py
 
 from bokeh.io import curdoc
 
-from bokcolmaps import CMSlicer
+from bokcolmaps.CMSlicer import CMSlicer
 from bokcolmaps.Examples import example_data
 
 x, y, z, D = example_data()

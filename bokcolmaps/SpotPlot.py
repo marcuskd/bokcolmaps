@@ -10,10 +10,10 @@ from bokeh.models.layouts import Column
 
 from bokeh.core.properties import Instance, String, Int, Float, Bool
 
-from .get_common_kwargs import get_common_kwargs
-from .generate_colourbar import generate_colourbar
-from .read_colourmap import read_colourmap
-from .get_min_max import get_min_max
+from bokcolmaps.get_common_kwargs import get_common_kwargs
+from bokcolmaps.generate_colourbar import generate_colourbar
+from bokcolmaps.read_colourmap import read_colourmap
+from bokcolmaps.get_min_max import get_min_max
 
 
 class SpotPlot(Column):

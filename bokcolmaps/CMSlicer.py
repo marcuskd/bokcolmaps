@@ -11,11 +11,11 @@ from bokeh.plotting import Figure
 from bokeh.models.renderers import GlyphRenderer
 from bokeh.models.glyphs import Line
 
-from .ColourMapLPSlider import ColourMapLPSlider
-from .ColourMap import ColourMap
+from bokcolmaps.ColourMapLPSlider import ColourMapLPSlider
+from bokcolmaps.ColourMap import ColourMap
 
-from .get_common_kwargs import get_common_kwargs
-from .interp_2d_line import interp_2d_line
+from bokcolmaps.get_common_kwargs import get_common_kwargs
+from bokcolmaps.interp_2d_line import interp_2d_line
 
 
 class CMSlicer(Row):

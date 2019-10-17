@@ -1,7 +1,7 @@
 '''interp_2d_line function definition'''
 
 import numpy
-from .interp_data import interp_data
+from bokcolmaps.interp_data import interp_data
 
 
 def interp_2d_line(x, y, f, c_i, z=None, ax_int=None):

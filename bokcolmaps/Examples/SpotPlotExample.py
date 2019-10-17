@@ -10,19 +10,19 @@ import numpy
 
 from bokeh.plotting import show
 
-from bokcolmaps import SpotPlot
+from bokcolmaps.SpotPlot import SpotPlot
 from bokcolmaps.Examples import example_data
 
 xg, yg, z, Dg = example_data()
 
 ns = 20  # Number of grid samples
 # Select random x and y coordinates
-xi = numpy.floor(numpy.random.rand(ns)*xg.size).astype(int)
-yi = numpy.floor(numpy.random.rand(ns)*yg.size).astype(int)
+xi = numpy.floor(numpy.random.rand(ns) * xg.size).astype(int)
+yi = numpy.floor(numpy.random.rand(ns) * yg.size).astype(int)
 # Set first and last points to corners of grid (makes colour mapping same as
 # for ColourMapLPSlider example)
 xi[0], yi[0] = 0, 0
-xi[-1], yi[-1] = xg.size-1, yg.size-1
+xi[-1], yi[-1] = xg.size - 1, yg.size - 1
 
 x, y = xg[xi], yg[yi]
 D = numpy.zeros(ns)

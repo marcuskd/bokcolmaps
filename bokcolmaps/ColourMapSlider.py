@@ -5,9 +5,9 @@ from bokeh.models.layouts import Column, WidgetBox
 
 from bokeh.core.properties import Instance
 
-from .ColourMap import ColourMap
+from bokcolmaps.ColourMap import ColourMap
 
-from .get_common_kwargs import get_common_kwargs
+from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
 class ColourMapSlider(Column):

@@ -11,9 +11,9 @@ from bokeh.models.widgets.markups import Paragraph
 
 from bokeh.core.properties import Instance, String
 
-from .SpotPlot import SpotPlot
+from bokcolmaps.SpotPlot import SpotPlot
 
-from .get_common_kwargs import get_common_kwargs
+from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
 class SpotPlotLP(Row):

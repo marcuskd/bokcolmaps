@@ -5,7 +5,7 @@ import numpy
 
 from bokeh.plotting import show
 
-from bokcolmaps import ColourMap
+from bokcolmaps.ColourMap import ColourMap
 from bokcolmaps.Examples import example_data
 
 x, y, z, D = example_data()

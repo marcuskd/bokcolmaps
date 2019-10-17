@@ -14,9 +14,9 @@ from bokeh.models.tools import HoverTool
 
 from bokeh.core.properties import Instance, String
 
-from .ColourMap import ColourMap
+from bokcolmaps.ColourMap import ColourMap
 
-from .get_common_kwargs import get_common_kwargs
+from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
 class ColourMapLP(Row):
