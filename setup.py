@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='bokcolmaps',
-      version='0.4.5',
+      version='0.4.6',
       description='Colourmap plots based on the Bokeh visualisation library',
       author='Systems Engineering & Assessment Ltd.',
       author_email='Marcus.Donnelly@sea.co.uk',
@@ -20,7 +20,7 @@ setup(name='bokcolmaps',
                 ],
       packages=find_packages(),
       install_requires=['numpy >= 1.13',
-                        'bokeh >= 1.2.0'
+                        'bokeh >= 1.2'
                         ],
       package_data={'bokcolmaps': ['jet.txt'],
                     },
