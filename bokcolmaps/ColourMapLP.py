@@ -49,6 +49,7 @@ class ColourMapLP(Row):
         lpwidth = kwargs.get('lpwidth', 300)
         revz = kwargs.get('revz', False)
         hoverdisp = kwargs.get('hoverdisp', True)
+        scbutton = kwargs.get('scbutton', True)
 
         '''
         All init arguments same as for ColourMap except for additional ones:
@@ -133,10 +134,12 @@ class ColourMapLP(Row):
         self.lplot.yaxis.axis_label_text_font_size = '10pt'
         self.lplot.yaxis.axis_label_text_font_style = 'bold'
 
-        self.btn = Button(label='Snap to centre')
-        self.btn.on_click(self.centre_lp)
+        self.lpcon = Column(self.lplot)
 
-        self.lpcon = Column(self.lplot, self.btn)
+        if scbutton:
+            self.btn = Button(label='Snap to centre')
+            self.btn.on_click(self.centre_lp)
+            self.lpcon.children.append(self.btn)
 
         self.children.append(self.cmplot)
         self.children.append(self.lpcon)
