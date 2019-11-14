@@ -1,16 +1,16 @@
-'''ColourMapLPSlider class definition'''
+'''ColourMap3LPSlider class definition'''
 
 from bokeh.models.widgets import Slider
 from bokeh.models.layouts import Column, WidgetBox
 
 from bokeh.core.properties import Instance
 
-from bokcolmaps.ColourMapLP import ColourMapLP
+from bokcolmaps.ColourMap3LP import ColourMap3LP
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
-class ColourMapLPSlider(Column):
+class ColourMap3LPSlider(Column):
 
     '''
     A ColourMapLP with a slider linked to the z coordinate
@@ -18,17 +18,17 @@ class ColourMapLPSlider(Column):
     '''
 
     __view_model__ = "Column"
-    __subtype__ = "ColourMapLPSlider"
+    __subtype__ = "ColourMap3LPSlider"
 
     __view_module__ = '__main__'
 
-    cmaplp = Instance(ColourMapLP)
+    cmaplp = Instance(ColourMap3LP)
     zslider = Instance(Slider)
 
     def __init__(self, x, y, z, dm, **kwargs):
 
         '''
-        All init arguments same as for ColourMapLP.
+        All init arguments same as for ColourMap3LP.
         '''
 
         palette, cfile, xlab, ylab, zlab,\
@@ -46,17 +46,17 @@ class ColourMapLPSlider(Column):
         self.height = cmheight
         self.width = int((cmwidth + lpwidth) * 1.1)
 
-        self.cmaplp = ColourMapLP(x, y, z, dm, palette=palette, cfile=cfile,
-                                  xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
-                                  cmheight=cmheight, cmwidth=cmwidth,
-                                  lpheight=lpheight, lpwidth=lpwidth,
-                                  rmin=rmin, rmax=rmax, xran=xran, yran=yran,
-                                  revz=revz, hoverdisp=hoverdisp)
+        self.cmaplp = ColourMap3LP(x, y, z, dm, palette=palette, cfile=cfile,
+                                   xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
+                                   cmheight=cmheight, cmwidth=cmwidth,
+                                   lpheight=lpheight, lpwidth=lpwidth,
+                                   rmin=rmin, rmax=rmax, xran=xran, yran=yran,
+                                   revz=revz, hoverdisp=hoverdisp)
 
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal')
 
-        self.zslider.on_change('value', self.cmaplp.cmplot.input_change)
+        self.zslider.js_on_change('value', self.cmaplp.cmplot.cjs_slider)
 
         self.children.append(WidgetBox(self.zslider, width=self.width))
         self.children.append(self.cmaplp)

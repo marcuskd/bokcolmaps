@@ -1,34 +1,34 @@
-'''ColourMapSlider class definition'''
+'''ColourMap3Slider class definition'''
 
 from bokeh.models.widgets import Slider
 from bokeh.models.layouts import Column, WidgetBox
 
 from bokeh.core.properties import Instance
 
-from bokcolmaps.ColourMap import ColourMap
+from bokcolmaps.ColourMap3 import ColourMap3
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
-class ColourMapSlider(Column):
+class ColourMap3Slider(Column):
 
     '''
-    A ColourMap with a slider linked to the z coordinate
+    A ColourMap3 with a slider linked to the z coordinate
     (i.e. the 2D slice being displayed).
     '''
 
     __view_model__ = "Column"
-    __subtype__ = "ColourMapSlider"
+    __subtype__ = "ColourMap3Slider"
 
     __view_module__ = '__main__'
 
-    cmap = Instance(ColourMap)
+    cmap = Instance(ColourMap3)
     zslider = Instance(Slider)
 
     def __init__(self, x, y, z, dm, **kwargs):
 
         '''
-        All init arguments same as for ColourMap.
+        All init arguments same as for ColourMap3.
         '''
 
         palette, cfile, xlab, ylab, zlab,\
@@ -43,15 +43,15 @@ class ColourMapSlider(Column):
         self.height = height
         self.width = int(width * 1.1)
 
-        self.cmap = ColourMap(x, y, z, dm, palette=palette, cfile=cfile,
-                              xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
-                              height=height, width=width, rmin=rmin, rmax=rmax,
-                              xran=xran, yran=yran, hover=hover)
+        self.cmap = ColourMap3(x, y, z, dm, palette=palette, cfile=cfile,
+                               xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
+                               height=height, width=width, rmin=rmin, rmax=rmax,
+                               xran=xran, yran=yran, hover=hover)
 
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal')
 
-        self.zslider.on_change('value', self.cmap.input_change)
+        self.zslider.js_on_change('value', self.cmap.cjs_slider)
 
         self.children.append(WidgetBox(self.zslider, width=self.width))
         self.children.append(self.cmap)

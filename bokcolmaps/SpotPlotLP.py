@@ -11,6 +11,8 @@ from bokeh.models.widgets.markups import Paragraph
 
 from bokeh.core.properties import Instance, String
 
+#from bokeh.events import Tap
+
 from bokcolmaps.SpotPlot import SpotPlot
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
@@ -25,6 +27,8 @@ class SpotPlotLP(Row):
 
     __view_model__ = "Row"
     __subtype__ = "SpotPlotLP"
+
+    __view_module__ = '__main__'
 
     spplot = Instance(SpotPlot)
     lpcon = Instance(Column)
@@ -58,6 +62,8 @@ class SpotPlotLP(Row):
         self.lpds = ColumnDataSource(data={'x': dm[:, xi], 'y': z, 'dm': dm})
 
         jscode = '''
+        console.log('Tap');
+        console.log(cb_data);
         var inds = cb_obj.get('selected')['1d'].indices;
         if (inds.length > 0) {
             var ind = inds[0];
@@ -75,11 +81,15 @@ class SpotPlotLP(Row):
 
         update_lp = CustomJS(args={'source': self.lpds}, code=jscode)
         ttool = TapTool(callback=update_lp)
+#        ttool.js_on_event(Tap, update_lp)
 
         self.spplot = SpotPlot(x, y, z, dm, palette=palette, cfile=cfile,
                                xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                height=spheight, width=spwidth, rmin=rmin,
+#                               rmax=rmax, xran=xran, yran=yran)
+#        self.spplot.plot.tools.append(TapTool())
                                rmax=rmax, xran=xran, yran=yran, ttool=ttool)
+#        self.spplot.plot.js_on_event(Tap, update_lp)
 
         self.lplot = Figure(x_axis_label=dmlab, y_axis_label=zlab,
                             plot_height=lpheight, plot_width=lpwidth,

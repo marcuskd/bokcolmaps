@@ -1,4 +1,4 @@
-'''ColourMapLP class definition'''
+'''ColourMap3LP class definition'''
 
 import numpy
 
@@ -14,24 +14,24 @@ from bokeh.models.tools import HoverTool
 
 from bokeh.core.properties import Instance, String
 
-from bokcolmaps.ColourMap import ColourMap
+from bokcolmaps.ColourMap3 import ColourMap3
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
-class ColourMapLP(Row):
+class ColourMap3LP(Row):
 
     '''
-    A ColourMap and a line plot of the data against z at the x and y
+    A ColourMap3 and a line plot of the data against z at the x and y
     coordinates linked to a custom hover tool.
     '''
 
     __view_model__ = 'Row'
-    __subtype__ = 'ColourMapLP'
+    __subtype__ = 'ColourMap3LP'
 
     __view_module__ = '__main__'
 
-    cmplot = Instance(ColourMap)
+    cmplot = Instance(ColourMap3)
     lpcon = Instance(Column)
     btn = Instance(Button)
     lplot = Instance(Plot)
@@ -51,7 +51,7 @@ class ColourMapLP(Row):
         lpwidth = kwargs.get('lpwidth', 300)
         revz = kwargs.get('revz', False)
         hoverdisp = kwargs.get('hoverdisp', True)
-        scbutton = kwargs.get('scbutton', True)
+        scbutton = kwargs.get('scbutton', False)
 
         '''
         All init arguments same as for ColourMap except for additional ones:
@@ -71,10 +71,10 @@ class ColourMapLP(Row):
         yi = round(y.size / 2)
         self.lpds = ColumnDataSource(data={'x': dm[:, yi, xi], 'y': z})
 
-        self.cmplot = ColourMap(x, y, z, dm, palette=palette, cfile=cfile,
-                                xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
-                                height=cmheight, width=cmwidth, rmin=rmin,
-                                rmax=rmax, xran=xran, yran=yran, hover=False)
+        self.cmplot = ColourMap3(x, y, z, dm, palette=palette, cfile=cfile,
+                                 xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
+                                 height=cmheight, width=cmwidth, rmin=rmin,
+                                 rmax=rmax, xran=xran, yran=yran, hover=False)
 
         # Custom hover tool to render profile at cursor position in line plot
 

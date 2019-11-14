@@ -20,6 +20,8 @@ class SpotPlotLPSlider(Column):
     __view_model__ = "Column"
     __subtype__ = "SpotPlotLPSlider"
 
+    __view_module__ = '__main__'
+
     splotlp = Instance(SpotPlotLP)
     zslider = Instance(Slider)
 

@@ -23,6 +23,8 @@ class SpotPlotSlider(Column):
     __view_model__ = "Column"
     __subtype__ = "SpotPlotSlider"
 
+    __view_module__ = '__main__'
+
     def __init__(self, x, y, z, dm, **kwargs):
 
         '''
