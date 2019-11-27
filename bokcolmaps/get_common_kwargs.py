@@ -1,9 +1,24 @@
-'''get_common_kwargs function definition'''
+"""
+get_common_kwargs function definition
+"""
 
 
 def get_common_kwargs(**kwargs):
 
-    '''Get common kwargs for ColourMap, SpotPlot and derived classes'''
+    """
+    Get common kwargs for the ColourMap/ColourMap3, SpotPlot and derived classes
+    kwargs...
+        palette: A Bokeh palette for the colour mapping
+        cfile: path to a file RGBA floats for palette (will be used instead of palette if not None)
+        xlab: x axis label
+        ylab: y axis label
+        zlab: z axis label
+        dmlab: data label
+        rmin: minimum value for the colour scale (no autoscaling if neither this nor rmax is None)
+        rmax: maximum value for the colour scale
+        xran: x axis range
+        yran: y axis range
+    """
 
     palette = kwargs.get('palette', 'Viridis256')
     cfile = kwargs.get('cfile', 'jet.txt')

@@ -1,4 +1,6 @@
-'''interp_2d_line function definition'''
+"""
+interp_2d_line function definition
+"""
 
 import numpy
 from bokcolmaps.interp_data import interp_data
@@ -6,36 +8,30 @@ from bokcolmaps.interp_data import interp_data
 
 def interp_2d_line(x, y, f, c_i, z=None, ax_int=None):
 
-    '''
+    """
     Performs 2D linear interpolation from a grid along a line.
-    -------
     args...
-    -------
-    f is the interpolant, a 2D or 3D Numpy array with corresponding 1D axes
-        arrays x and y along which interpolation is performed.
-    x and y can be non-uniform but must be ordered, either increasing
-        or decreasing.
-    If f is a 3D array, its dimensions are (N, x.size, y.size),
-        otherwise they are (x.size, y.size).
-    c_i is a 2D Numpy array of interpolation coordinates, size M by 2 where
-        M is the number of points. First column is x coordinates, second is
-        y coordinates.
-    Both columns of c_i can be non-uniform but must be ordered in the same
-        sense as x and y respectively for optimum speed. If not, the
-        interpolation will still work but will be slower.
-    ---------
+        f is the interpolant, a 2D or 3D Numpy array with corresponding 1D axes
+            arrays x and y along which interpolation is performed.
+        x and y can be non-uniform but must be ordered, either increasing
+            or decreasing.
+        If f is a 3D array, its dimensions are (N, x.size, y.size),
+            otherwise they are (x.size, y.size).
+        c_i is a 2D Numpy array of interpolation coordinates, size M by 2 where
+            M is the number of points. First column is x coordinates, second is
+            y coordinates.
+        Both columns of c_i can be non-uniform but must be ordered in the same
+            sense as x and y respectively for optimum speed. If not, the
+            interpolation will still work but will be slower.
     kwargs...
-    ---------
-    z is the 1D axis array for the first dimension of f. If z is None or
-    f is 2D, interpolation over z will not be performed.
-    ax_int is the interval for interpolation over z. If equal to None,
-    the minimum interval in z will be used for interpolation.
-    ----------
+        z is the 1D axis array for the first dimension of f. If z is None or
+        f is 2D, interpolation over z will not be performed.
+        ax_int is the interval for interpolation over z. If equal to None,
+        the minimum interval in z will be used for interpolation.
     returns...
-    ----------
-    f_i, Numpy 2D array with dimensions (I, M) if f is a 3D array, otherwise
-        1D array, length M.  I = N if ax_int is None.
-    '''
+        f_i, Numpy 2D array with dimensions (I, M) if f is a 3D array, otherwise
+            1D array, length M.  I = N if ax_int is None.
+    """
 
     #  Check inputs
 

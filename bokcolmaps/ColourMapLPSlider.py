@@ -1,4 +1,6 @@
-'''ColourMapLPSlider class definition'''
+"""
+ColourMapLPSlider class definition
+"""
 
 from bokeh.models.widgets import Slider
 from bokeh.models.layouts import Column, WidgetBox
@@ -12,13 +14,13 @@ from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 class ColourMapLPSlider(Column):
 
-    '''
+    """
     A ColourMapLP with a slider linked to the z coordinate
     (i.e. the 2D slice being displayed).
-    '''
+    """
 
-    __view_model__ = "Column"
-    __subtype__ = "ColourMapLPSlider"
+    __view_model__ = 'Column'
+    __subtype__ = 'ColourMapLPSlider'
 
     __view_module__ = '__main__'
 
@@ -27,9 +29,10 @@ class ColourMapLPSlider(Column):
 
     def __init__(self, x, y, z, dm, **kwargs):
 
-        '''
-        All init arguments same as for ColourMapLP.
-        '''
+        """
+        All init arguments same as for ColourMapLP (apart from scbutton flag -
+        assumed here as ColourMapLPSlider needs the Bokeh Server)
+        """
 
         palette, cfile, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)

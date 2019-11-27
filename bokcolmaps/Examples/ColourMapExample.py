@@ -1,5 +1,7 @@
-'''To run this example at the command line enter:
-python3 ColourMapExample.py'''
+"""
+To run this example at the command line enter:
+python3 ColourMapExample.py
+"""
 
 import numpy
 

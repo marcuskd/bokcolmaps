@@ -1,13 +1,17 @@
-'''read_colourmap function definition'''
+"""
+read_colourmap function definition
+"""
 
 from bokeh.models import ColumnDataSource
 
 
 def read_colourmap(fname):
 
-    '''
+    """
     Read in the colour scale.
-    '''
+    args...
+        fname: path to file containing comma separated RGBA floats
+    """
 
     f = open(fname, 'rt')
     cmap = []

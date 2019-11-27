@@ -1,4 +1,6 @@
-'''ColourMap3LPSlider class definition'''
+"""
+ColourMap3LPSlider class definition
+"""
 
 from bokeh.models.widgets import Slider
 from bokeh.models.layouts import Column, WidgetBox
@@ -12,13 +14,13 @@ from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 class ColourMap3LPSlider(Column):
 
-    '''
-    A ColourMapLP with a slider linked to the z coordinate
+    """
+    A ColourMap3LP with a slider linked to the z coordinate
     (i.e. the 2D slice being displayed).
-    '''
+    """
 
-    __view_model__ = "Column"
-    __subtype__ = "ColourMap3LPSlider"
+    __view_model__ = 'Column'
+    __subtype__ = 'ColourMap3LPSlider'
 
     __view_module__ = '__main__'
 
@@ -27,9 +29,9 @@ class ColourMap3LPSlider(Column):
 
     def __init__(self, x, y, z, dm, **kwargs):
 
-        '''
+        """
         All init arguments same as for ColourMap3LP.
-        '''
+        """
 
         palette, cfile, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
@@ -40,6 +42,7 @@ class ColourMap3LPSlider(Column):
         lpwidth = kwargs.get('lpwidth', 300)
         revz = kwargs.get('revz', False)
         hoverdisp = kwargs.get('hoverdisp', True)
+        scbutton = kwargs.get('scbutton', False)
 
         super().__init__()
 
@@ -51,7 +54,7 @@ class ColourMap3LPSlider(Column):
                                    cmheight=cmheight, cmwidth=cmwidth,
                                    lpheight=lpheight, lpwidth=lpwidth,
                                    rmin=rmin, rmax=rmax, xran=xran, yran=yran,
-                                   revz=revz, hoverdisp=hoverdisp)
+                                   revz=revz, hoverdisp=hoverdisp, scbutton=scbutton)
 
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal')

@@ -1,4 +1,6 @@
-'''interp_data function definition'''
+"""
+interp_data function definition
+"""
 
 import numpy
 from bokcolmaps.flip_data import flip_data
@@ -7,7 +9,19 @@ from bokcolmaps.flip_data import flip_data
 def interp_data(x_t, y_t, data_t, nu_tol=0,
                 stat_box=None, interp_int_box=None):
 
-    '''Uniform interpolation (if needed) for display'''
+    """
+    Conduct uniform interpolation (if needed according to tolerance).
+    args...
+        x_t: 1D NumPy array of x coordinates
+        y_t: 1D NumPy array of y coordinates
+        data_t: 2D or 3D NumPy array of data for interpolation, dimensions N (if 3D), y_t.size, x_t.size
+    kwargs...
+        nu_tol: non-uniform tolerance value
+        stat_box: handle to Bokeh Div
+        interp_int_box: handle to Bokeh TextInput
+    returns...
+        x_t, y_t, data_t: either x_t or y_t made uniform, and data_t interpolated accordingly.
+    """
 
     # Check if interpolation needed
 

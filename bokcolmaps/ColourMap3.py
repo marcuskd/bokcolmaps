@@ -1,4 +1,6 @@
-'''ColourMap3 class definition'''
+"""
+ColourMap3 class definition
+"""
 
 from bokeh.plotting import Figure
 
@@ -18,11 +20,10 @@ from bokcolmaps.get_min_max import get_min_max
 
 class ColourMap3(Column):
 
-    '''
-    Plots an image as a colour map with a user-defined colour scale and
-    creates a hover readout. The image must be on a uniform grid to be
-    rendered correctly and for the data cursor to provide correct readout.
-    '''
+    """
+    This provides the same functionality as the ColourMap class
+    without requiring the Bokeh Server (i.e. works with static HTML).
+    """
 
     __view_model__ = 'Column'
     __subtype__ = 'ColourMap3'
@@ -59,19 +60,17 @@ class ColourMap3(Column):
 
     def __init__(self, x, y, z, dm, **kwargs):
 
-        '''
-        x,y and z are 1D NumPy arrays for the 3D grid dimensions.
-        dm is a 3D NumPy array.
-        Supply a bokeh palette name or a file of RGBA floats -
-        this will be used if provided.
-        xlab,ylab,zlab,dmlab: labels for the axes and data.
-        height and width for the plot are in pixels.
-        rmin and rmax are fixed limits for the colour scale
-        (i.e. it won't autoscale if they are both not None).
-        xran and yran: ranges for the x and y axes (e.g. to link to
-        another plot).
-        hover: enable hover tool readout.
-        '''
+        """
+        args...
+            x: 1D NumPy array of x coordinates
+            y: 1D NumPy array of y coordinates
+            z: 1D NumPy array of y coordinates
+            dm: 3D NumPy array of the data for display, dimensions z.size, y.size, x.size
+        kwargs: all in get_common_kwargs plus...
+            height: plot height (pixels)
+            width: plot width (pixels)
+            hover: Boolean to enable hover tool readout
+        """
 
         palette, cfile, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
@@ -123,7 +122,7 @@ class ColourMap3(Column):
         # JS code for slider in classes ColourMap3Slider
         # and ColourMap3LPSlider
 
-        js_slider = '''
+        js_slider = """
         var dind = cb_obj['value'];
         var data = datasrc.data;
 
@@ -150,7 +149,7 @@ class ColourMap3(Column):
 
         var z = data['z'][0];
         cmplot.title.text = title_root + ', ' + zlab + ' = ' + z[dind].toString();
-        '''
+        """
 
         self.get_cmap(cfile, palette)
 
@@ -159,12 +158,12 @@ class ColourMap3(Column):
         if yran is None:
             yran = Range1d(start=y[0], end=y[-1])
 
-        ptools = ['reset,pan,wheel_zoom,box_zoom,save']
+        ptools = ['reset, pan, wheel_zoom, box_zoom, save']
 
         # JS code defined whether or not hover tool used as may be needed in
         # class ColourMapLP
 
-        self.js_hover = '''
+        self.js_hover = """
         var geom = cb_data['geometry'];
         var data = datasrc.data;
 
@@ -186,7 +185,7 @@ class ColourMap3(Column):
             var zind = yind*x.length + xind;
             data['dp'] = [d[zind]];
         }
-        '''
+        """
 
         if hover:
             cjs_hover = CustomJS(args={'datasrc': self.datasrc},
@@ -269,7 +268,9 @@ class ColourMap3(Column):
 
     def get_cmap(self, cfile, palette):
 
-        '''Get the colour mapper'''
+        """
+        Get the colour mapper
+        """
 
         if self.autoscale:
             min_val, max_val = get_min_max(self.datasrc.data['image'][0],
@@ -288,8 +289,8 @@ class ColourMap3(Column):
 
     def read_cmap(self, fname):
 
-        '''
+        """
         Read in the colour scale.
-        '''
+        """
 
         self.cvals = read_colourmap(fname)

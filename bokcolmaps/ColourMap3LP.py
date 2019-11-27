@@ -1,4 +1,6 @@
-'''ColourMap3LP class definition'''
+"""
+ColourMap3LP class definition
+"""
 
 import numpy
 
@@ -21,10 +23,10 @@ from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 class ColourMap3LP(Row):
 
-    '''
+    """
     A ColourMap3 and a line plot of the data against z at the x and y
     coordinates linked to a custom hover tool.
-    '''
+    """
 
     __view_model__ = 'Row'
     __subtype__ = 'ColourMap3LP'
@@ -42,6 +44,18 @@ class ColourMap3LP(Row):
 
     def __init__(self, x, y, z, dm, **kwargs):
 
+        """
+        All init arguments same as for ColourMap3 except for additional kwargs...
+        cmheight: ColourMap height (pixels)
+        cmwidth: ColourMap width (pixels)
+        lpheight: line plot height (pixels)
+        lpwidth: line plot width (pixels)
+        revz: reverse z axis in line plot if True
+        hoverdisp: display the hover tool readout if True
+        scbutton: create a Snap to Centre button if True (set to False if
+                  ColourMap3LP not used with Bokeh Server)
+        """
+
         palette, cfile, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
@@ -52,17 +66,6 @@ class ColourMap3LP(Row):
         revz = kwargs.get('revz', False)
         hoverdisp = kwargs.get('hoverdisp', True)
         scbutton = kwargs.get('scbutton', False)
-
-        '''
-        All init arguments same as for ColourMap except for additional ones:
-        cmheight and cmwidth correspond to height and width in ColourMap.
-        lpheight and lpwidth: line plot height and width (pixels).
-        revz: reverse z axis in line plot if True.
-        hoverdisp: display the hover tool readout if True
-        (the line plot update will work anyway).
-        NB: The readout is useful but it seems to slow down the
-        line plot update. Investigation TBD.
-        '''
 
         super().__init__()
 
@@ -78,7 +81,7 @@ class ColourMap3LP(Row):
 
         # Custom hover tool to render profile at cursor position in line plot
 
-        self.js_hover = self.cmplot.js_hover + '''
+        self.js_hover = self.cmplot.js_hover + """
         var lpdata = lpsrc.data;
 
         if ((xind < x.length) && (yind < y.length)) {
@@ -92,7 +95,7 @@ class ColourMap3LP(Row):
 
             lpsrc.change.emit();
         }
-        '''
+        """
 
         cjs = CustomJS(args={'datasrc': self.cmplot.datasrc,
                              'lpsrc': self.lpds},
@@ -109,7 +112,7 @@ class ColourMap3LP(Row):
 
         self.lplot = Figure(x_axis_label=dmlab, y_axis_label=zlab,
                             plot_height=lpheight, plot_width=lpwidth,
-                            tools=['reset,pan,wheel_zoom,box_zoom,save'],
+                            tools=['reset, pan, wheel_zoom, box_zoom, save'],
                             toolbar_location='right')
 
         if revz:
@@ -153,10 +156,10 @@ class ColourMap3LP(Row):
 
     def centre_lp(self):
 
-        '''
+        """
         When the button is clicked, update the line plot to correspond to the
         centre of the image.
-        '''
+        """
 
         # Get current colourmap axes centre points
 

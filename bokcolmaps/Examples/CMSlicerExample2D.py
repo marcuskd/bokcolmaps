@@ -1,7 +1,8 @@
-''' This class needs the Bokeh server,
+"""
+This class needs the Bokeh server,
 i.e. to run this example at the command line enter:
 bokeh serve --show CMSlicerExample2D.py
-'''
+"""
 
 import numpy
 from bokeh.io import curdoc

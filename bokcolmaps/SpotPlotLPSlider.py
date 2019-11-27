@@ -1,4 +1,6 @@
-'''SplotPlotLPSlider class definition'''
+"""
+SplotPlotLPSlider class definition
+"""
 
 from bokeh.models.widgets import Slider
 from bokeh.models.layouts import Column, WidgetBox
@@ -12,13 +14,13 @@ from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 class SpotPlotLPSlider(Column):
 
-    '''
+    """
     A SpotPlotLP with a slider linked to the z coordinate
     (i.e. the row being displayed).
-    '''
+    """
 
-    __view_model__ = "Column"
-    __subtype__ = "SpotPlotLPSlider"
+    __view_model__ = 'Column'
+    __subtype__ = 'SpotPlotLPSlider'
 
     __view_module__ = '__main__'
 
@@ -27,9 +29,9 @@ class SpotPlotLPSlider(Column):
 
     def __init__(self, x, y, z, dm, **kwargs):
 
-        '''
+        """
         All init arguments same as for SpotPlotLP.
-        '''
+        """
 
         palette, cfile, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)

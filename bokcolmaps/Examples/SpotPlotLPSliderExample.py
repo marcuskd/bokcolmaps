@@ -1,5 +1,7 @@
-'''The classes with sliders need the Bokeh server, i.e. to run this example
-at the command line enter: bokeh serve --show SpotPlotLPSliderExample.py
+"""
+The SpotPlot based classes with sliders need the Bokeh server,
+i.e. to run this example at the command line enter:
+bokeh serve --show SpotPlotLPSliderExample.py
 To use the SpotPlotSlider (i.e. without a line plot) just import and
 instantiate that instead (same init parameters)
 The example data is the 3D grid used in the ColourMapLPSlider example.
@@ -7,7 +9,8 @@ The SpotPlotLPSlider class is for 1D data sections defined at arbitrary
 x and y coordinates on a common z grid, so we'll subsample the 3D grid at a
 number of random x and y coordinates to illustrate. The first and last points
 are set to the corners of the grid. Using this approach, the spot
-colours can be directly compared with the ColourMapLPSlider example.'''
+colours can be directly compared with the ColourMapLPSlider example.
+"""
 
 import numpy
 

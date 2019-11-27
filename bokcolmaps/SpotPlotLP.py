@@ -1,4 +1,6 @@
-'''SplotPlotLP class definition'''
+"""
+SplotPlotLP class definition
+"""
 
 from bokeh.plotting import Figure
 
@@ -11,8 +13,6 @@ from bokeh.models.widgets.markups import Paragraph
 
 from bokeh.core.properties import Instance, String
 
-#from bokeh.events import Tap
-
 from bokcolmaps.SpotPlot import SpotPlot
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
@@ -20,13 +20,13 @@ from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 class SpotPlotLP(Row):
 
-    '''
+    """
     A SpotPlot and a line plot of the data against z at the x and y coordinates
     linked to a custom tap tool.
-    '''
+    """
 
-    __view_model__ = "Row"
-    __subtype__ = "SpotPlotLP"
+    __view_model__ = 'Row'
+    __subtype__ = 'SpotPlotLP'
 
     __view_module__ = '__main__'
 
@@ -40,12 +40,14 @@ class SpotPlotLP(Row):
 
     def __init__(self, x, y, z, dm, **kwargs):
 
-        '''
-        All init arguments same as for SpotPlot except for additional ones:
-        spheight and spwidth correspond to height and width in SpotPlot.
-        lpheight and lpwidth: line plot height and width (pixels).
+        """
+        All init arguments same as for SpotPlot except for additional kwargs...
+        spheight: SpotPlot height (pixels)
+        spwidth: SpotPlot width (pixels)
+        lpheight: line plot height (pixels)
+        lpwidth: line plot width (pixels)
         revz: reverse z axis in line plot if True.
-        '''
+        """
 
         palette, cfile, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
@@ -61,13 +63,11 @@ class SpotPlotLP(Row):
         xi = round(x.size / 2)
         self.lpds = ColumnDataSource(data={'x': dm[:, xi], 'y': z, 'dm': dm})
 
-        jscode = '''
-        console.log('Tap');
-        console.log(cb_data);
-        var inds = cb_obj.get('selected')['1d'].indices;
+        jscode = """
+        var inds = psource.selected.indices;
         if (inds.length > 0) {
             var ind = inds[0];
-            var data = source.data;
+            var data = dsource.data;
             var x = data['x'];
             var y = data['y'];
             dm = data['dm'];
@@ -75,25 +75,25 @@ class SpotPlotLP(Row):
             for (i = 0; i < y.length; i++) {
                 x[i] = dm[ind + i*skip];
             }
-            source.change.emit();
+            dsource.change.emit();
         }
-        '''
-
-        update_lp = CustomJS(args={'source': self.lpds}, code=jscode)
-        ttool = TapTool(callback=update_lp)
-#        ttool.js_on_event(Tap, update_lp)
+        """
 
         self.spplot = SpotPlot(x, y, z, dm, palette=palette, cfile=cfile,
                                xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                height=spheight, width=spwidth, rmin=rmin,
-#                               rmax=rmax, xran=xran, yran=yran)
-#        self.spplot.plot.tools.append(TapTool())
-                               rmax=rmax, xran=xran, yran=yran, ttool=ttool)
-#        self.spplot.plot.js_on_event(Tap, update_lp)
+                               rmax=rmax, xran=xran, yran=yran)
+
+        update_lp = CustomJS(args={'dsource': self.lpds,
+                                   'psource': self.spplot.plot.renderers[0].data_source},
+                             code=jscode)
+
+        ttool = TapTool(callback=update_lp)
+        self.spplot.plot.tools.append(ttool)
 
         self.lplot = Figure(x_axis_label=dmlab, y_axis_label=zlab,
                             plot_height=lpheight, plot_width=lpwidth,
-                            tools=["reset,pan,wheel_zoom,box_zoom,save"],
+                            tools=['reset, pan, wheel_zoom, box_zoom, save'],
                             toolbar_location='right')
 
         self.lplot.line('x', 'y', source=self.lpds, line_color='blue',
@@ -101,10 +101,14 @@ class SpotPlotLP(Row):
 
         self.lplot.y_range.start = self.lpds.data['y'].min()
         self.lplot.y_range.end = self.lpds.data['y'].max()
+
         if revz:
+
             self.lplot.y_range.start, self.lplot.y_range.end = \
                 self.lplot.y_range.end, self.lplot.y_range.start
+
         if (rmin is not None) and (rmax is not None):
+
             self.lplot.x_range.start = rmin
             self.lplot.x_range.end = rmax
 

@@ -1,4 +1,6 @@
-'''CMSlicer class definition'''
+"""
+CMSlicer class definition
+"""
 
 import numpy
 
@@ -22,15 +24,17 @@ class CMSlicer(Row):
 
     nu_tol_default = 1.
 
-    '''
+    """
     A ColourMapLPSlider with the ability to slice the plot with a line
     through the x-y plane which gives the profile against z along the line
     as a separate ColourMap. For 2D input data, creates a ColourMap and
     the slice is a line plot.
-    '''
+    """
 
-    __view_model__ = "Row"
-    __subtype__ = "CMSlicer"
+    __view_model__ = 'Row'
+    __subtype__ = 'CMSlicer'
+
+    __view_module__ = '__main__'
 
     cmap2D = Instance(ColourMap)
     cmap3D = Instance(ColourMapLPSlider)
@@ -48,9 +52,9 @@ class CMSlicer(Row):
 
     def __init__(self, x, y, z, dm, **kwargs):
 
-        '''
+        """
         All init arguments same as for ColourMapLPSlider.
-        '''
+        """
 
         palette, cfile, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
@@ -124,6 +128,10 @@ class CMSlicer(Row):
 
     def change_slice(self):
 
+        """
+        Change the slice displayed in the separate ColourMap
+        """
+
         if self.is_3d:
             datasrc = self.cmap3D.cmaplp.cmplot.datasrc
         else:
@@ -184,12 +192,17 @@ class CMSlicer(Row):
                            plot_height=self.cmap_params.data['cmheight'][0],
                            plot_width=self.cmap_params.data['cmwidth'][0],
                            toolbar_location='right')
+
             iplot.line(r_i, dm_i, line_color='blue',
                        line_width=2, line_alpha=1)
 
         self.children[1].children[1] = iplot
 
     def toggle_select(self, event):
+
+        """
+        Handle Tap events for slice change
+        """
 
         if self.is_selecting:
 
@@ -204,7 +217,8 @@ class CMSlicer(Row):
 
             cmap.renderers.remove(self.lr)
             self.lr = cmap.add_glyph(self.sl_src, glyph=Line(x='x', y='y', line_color='white',
-                                                             line_width=5, line_dash='dashed', line_alpha=1))
+                                                             line_width=5, line_dash='dashed',
+                                                             line_alpha=1))
 
             self.change_slice()
 

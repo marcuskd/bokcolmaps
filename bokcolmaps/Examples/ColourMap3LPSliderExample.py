@@ -1,5 +1,7 @@
-'''To run this example at the command line enter:
-python3 ColourMap3LPSLiderExample.py'''
+"""
+To run this example at the command line enter:
+python3 ColourMap3LPSLiderExample.py
+"""
 
 from bokeh.plotting import show
 
@@ -10,6 +12,6 @@ x, y, z, D = example_data()
 
 cm = ColourMap3LPSlider(x, y, z, D, cfile='../jet.txt',
                         xlab='x val', ylab='y val', zlab='power val',
-                        dmlab='Function val', hoverdisp=False)
+                        dmlab='Function val')
 
 show(cm)

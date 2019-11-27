@@ -1,4 +1,6 @@
-'''ColourMapSlider class definition'''
+"""
+ColourMapSlider class definition
+"""
 
 from bokeh.models.widgets import Slider
 from bokeh.models.layouts import Column, WidgetBox
@@ -12,13 +14,13 @@ from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 class ColourMapSlider(Column):
 
-    '''
+    """
     A ColourMap with a slider linked to the z coordinate
     (i.e. the 2D slice being displayed).
-    '''
+    """
 
-    __view_model__ = "Column"
-    __subtype__ = "ColourMapSlider"
+    __view_model__ = 'Column'
+    __subtype__ = 'ColourMapSlider'
 
     __view_module__ = '__main__'
 
@@ -27,9 +29,9 @@ class ColourMapSlider(Column):
 
     def __init__(self, x, y, z, dm, **kwargs):
 
-        '''
+        """
         All init arguments same as for ColourMap.
-        '''
+        """
 
         palette, cfile, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)

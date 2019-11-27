@@ -1,10 +1,12 @@
-'''To run this example at the command line enter: python3 SpotPlotExample.py
+"""
+To run this example at the command line enter: python3 SpotPlotExample.py
 The example data is the 3D grid used in the ColourMap example. The SpotPlot
 class is for 1D data sections defined at arbitrary x and y coordinates on a
-common z grid, so we'll  subsample the 3D grid at a number of random x and y
+common z grid, so we'll subsample the 3D grid at a number of random x and y
 coordinates to illustrate. The first and last points are set to the corners of
 the grid. Using this approach, the spot colours can be directly compared with
-the ColourMap example.'''
+the ColourMap example.
+"""
 
 import numpy
 
@@ -35,7 +37,6 @@ sp = SpotPlot(x, y, z, D, cfile='../jet.txt',
               dmlab='Function val')
 
 # Calls below not needed, only added for code coverage test
-sp.convert_data()
 sp.changed(0)
 sp.update_cbar()
 

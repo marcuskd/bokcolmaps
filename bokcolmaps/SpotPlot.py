@@ -1,4 +1,4 @@
-'''SplotPlot class definition'''
+"""SpotPlot class definition"""
 
 import numpy
 
@@ -18,13 +18,13 @@ from bokcolmaps.get_min_max import get_min_max
 
 class SpotPlot(Column):
 
-    '''
+    """
     Like a scatter plot but with the points colour mapped with a
     user-defined colour scale.
-    '''
+    """
 
-    __view_model__ = "Column"
-    __subtype__ = "SpotPlot"
+    __view_model__ = 'Column'
+    __subtype__ = 'SpotPlot'
 
     __view_module__ = '__main__'
 
@@ -50,28 +50,22 @@ class SpotPlot(Column):
 
     def __init__(self, x, y, z, dm, **kwargs):
 
-        '''
-        x and y (same length) give the spot locations, z is the
-        (common) z axis. All are 1D NumPy arrays.
-        dm is a 2D NumPy array of the data for display, dimensions
-        z.size by x.size (or y.size).
-        Supply a bokeh palette name or a file of RGBA floats;
-        the file will be used if provided.
-        xlab,ylab,zlab,dmlab: labels for the axes and data.
-        height and width for the plot are in pixels.
-        rmin and rmax are fixed limits for the colour scale
-        (i.e. it won't autoscale if either of these is not None).
-        xran and yran: ranges for the x and y axes
-        (e.g. to link to another plot).
-        ttool: custom tap tool passed in from SpotPlotLP class.
-        '''
+        """
+        args...
+            x: 1D NumPy array of x coordinates for the spot locations
+            y: 1D NumPy array of y coordinates for the spot locations, same size as x
+            z: 1D NumPy array of (common) z coordinates
+            dm: 2D NumPy array of the data for display, dimensions z.size by x.size
+        kwargs: all in get_common_kwargs plus...
+            height: plot height (pixels)
+            width: plot width (pixels)
+        """
 
         palette, cfile, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
-        ttool = kwargs.get('ttool', None)
 
         super().__init__()
 
@@ -114,9 +108,7 @@ class SpotPlot(Column):
         self.datasrc = ColumnDataSource(data={'z': [z], 'd': [d], 'dm': [dm]})
         self.coldatasrc = ColumnDataSource(data={'x': x, 'y': y, 'cols': cols})
 
-        ptools = ["reset,pan,wheel_zoom,box_zoom,save"]
-        if ttool is not None:
-            ptools.append(ttool)
+        ptools = ['reset, pan, wheel_zoom, box_zoom, save']
 
         # Default to entire range unless externally controlled
         if xran is None:
@@ -161,73 +153,58 @@ class SpotPlot(Column):
         self.children.append(self.plot)
 
     def generate_colorbar(self, cbarwidth=25):
-        '''
+
+        """
         Generate the colourbar
-        '''
+        """
 
         self.cbar = generate_colourbar(self.cmap, cbarwidth)
         self.plot.add_layout(self.cbar, 'below')
 
     def read_cmap(self, fname):
 
-        '''
-        Read in the colour scale.
-        '''
+        """
+        Read in the colour scale
+        """
 
         self.cvals = read_colourmap(fname)
 
     def changed(self, zind):
 
-        '''
-        Change the row of dm being displayed (i.e. a different value of z)
-        '''
+        """
+        Change the row of dm being displayed
+        (i.e. a different value of z)
+        """
 
         if (len(self.datasrc.data['dm'][0].shape) > 1) and \
            (zind >= 0) and (zind < self.datasrc.data['dm'][0].shape[0]):
+
             data = self.datasrc.data
             newdata = data
             d = data['dm'][0][zind]
             newdata['d'] = [d]
+
             self.datasrc.trigger('data', data, newdata)
 
     def update_cbar(self):
 
-        '''
-        Update the colour scale (needed when the data for display changes).
-        '''
+        """
+        Update the colour scale (needed when the data for display changes)
+        """
 
         if self.autoscale:
+
             d = self.datasrc.data['d'][0]
             min_val, max_val = get_min_max(d, self.cbdelta)
+
             self.cmap.low = min_val
             self.cmap.high = max_val
 
-    def update_title(self, zind):
-
-        if self.datasrc.data['z'][0].size > 1:
-            val = self.datasrc.data['z'][0][zind]
-        else:
-            val = self.datasrc.data['z'][0]
-        self.plot.title.text = self.title_root + ', ' + \
-            self.zlab + ' = ' + str(val)
-
-    def input_change(self, attrname, old, new):
-
-        '''
-        Callback for use with e.g. sliders.
-        '''
-
-        self.convert_data()
-        self.changed(new)
-        self.update_cbar()
-        self.update_colours()
-        self.update_title(new)
-
     def update_colours(self):
 
-        '''
-        Update the spot colours (needed when the data for display changes).
-        '''
+        """
+        Update the spot colours (needed when the data for display changes)
+        """
 
         colset = self.cvals.data['colours']
         ncols = len(colset)
@@ -242,27 +219,45 @@ class SpotPlot(Column):
         max_val = self.cmap.high
 
         for s in range(d.size):
+
             if numpy.isfinite(d[s]):
+
                 cind = int(round(ncols * (d[s] - min_val) / (max_val - min_val)))
                 if cind < 0:
                     cind = 0
                 if cind >= ncols:
                     cind = ncols - 1
+
                 cols[s] = colset[cind]
+
             else:
+
                 cols[s] = self.nan_col
 
         newdata['cols'] = cols
+
         self.coldatasrc.trigger('data', data, newdata)
 
-    def convert_data(self):
+    def update_title(self, zind):
 
-        '''
-        NumPy arrays sometimes not deserialised from lists so need to check.
-        '''
+        """
+        Update the plot title (needed when the z index changes)
+        """
 
-        data = self.datasrc.data
-        newdata = data
-        for k in ['z', 'd', 'dm']:
-            if type(newdata[k][0]) is list:
-                newdata[k][0] = numpy.array(newdata[k][0])
+        if self.datasrc.data['z'][0].size > 1:
+            val = self.datasrc.data['z'][0][zind]
+        else:
+            val = self.datasrc.data['z'][0]
+        self.plot.title.text = self.title_root + ', ' + \
+            self.zlab + ' = ' + str(val)
+
+    def input_change(self, attrname, old, new):
+
+        """
+        Callback for use with e.g. sliders
+        """
+
+        self.changed(new)
+        self.update_cbar()
+        self.update_colours()
+        self.update_title(new)
