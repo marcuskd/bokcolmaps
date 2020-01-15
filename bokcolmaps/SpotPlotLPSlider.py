@@ -22,7 +22,7 @@ class SpotPlotLPSlider(Column):
     __view_model__ = 'Column'
     __subtype__ = 'SpotPlotLPSlider'
 
-    __view_module__ = '__main__'
+    __view_module__ = 'bokeh'
 
     splotlp = Instance(SpotPlotLP)
     zslider = Instance(Slider)

@@ -22,7 +22,7 @@ class ColourMapLPSlider(Column):
     __view_model__ = 'Column'
     __subtype__ = 'ColourMapLPSlider'
 
-    __view_module__ = '__main__'
+    __view_module__ = 'bokeh'
 
     cmaplp = Instance(ColourMapLP)
     zslider = Instance(Slider)

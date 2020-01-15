@@ -25,7 +25,7 @@ class SpotPlotSlider(Column):
     __view_model__ = 'Column'
     __subtype__ = 'SpotPlotSlider'
 
-    __view_module__ = '__main__'
+    __view_module__ = 'bokeh'
 
     def __init__(self, x, y, z, dm, **kwargs):
 

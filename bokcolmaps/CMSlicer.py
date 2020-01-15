@@ -13,8 +13,8 @@ from bokeh.plotting import Figure
 from bokeh.models.renderers import GlyphRenderer
 from bokeh.models.glyphs import Line
 
-from bokcolmaps.ColourMapLPSlider import ColourMapLPSlider
-from bokcolmaps.ColourMap import ColourMap
+from bokcolmaps.ColourMap3LPSlider import ColourMap3LPSlider
+from bokcolmaps.ColourMap3 import ColourMap3
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 from bokcolmaps.interp_2d_line import interp_2d_line
@@ -34,10 +34,10 @@ class CMSlicer(Row):
     __view_model__ = 'Row'
     __subtype__ = 'CMSlicer'
 
-    __view_module__ = '__main__'
+    __view_module__ = 'bokeh'
 
-    cmap2D = Instance(ColourMap)
-    cmap3D = Instance(ColourMapLPSlider)
+    cmap2D = Instance(ColourMap3)
+    cmap3D = Instance(ColourMap3LPSlider)
     cm_src = Instance(ColumnDataSource)
     sl_src = Instance(ColumnDataSource)
     cmap_params = Instance(ColumnDataSource)
@@ -53,7 +53,7 @@ class CMSlicer(Row):
     def __init__(self, x, y, z, dm, **kwargs):
 
         """
-        All init arguments same as for ColourMapLPSlider.
+        All init arguments same as for ColourMapLP3Slider.
         """
 
         palette, cfile, xlab, ylab, zlab,\
@@ -76,21 +76,21 @@ class CMSlicer(Row):
             self.is_3d = False
 
         if self.is_3d:
-            self.cmap3D = ColourMapLPSlider(x, y, z, dm, palette=palette,
-                                            cfile=cfile, xlab=xlab, ylab=ylab,
-                                            zlab=zlab, dmlab=dmlab,
-                                            cmheight=cmheight, cmwidth=cmwidth,
-                                            lpheight=lpheight, lpwidth=lpwidth,
-                                            rmin=rmin, rmax=rmax, xran=xran,
-                                            yran=yran, revz=revz,
-                                            hoverdisp=hoverdisp)
+            self.cmap3D = ColourMap3LPSlider(x, y, z, dm, palette=palette,
+                                             cfile=cfile, xlab=xlab, ylab=ylab,
+                                             zlab=zlab, dmlab=dmlab,
+                                             cmheight=cmheight, cmwidth=cmwidth,
+                                             lpheight=lpheight, lpwidth=lpwidth,
+                                             rmin=rmin, rmax=rmax, xran=xran,
+                                             yran=yran, revz=revz,
+                                             hoverdisp=hoverdisp, scbutton=True)
             iplot = self.cmap3D.cmaplp.cmplot.plot
         else:
-            self.cmap2D = ColourMap(x, y, z, dm, palette=palette,
-                                    cfile=cfile, xlab=xlab, ylab=ylab,
-                                    zlab=zlab, dmlab=dmlab,
-                                    height=cmheight, width=cmwidth,
-                                    rmin=rmin, rmax=rmax, xran=xran, yran=yran)
+            self.cmap2D = ColourMap3(x, y, z, dm, palette=palette,
+                                     cfile=cfile, xlab=xlab, ylab=ylab,
+                                     zlab=zlab, dmlab=dmlab,
+                                     height=cmheight, width=cmwidth,
+                                     rmin=rmin, rmax=rmax, xran=xran, yran=yran)
             iplot = self.cmap2D.plot
 
         iplot.on_event(Tap, self.toggle_select)
@@ -174,16 +174,16 @@ class CMSlicer(Row):
                 z_i = numpy.flipud(z_i)
                 dm_i = numpy.flipud(dm_i)
 
-            iplot = ColourMap(r_i, z_i, [0], dm_i,
-                              palette=self.cmap_params.data['palette'][0],
-                              cfile=self.cmap_params.data['cfile'][0],
-                              xlab='Units',
-                              ylab=self.cmap_params.data['zlab'][0],
-                              dmlab=self.cmap_params.data['dmlab'][0],
-                              height=self.cmap_params.data['cmheight'][0],
-                              width=self.cmap_params.data['cmwidth'][0],
-                              rmin=self.cmap_params.data['rmin'][0],
-                              rmax=self.cmap_params.data['rmax'][0])
+            iplot = ColourMap3(r_i, z_i, [0], dm_i,
+                               palette=self.cmap_params.data['palette'][0],
+                               cfile=self.cmap_params.data['cfile'][0],
+                               xlab='Units',
+                               ylab=self.cmap_params.data['zlab'][0],
+                               dmlab=self.cmap_params.data['dmlab'][0],
+                               height=self.cmap_params.data['cmheight'][0],
+                               width=self.cmap_params.data['cmwidth'][0],
+                               rmin=self.cmap_params.data['rmin'][0],
+                               rmax=self.cmap_params.data['rmax'][0])
 
         else:
 
@@ -191,7 +191,7 @@ class CMSlicer(Row):
                            y_axis_label=self.cmap_params.data['zlab'][0],
                            plot_height=self.cmap_params.data['cmheight'][0],
                            plot_width=self.cmap_params.data['cmwidth'][0],
-                           toolbar_location='right')
+                           x_range=[r_i[0], r_i[-1]], toolbar_location='right')
 
             iplot.line(r_i, dm_i, line_color='blue',
                        line_width=2, line_alpha=1)

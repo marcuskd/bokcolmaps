@@ -26,7 +26,7 @@ class SpotPlot(Column):
     __view_model__ = 'Column'
     __subtype__ = 'SpotPlot'
 
-    __view_module__ = '__main__'
+    __view_module__ = 'bokeh'
 
     __sizing_mode__ = 'stretch_both'
 

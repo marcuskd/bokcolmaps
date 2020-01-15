@@ -28,7 +28,7 @@ class SpotPlotLP(Row):
     __view_model__ = 'Row'
     __subtype__ = 'SpotPlotLP'
 
-    __view_module__ = '__main__'
+    __view_module__ = 'bokeh'
 
     spplot = Instance(SpotPlot)
     lpcon = Instance(Column)

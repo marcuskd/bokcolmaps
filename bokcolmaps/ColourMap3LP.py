@@ -31,7 +31,7 @@ class ColourMap3LP(Row):
     __view_model__ = 'Row'
     __subtype__ = 'ColourMap3LP'
 
-    __view_module__ = '__main__'
+    __view_module__ = 'bokeh'
 
     cmplot = Instance(ColourMap3)
     lpcon = Instance(Column)

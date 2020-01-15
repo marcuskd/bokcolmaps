@@ -22,7 +22,7 @@ class ColourMap3Slider(Column):
     __view_model__ = 'Column'
     __subtype__ = 'ColourMap3Slider'
 
-    __view_module__ = '__main__'
+    __view_module__ = 'bokeh'
 
     cmap = Instance(ColourMap3)
     zslider = Instance(Slider)
