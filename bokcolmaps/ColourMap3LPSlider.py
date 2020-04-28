@@ -33,7 +33,7 @@ class ColourMap3LPSlider(Column):
         All init arguments same as for ColourMap3LP.
         """
 
-        palette, cfile, xlab, ylab, zlab,\
+        palette, cfile, revcols, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         cmheight = kwargs.get('cmheight', 575)
@@ -49,7 +49,8 @@ class ColourMap3LPSlider(Column):
         self.height = cmheight
         self.width = int((cmwidth + lpwidth) * 1.1)
 
-        self.cmaplp = ColourMap3LP(x, y, z, dm, palette=palette, cfile=cfile,
+        self.cmaplp = ColourMap3LP(x, y, z, dm,
+                                   palette=palette, cfile=cfile, revcols=revcols,
                                    xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                    cmheight=cmheight, cmwidth=cmwidth,
                                    lpheight=lpheight, lpwidth=lpwidth,

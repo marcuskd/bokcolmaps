@@ -61,7 +61,7 @@ class SpotPlot(Column):
             width: plot width (pixels)
         """
 
-        palette, cfile, xlab, ylab, zlab,\
+        palette, cfile, revcols, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         height = kwargs.get('height', 575)
@@ -93,12 +93,17 @@ class SpotPlot(Column):
 
         if cfile is not None:
             self.read_cmap(cfile)
-            self.cmap = LinearColorMapper(palette=self.cvals.data['colours'])
-        else:
-            self.cmap = LinearColorMapper(palette=palette)
-            self.cvals = ColumnDataSource(data={'colours': self.cmap.palette})
+            palette = self.cvals.data['colours']
+
+        if revcols:
+            palette.reverse()
+
+        self.cmap = LinearColorMapper(palette=palette)
         self.cmap.low = min_val
         self.cmap.high = max_val
+
+        if cfile is None:
+            self.cvals = ColumnDataSource(data={'colours': self.cmap.palette})
 
         self.bg_col = 'black'
         self.nan_col = 'grey'

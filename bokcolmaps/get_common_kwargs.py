@@ -10,6 +10,7 @@ def get_common_kwargs(**kwargs):
     kwargs...
         palette: A Bokeh palette for the colour mapping
         cfile: path to a file RGBA floats for palette (will be used instead of palette if not None)
+        revcols: reverse colour palette if True
         xlab: x axis label
         ylab: y axis label
         zlab: z axis label
@@ -22,6 +23,7 @@ def get_common_kwargs(**kwargs):
 
     palette = kwargs.get('palette', 'Viridis256')
     cfile = kwargs.get('cfile', 'jet.txt')
+    revcols = kwargs.get('revcols', False)
     xlab = kwargs.get('xlab', 'x')
     ylab = kwargs.get('ylab', 'y')
     zlab = kwargs.get('zlab', 'Index')
@@ -31,5 +33,5 @@ def get_common_kwargs(**kwargs):
     xran = kwargs.get('xran', None)
     yran = kwargs.get('yran', None)
 
-    return palette, cfile, xlab, ylab, zlab,\
+    return palette, cfile, revcols, xlab, ylab, zlab,\
         dmlab, rmin, rmax, xran, yran

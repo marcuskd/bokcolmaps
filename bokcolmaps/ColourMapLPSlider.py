@@ -34,7 +34,7 @@ class ColourMapLPSlider(Column):
         assumed here as ColourMapLPSlider needs the Bokeh Server)
         """
 
-        palette, cfile, xlab, ylab, zlab,\
+        palette, cfile, revcols, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         cmheight = kwargs.get('cmheight', 575)
@@ -49,7 +49,8 @@ class ColourMapLPSlider(Column):
         self.height = cmheight
         self.width = int((cmwidth + lpwidth) * 1.1)
 
-        self.cmaplp = ColourMapLP(x, y, z, dm, palette=palette, cfile=cfile,
+        self.cmaplp = ColourMapLP(x, y, z, dm,
+                                  palette=palette, cfile=cfile, revcols=revcols,
                                   xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                   cmheight=cmheight, cmwidth=cmwidth,
                                   lpheight=lpheight, lpwidth=lpwidth,

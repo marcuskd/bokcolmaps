@@ -47,6 +47,7 @@ class ColourMap(Column):
     rmin = Float
     rmax = Float
     autoscale = Bool
+    revcols = Bool
 
     xsize = Int
     ysize = Int
@@ -72,7 +73,7 @@ class ColourMap(Column):
             hover: Boolean to enable hover tool readout
         """
 
-        palette, cfile, xlab, ylab, zlab,\
+        palette, cfile, revcols, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         height = kwargs.get('height', 575)
@@ -111,6 +112,7 @@ class ColourMap(Column):
                                               'image': [d], 'dm': [dm],
                                               'xp': [0], 'yp': [0], 'dp': [0]})
 
+        self.revcols = revcols
         self.get_cmap(cfile, palette)
 
         if xran is None:  # Default to whole range unless externally controlled
@@ -227,9 +229,12 @@ class ColourMap(Column):
 
         if cfile is not None:
             self.read_cmap(cfile)
-            self.cmap = LinearColorMapper(palette=self.cvals.data['colours'])
-        else:
-            self.cmap = LinearColorMapper(palette=palette)
+            palette = self.cvals.data['colours']
+
+        if self.revcols:
+            palette.reverse()
+
+        self.cmap = LinearColorMapper(palette=palette)
         self.cmap.low = min_val
         self.cmap.high = max_val
 

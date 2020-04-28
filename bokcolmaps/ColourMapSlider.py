@@ -33,7 +33,7 @@ class ColourMapSlider(Column):
         All init arguments same as for ColourMap.
         """
 
-        palette, cfile, xlab, ylab, zlab,\
+        palette, cfile, revcols, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         height = kwargs.get('height', 575)
@@ -45,7 +45,8 @@ class ColourMapSlider(Column):
         self.height = height
         self.width = int(width * 1.1)
 
-        self.cmap = ColourMap(x, y, z, dm, palette=palette, cfile=cfile,
+        self.cmap = ColourMap(x, y, z, dm,
+                              palette=palette, cfile=cfile, revcols=revcols,
                               xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                               height=height, width=width, rmin=rmin, rmax=rmax,
                               xran=xran, yran=yran, hover=hover)

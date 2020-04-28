@@ -56,7 +56,7 @@ class ColourMap3LP(Row):
                   ColourMap3LP not used with Bokeh Server)
         """
 
-        palette, cfile, xlab, ylab, zlab,\
+        palette, cfile, revcols, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         cmheight = kwargs.get('cmheight', 575)
@@ -74,7 +74,8 @@ class ColourMap3LP(Row):
         yi = round(y.size / 2)
         self.lpds = ColumnDataSource(data={'x': dm[:, yi, xi], 'y': z})
 
-        self.cmplot = ColourMap3(x, y, z, dm, palette=palette, cfile=cfile,
+        self.cmplot = ColourMap3(x, y, z, dm,
+                                 palette=palette, cfile=cfile, revcols=revcols,
                                  xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                  height=cmheight, width=cmwidth, rmin=rmin,
                                  rmax=rmax, xran=xran, yran=yran, hover=False)

@@ -33,7 +33,7 @@ class SpotPlotLPSlider(Column):
         All init arguments same as for SpotPlotLP.
         """
 
-        palette, cfile, xlab, ylab, zlab,\
+        palette, cfile, revcols, xlab, ylab, zlab,\
             dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
 
         spheight = kwargs.get('spheight', 575)
@@ -47,7 +47,8 @@ class SpotPlotLPSlider(Column):
         self.height = spheight
         self.width = int((spwidth + lpwidth) * 1.1)
 
-        self.splotlp = SpotPlotLP(x, y, z, dm, palette=palette, cfile=cfile,
+        self.splotlp = SpotPlotLP(x, y, z, dm,
+                                  palette=palette, cfile=cfile, revcols=revcols,
                                   xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                   spheight=spheight, spwidth=spwidth,
                                   lpheight=lpheight, lpwidth=lpwidth,
