@@ -107,7 +107,7 @@ class SpotPlot(Column):
 
         self.bg_col = 'black'
         self.nan_col = 'grey'
-        self.sp_size = int(min(height, width) / 25)
+        self.sp_size = int(min(height, width) / 40)
 
         cols = [self.nan_col] * d.size  # Initially empty
         self.datasrc = ColumnDataSource(data={'z': [z], 'd': [d], 'dm': [dm]})
@@ -153,18 +153,10 @@ class SpotPlot(Column):
 
         self.update_colours()
 
-        self.generate_colorbar(cbarwidth=round(width / 20))
+        self.cbar = generate_colourbar(self.cmap, cbarwidth=round(height / 20))
+        self.plot.add_layout(self.cbar, 'below')
 
         self.children.append(self.plot)
-
-    def generate_colorbar(self, cbarwidth=25):
-
-        """
-        Generate the colourbar
-        """
-
-        self.cbar = generate_colourbar(self.cmap, cbarwidth)
-        self.plot.add_layout(self.cbar, 'below')
 
     def read_cmap(self, fname):
 
