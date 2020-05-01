@@ -17,6 +17,8 @@ class Test_interp_data(unittest.TestCase):
         self.x_t = numpy.linspace(1, 10, self.dims[2])
         self.y_t = numpy.linspace(4, 12, self.dims[1])
 
+        self.tol = 1e-8  # Tolerable difference in test results
+
     def tearDown(self):
         pass
 
@@ -27,9 +29,8 @@ class Test_interp_data(unittest.TestCase):
         data_t = self.data_t[0]
 
         x_int = numpy.min(numpy.diff(x_t))
-        n_pts = int(numpy.round((x_t[-1] - x_t[0]) / x_int)) + 1
-        x_t_i = numpy.linspace(x_t[0], x_t[-1], n_pts)
-        npts = x_t_i.size
+        npts = int(numpy.round(numpy.abs(x_t[-1] - x_t[0]) / x_int)) + 1
+        x_t_i = numpy.linspace(x_t[0], x_t[-1], npts)
 
         data_c = numpy.zeros([self.dims[1], npts])
 
@@ -38,9 +39,9 @@ class Test_interp_data(unittest.TestCase):
 
         test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
 
-        self.assertTrue(numpy.array_equal(test_x_t, x_t_i))
+        self.assertTrue(numpy.max(numpy.abs(test_x_t - x_t_i)) < self.tol)
         self.assertTrue(numpy.array_equal(test_y_t, y_t))
-        self.assertTrue(numpy.array_equal(test_data_t, data_c))
+        self.assertTrue(numpy.max(numpy.abs(test_data_t - data_c)) < self.tol)
 
     def test_2d_y(self):
 
@@ -49,9 +50,8 @@ class Test_interp_data(unittest.TestCase):
         data_t = self.data_t[1]
 
         y_int = numpy.min(numpy.diff(y_t))
-        n_pts = int(numpy.round((y_t[-1] - y_t[0]) / y_int)) + 1
-        y_t_i = numpy.linspace(y_t[0], y_t[-1], n_pts)
-        npts = y_t_i.size
+        npts = int(numpy.round(numpy.abs(y_t[-1] - y_t[0]) / y_int)) + 1
+        y_t_i = numpy.linspace(y_t[0], y_t[-1], npts)
 
         data_c = numpy.zeros([npts, self.dims[2]])
 
@@ -61,8 +61,8 @@ class Test_interp_data(unittest.TestCase):
         test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.array_equal(test_x_t, x_t))
-        self.assertTrue(numpy.array_equal(test_y_t, y_t_i))
-        self.assertTrue(numpy.array_equal(test_data_t, data_c))
+        self.assertTrue(numpy.max(numpy.abs(test_y_t - y_t_i)) < self.tol)
+        self.assertTrue(numpy.max(numpy.abs(test_data_t - data_c)) < self.tol)
 
     def test_2d_x_neg(self):
 
@@ -71,9 +71,8 @@ class Test_interp_data(unittest.TestCase):
         data_t = self.data_t[0]
 
         x_int = numpy.min(numpy.abs(numpy.diff(x_t)))
-        n_pts = int(numpy.round((x_t[0] - x_t[-1]) / x_int)) + 1
-        x_t_i = numpy.linspace(-x_t[0], -x_t[-1], n_pts)
-        npts = x_t_i.size
+        npts = int(numpy.round(numpy.abs(x_t[0] - x_t[-1]) / x_int)) + 1
+        x_t_i = numpy.linspace(-x_t[0], -x_t[-1], npts)
 
         data_c = numpy.zeros([self.dims[1], npts])
 
@@ -84,9 +83,9 @@ class Test_interp_data(unittest.TestCase):
 
         test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
 
-        self.assertTrue(numpy.array_equal(test_x_t, x_t_i))
+        self.assertTrue(numpy.max(numpy.abs(test_x_t - x_t_i)) < self.tol)
         self.assertTrue(numpy.array_equal(test_y_t, y_t))
-        self.assertTrue(numpy.array_equal(test_data_t, data_c))
+        self.assertTrue(numpy.max(numpy.abs(test_data_t - data_c)) < self.tol)
 
     def test_2d_y_neg(self):
 
@@ -95,9 +94,8 @@ class Test_interp_data(unittest.TestCase):
         data_t = self.data_t[1]
 
         y_int = numpy.min(numpy.abs(numpy.diff(y_t)))
-        n_pts = int(numpy.round((y_t[0] - y_t[-1]) / y_int)) + 1
-        y_t_i = numpy.linspace(-y_t[0], -y_t[-1], n_pts)
-        npts = y_t_i.size
+        npts = int(numpy.round(numpy.abs(y_t[0] - y_t[-1]) / y_int)) + 1
+        y_t_i = numpy.linspace(-y_t[0], -y_t[-1], npts)
 
         data_c = numpy.zeros([npts, self.dims[2]])
 
@@ -109,8 +107,8 @@ class Test_interp_data(unittest.TestCase):
         test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.array_equal(test_x_t, x_t))
-        self.assertTrue(numpy.array_equal(test_y_t, y_t_i))
-        self.assertTrue(numpy.array_equal(test_data_t, data_c))
+        self.assertTrue(numpy.max(numpy.abs(test_y_t - y_t_i)) < self.tol)
+        self.assertTrue(numpy.max(numpy.abs(test_data_t - data_c)) < self.tol)
 
     def test_2d_x_rev(self):
 
@@ -119,9 +117,8 @@ class Test_interp_data(unittest.TestCase):
         data_t = self.data_t[1]
 
         x_int = numpy.min(numpy.abs(numpy.diff(x_t)))
-        n_pts = int(numpy.round((x_t[0] - x_t[-1]) / x_int)) + 1
-        x_t_i = numpy.linspace(x_t[-1], x_t[0], n_pts)
-        npts = x_t_i.size
+        npts = int(numpy.round(numpy.abs(x_t[0] - x_t[-1]) / x_int)) + 1
+        x_t_i = numpy.linspace(x_t[-1], x_t[0], npts)
 
         data_c = numpy.zeros([self.dims[1], npts])
 
@@ -134,9 +131,9 @@ class Test_interp_data(unittest.TestCase):
 
         test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
 
-        self.assertTrue(numpy.array_equal(test_x_t, x_t_i))
+        self.assertTrue(numpy.max(numpy.abs(test_x_t - x_t_i)) < self.tol)
         self.assertTrue(numpy.array_equal(test_y_t, y_t))
-        self.assertTrue(numpy.array_equal(test_data_t, data_c))
+        self.assertTrue(numpy.max(numpy.abs(test_data_t - data_c)) < self.tol)
 
     def test_2d_y_rev(self):
 
@@ -145,9 +142,8 @@ class Test_interp_data(unittest.TestCase):
         data_t = self.data_t[1]
 
         y_int = numpy.min(numpy.abs(numpy.diff(y_t)))
-        n_pts = int(numpy.round((y_t[0] - y_t[-1]) / y_int)) + 1
-        y_t_i = numpy.linspace(y_t[-1], y_t[0], n_pts)
-        npts = y_t_i.size
+        npts = int(numpy.round(numpy.abs(y_t[0] - y_t[-1]) / y_int)) + 1
+        y_t_i = numpy.linspace(y_t[-1], y_t[0], npts)
 
         data_c = numpy.zeros([npts, self.dims[2]])
 
@@ -161,8 +157,8 @@ class Test_interp_data(unittest.TestCase):
         test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.array_equal(test_x_t, x_t))
-        self.assertTrue(numpy.array_equal(test_y_t, y_t_i))
-        self.assertTrue(numpy.array_equal(test_data_t, data_c))
+        self.assertTrue(numpy.max(numpy.abs(test_y_t - y_t_i)) < self.tol)
+        self.assertTrue(numpy.max(numpy.abs(test_data_t - data_c)) < self.tol)
 
     def test_3d_x_neg(self):
 
@@ -171,9 +167,8 @@ class Test_interp_data(unittest.TestCase):
         data_t = self.data_t
 
         x_int = numpy.min(numpy.abs(numpy.diff(x_t)))
-        n_pts = int(numpy.round((x_t[0] - x_t[-1]) / x_int)) + 1
-        x_t_i = numpy.linspace(-x_t[0], -x_t[-1], n_pts)
-        npts = x_t_i.size
+        npts = int(numpy.round(numpy.abs(x_t[0] - x_t[-1]) / x_int)) + 1
+        x_t_i = numpy.linspace(-x_t[0], -x_t[-1], npts)
 
         data_c = numpy.zeros([self.dims[0], self.dims[1], npts])
 
@@ -185,9 +180,9 @@ class Test_interp_data(unittest.TestCase):
 
         test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
 
-        self.assertTrue(numpy.array_equal(test_x_t, x_t_i))
+        self.assertTrue(numpy.max(numpy.abs(test_x_t - x_t_i)) < self.tol)
         self.assertTrue(numpy.array_equal(test_y_t, y_t))
-        self.assertTrue(numpy.array_equal(test_data_t, data_c))
+        self.assertTrue(numpy.max(numpy.abs(test_data_t - data_c)) < self.tol)
 
     def test_3d_y_rev(self):
 
@@ -196,9 +191,8 @@ class Test_interp_data(unittest.TestCase):
         data_t = self.data_t
 
         y_int = numpy.min(numpy.abs(numpy.diff(y_t)))
-        n_pts = int(numpy.round((y_t[0] - y_t[-1]) / y_int)) + 1
-        y_t_i = numpy.linspace(y_t[-1], y_t[0], n_pts)
-        npts = y_t_i.size
+        npts = int(numpy.round(numpy.abs(y_t[0] - y_t[-1]) / y_int)) + 1
+        y_t_i = numpy.linspace(y_t[-1], y_t[0], npts)
 
         data_c = numpy.zeros([self.dims[0], npts, self.dims[2]])
 
@@ -214,8 +208,8 @@ class Test_interp_data(unittest.TestCase):
         test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.array_equal(test_x_t, x_t))
-        self.assertTrue(numpy.array_equal(test_y_t, y_t_i))
-        self.assertTrue(numpy.array_equal(test_data_t, data_c))
+        self.assertTrue(numpy.max(numpy.abs(test_y_t - y_t_i)) < self.tol)
+        self.assertTrue(numpy.max(numpy.abs(test_data_t - data_c)) < self.tol)
 
     def test_3d_x_big(self):
 
@@ -227,9 +221,8 @@ class Test_interp_data(unittest.TestCase):
         t0 = time()
 
         x_int = numpy.min(numpy.diff(x_t))
-        n_pts = int(numpy.round((x_t[-1] - x_t[0]) / x_int)) + 1
-        x_t_i = numpy.linspace(x_t[0], x_t[-1], n_pts)
-        npts = x_t_i.size
+        npts = int(numpy.round(numpy.abs(x_t[-1] - x_t[0]) / x_int)) + 1
+        x_t_i = numpy.linspace(x_t[0], x_t[-1], npts)
 
         data_c = numpy.zeros([dims[0], dims[1], npts])
 
@@ -248,9 +241,9 @@ class Test_interp_data(unittest.TestCase):
 
         print('Speedup factor (x) = ' + str(t_orig / t_flat))
 
-        self.assertTrue(numpy.array_equal(test_x_t, x_t_i))
+        self.assertTrue(numpy.max(numpy.abs(test_x_t - x_t_i)) < self.tol)
         self.assertTrue(numpy.array_equal(test_y_t, y_t))
-        self.assertTrue(numpy.array_equal(test_data_t, data_c))
+        self.assertTrue(numpy.max(numpy.abs(test_data_t - data_c)) < self.tol)
 
     def test_3d_y_big(self):
 
@@ -262,9 +255,8 @@ class Test_interp_data(unittest.TestCase):
         t0 = time()
 
         y_int = numpy.min(numpy.diff(y_t))
-        n_pts = int(numpy.round((y_t[-1] - y_t[0]) / y_int)) + 1
-        y_t_i = numpy.linspace(y_t[0], y_t[-1], n_pts)
-        npts = y_t_i.size
+        npts = int(numpy.round(numpy.abs(y_t[-1] - y_t[0]) / y_int)) + 1
+        y_t_i = numpy.linspace(y_t[0], y_t[-1], npts)
 
         data_c = numpy.zeros([dims[0], npts, dims[2]])
 
@@ -284,8 +276,8 @@ class Test_interp_data(unittest.TestCase):
         print('Speedup factor (y) = ' + str(t_orig / t_flat))
 
         self.assertTrue(numpy.array_equal(test_x_t, x_t))
-        self.assertTrue(numpy.array_equal(test_y_t, y_t_i))
-        self.assertTrue(numpy.array_equal(test_data_t, data_c))
+        self.assertTrue(numpy.max(numpy.abs(test_y_t - y_t_i)) < self.tol)
+        self.assertTrue(numpy.max(numpy.abs(test_data_t - data_c)) < self.tol)
 
 
 if __name__ == '__main__':

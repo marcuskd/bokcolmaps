@@ -242,11 +242,10 @@ class SpotPlot(Column):
         """
 
         if self.datasrc.data['z'][0].size > 1:
-            val = self.datasrc.data['z'][0][zind]
+            self.plot.title.text = self.title_root + ', ' + \
+                self.zlab + ' = ' + str(self.datasrc.data['z'][0][zind])
         else:
-            val = self.datasrc.data['z'][0]
-        self.plot.title.text = self.title_root + ', ' + \
-            self.zlab + ' = ' + str(val)
+            self.plot.title.text = self.title_root
 
     def input_change(self, attrname, old, new):
 

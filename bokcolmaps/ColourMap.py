@@ -272,7 +272,7 @@ class ColourMap(Column):
 
     def update_title(self, zind):
 
-        if len(self.datasrc.data['z'][0]) > 1:
+        if self.datasrc.data['z'][0].size > 1:
             self.plot.title.text = self.title_root + ', ' + \
                 self.zlab + ' = ' + str(self.datasrc.data['z'][0][zind])
         else:
