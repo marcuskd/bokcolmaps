@@ -22,7 +22,7 @@ def get_common_kwargs(**kwargs):
     """
 
     palette = kwargs.get('palette', 'Viridis256')
-    cfile = kwargs.get('cfile', 'jet.txt')
+    cfile = kwargs.get('cfile', None)
     revcols = kwargs.get('revcols', False)
     xlab = kwargs.get('xlab', 'x')
     ylab = kwargs.get('ylab', 'y')

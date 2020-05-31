@@ -285,10 +285,9 @@ class ColourMap3(Column):
             self.read_cmap(cfile)
             palette = self.cvals.data['colours']
 
-        if self.revcols:
-            palette.reverse()
-
         self.cmap = LinearColorMapper(palette=palette)
+        if self.revcols:
+            self.cmap.palette.reverse()
         self.cmap.low = min_val
         self.cmap.high = max_val
 

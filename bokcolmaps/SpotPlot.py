@@ -95,10 +95,9 @@ class SpotPlot(Column):
             self.read_cmap(cfile)
             palette = self.cvals.data['colours']
 
-        if revcols:
-            palette.reverse()
-
         self.cmap = LinearColorMapper(palette=palette)
+        if revcols:
+            self.cmap.palette.reverse()
         self.cmap.low = min_val
         self.cmap.high = max_val
 
