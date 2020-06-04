@@ -106,10 +106,14 @@ class ColourMap3(Column):
 
         # Get minimum and maximum values for the colour mapping
 
-        minvals = [None] * self.zsize
-        maxvals = [None] * self.zsize
-        for zind in range(self.zsize):
-            minvals[zind], maxvals[zind] = get_min_max(dm[zind], self.cbdelta)
+        if self.autoscale:
+            minvals = [None] * self.zsize
+            maxvals = [None] * self.zsize
+            for zind in range(self.zsize):
+                minvals[zind], maxvals[zind] = get_min_max(dm[zind], self.cbdelta)
+        else:
+            minvals = [rmin] * self.zsize
+            maxvals = [rmax] * self.zsize
         self.mmsrc = ColumnDataSource(data={'minvals': minvals, 'maxvals': maxvals})
 
         dm = dm.flatten()
@@ -214,7 +218,7 @@ class ColourMap3(Column):
 
         if len(self.datasrc.data['z'][0]) > 1:
             self.plot.title.text = self.title_root + ', ' + \
-                self.zlab + ' = ' + str(self.datasrc.data['z'][0][zind])
+                self.zlab + ' = ' + str(self.datasrc.data['z'][0][0])
         else:
             self.plot.title.text = self.title_root
 
