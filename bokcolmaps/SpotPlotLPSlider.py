@@ -3,7 +3,7 @@ SplotPlotLPSlider class definition
 """
 
 from bokeh.models.widgets import Slider
-from bokeh.models.layouts import Column, WidgetBox
+from bokeh.models.layouts import Column
 
 from bokeh.core.properties import Instance
 
@@ -60,5 +60,5 @@ class SpotPlotLPSlider(Column):
 
         self.zslider.on_change('value', self.splotlp.spplot.input_change)
 
-        self.children.append(WidgetBox(self.zslider, width=self.width))
+        self.children.append(Column(self.zslider, width=self.width))
         self.children.append(self.splotlp)

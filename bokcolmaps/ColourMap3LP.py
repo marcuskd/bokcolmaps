@@ -90,7 +90,7 @@ class ColourMap3LP(Row):
             var lx = lpdata['x'];
 
             var skip = x.length*y.length;
-            for (i = 0; i < lx.length; i++) {
+            for (var i = 0; i < lx.length; i++) {
                 lx[i] = dm[zind + i*skip];
             }
 

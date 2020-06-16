@@ -3,7 +3,7 @@ ColourMapSlider class definition
 """
 
 from bokeh.models.widgets import Slider
-from bokeh.models.layouts import Column, WidgetBox
+from bokeh.models.layouts import Column
 
 from bokeh.core.properties import Instance
 
@@ -56,5 +56,5 @@ class ColourMapSlider(Column):
 
         self.zslider.on_change('value', self.cmap.input_change)
 
-        self.children.append(WidgetBox(self.zslider, width=self.width))
+        self.children.append(Column(self.zslider, width=self.width))
         self.children.append(self.cmap)

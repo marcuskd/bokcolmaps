@@ -70,9 +70,9 @@ class SpotPlotLP(Row):
             var data = dsource.data;
             var x = data['x'];
             var y = data['y'];
-            dm = data['dm'];
+            var dm = data['dm'];
             var skip = dm.length/y.length;
-            for (i = 0; i < y.length; i++) {
+            for (var i = 0; i < y.length; i++) {
                 x[i] = dm[ind + i*skip];
             }
             dsource.change.emit();

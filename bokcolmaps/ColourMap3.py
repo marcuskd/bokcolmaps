@@ -140,7 +140,7 @@ class ColourMap3(Column):
         var ny = y.length;
 
         var sind = dind*nx*ny;
-        for (i=0; i<nx*ny; i++) {
+        for (var i = 0; i < nx*ny; i++) {
             d[i] = dm[sind+i];
         }
 
@@ -290,8 +290,12 @@ class ColourMap3(Column):
             palette = self.cvals.data['colours']
 
         self.cmap = LinearColorMapper(palette=palette)
+
         if self.revcols:
-            self.cmap.palette.reverse()
+            pal = list(self.cmap.palette)
+            pal.reverse()
+            self.cmap.palette = tuple(pal)
+
         self.cmap.low = min_val
         self.cmap.high = max_val
 
