@@ -33,8 +33,8 @@ class ColourMapSlider(Column):
         All init arguments same as for ColourMap.
         """
 
-        palette, cfile, revcols, xlab, ylab, zlab,\
-            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+        palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
+            rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
 
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
@@ -49,12 +49,13 @@ class ColourMapSlider(Column):
                               palette=palette, cfile=cfile, revcols=revcols,
                               xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                               height=height, width=width, rmin=rmin, rmax=rmax,
-                              xran=xran, yran=yran, hover=hover)
+                              xran=xran, yran=yran, hover=hover,
+                              alpha=alpha, nan_colour=nan_colour)
 
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal')
 
-        self.zslider.on_change('value', self.cmap.input_change)
+        self.zslider.js_on_change('value', self.cmap.cjs_slider)
 
         self.children.append(Column(self.zslider, width=self.width))
         self.children.append(self.cmap)

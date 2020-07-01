@@ -37,6 +37,7 @@ class ColourMap(Column):
     cbar = Instance(ColorBar)
 
     datasrc = Instance(ColumnDataSource)
+    mmsrc = Instance(ColumnDataSource)
     cvals = Instance(ColumnDataSource)
 
     cmap = Instance(LinearColorMapper)
@@ -73,8 +74,8 @@ class ColourMap(Column):
             hover: Boolean to enable hover tool readout
         """
 
-        palette, cfile, revcols, xlab, ylab, zlab,\
-            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+        palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
+            rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
 
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
@@ -104,6 +105,18 @@ class ColourMap(Column):
         else:
             d = dm
 
+        # Get minimum and maximum values for the colour mapping
+
+        if self.autoscale:
+            minvals = [None] * self.zsize
+            maxvals = [None] * self.zsize
+            for zind in range(self.zsize):
+                minvals[zind], maxvals[zind] = get_min_max(dm[zind], self.cbdelta)
+        else:
+            minvals = [rmin] * self.zsize
+            maxvals = [rmax] * self.zsize
+        self.mmsrc = ColumnDataSource(data={'minvals': minvals, 'maxvals': maxvals})
+
         dm = dm.flatten()
 
         # All variables stored as single item lists in order to be the same
@@ -112,8 +125,40 @@ class ColourMap(Column):
                                               'image': [d], 'dm': [dm],
                                               'xp': [0], 'yp': [0], 'dp': [0]})
 
+        # JS code for slider in classes ColourMapSlider
+        # and ColourMapLPSlider
+
+        js_slider = """
+        var dind = cb_obj['value'];
+        var data = datasrc.data;
+
+        var x = data['x'][0];
+        var y = data['y'][0];
+        var d = data['image'][0];
+        var dm = data['dm'][0];
+
+        var nx = x.length;
+        var ny = y.length;
+
+        var sind = dind*nx*ny;
+        for (var i = 0; i < nx*ny; i++) {
+            d[i] = dm[sind+i];
+        }
+
+        datasrc.change.emit();
+
+        var minval = mmsrc.data['minvals'][dind];
+        var maxval = mmsrc.data['maxvals'][dind];
+
+        cmap.low = minval;
+        cmap.high = maxval;
+
+        var z = data['z'][0];
+        cmplot.title.text = title_root + ', ' + zlab + ' = ' + z[dind].toString();
+        """
+
         self.revcols = revcols
-        self.get_cmap(cfile, palette)
+        self.get_cmap(cfile, palette, nan_colour)
 
         if xran is None:  # Default to whole range unless externally controlled
             xran = Range1d(start=x[0], end=x[-1])
@@ -145,7 +190,12 @@ class ColourMap(Column):
             data['xp'] = [x[xind]];
             data['yp'] = [y[yind]];
             var zind = yind*x.length + xind;
-            data['dp'] = [d[zind]];
+            if (d.length == y.length) {
+                data['dp'] = [d[yind][xind]];
+            }
+            else {
+                data['dp'] = [d[zind]];
+            }
         }
         """
 
@@ -158,26 +208,39 @@ class ColourMap(Column):
                               callback=cjs_hover, point_policy='follow_mouse')
             ptools.append(htool)
 
+        # Create the plot
+
         self.plot = Figure(x_axis_label=xlab, y_axis_label=ylab,
                            x_range=xran, y_range=yran,
                            plot_height=height, plot_width=width,
                            tools=ptools, toolbar_location='right')
 
-        self.update_title(0)
+        self.cjs_slider = CustomJS(args={'datasrc': self.datasrc, 'mmsrc': self.mmsrc,
+                                         'cmap': self.cmap, 'cmplot': self.plot,
+                                         'title_root': self.title_root, 'zlab': self.zlab},
+                                   code=js_slider)
+
+#       Set the title
+
+        if len(self.datasrc.data['z'][0]) > 1:
+            self.plot.title.text = self.title_root + ', ' + \
+                self.zlab + ' = ' + str(self.datasrc.data['z'][0][0])
+        else:
+            self.plot.title.text = self.title_root
 
         self.plot.title.text_font = 'garamond'
         self.plot.title.text_font_size = '12pt'
         self.plot.title.text_font_style = 'bold'
         self.plot.title.align = 'center'
 
+        # The image is displayed such that x and y coordinate values
+        # correspond to the centres of rectangles
+
         dx = abs(x[1] - x[0])
         dy = abs(y[1] - y[0])
 
         pw = abs(x[-1] - x[0]) + dx
         ph = abs(y[-1] - y[0]) + dy
-
-        # The image is displayed such that x and y coordinate values
-        # correspond to the centres of rectangles
 
         xs = xran.start
         if xs is None:
@@ -195,9 +258,10 @@ class ColourMap(Column):
             ys += dy / 2
 
         self.plot.image('image', source=self.datasrc, x=xs, y=ys,
-                        dw=pw, dh=ph, color_mapper=self.cmap)
+                        dw=pw, dh=ph, color_mapper=self.cmap, global_alpha=alpha)
 
         # Needed for HoverTool...
+
         self.plot.rect(x=(x[0] + x[-1]) / 2, y=(y[0] + y[-1]) / 2, width=pw, height=ph,
                        line_alpha=0, fill_alpha=0, source=self.datasrc)
 
@@ -214,7 +278,7 @@ class ColourMap(Column):
 
         self.children.append(self.plot)
 
-    def get_cmap(self, cfile, palette):
+    def get_cmap(self, cfile, palette, nan_colour):
 
         """
         Get the colour mapper
@@ -231,7 +295,7 @@ class ColourMap(Column):
             self.read_cmap(cfile)
             palette = self.cvals.data['colours']
 
-        self.cmap = LinearColorMapper(palette=palette)
+        self.cmap = LinearColorMapper(palette=palette, nan_color=nan_colour)
 
         if self.revcols:
             pal = list(self.cmap.palette)
@@ -249,44 +313,27 @@ class ColourMap(Column):
 
         self.cvals = read_colourmap(fname)
 
-    def change_slice(self, zind):
+    def update_image(self, zind):
 
         """
-        Change the 2D slice of D being displayed (i.e. a different value of z)
+        Updates the data for display without slider movement
+        (e.g. for Bokeh Server applications)
         """
 
-        if (self.zsize > 1) and (zind >= 0) and (zind < self.zsize):
-            zindl = zind * self.xsize * self.ysize
-            dms = self.datasrc.data['dm'][0][zindl:zindl + self.xsize * self.ysize]
-            self.datasrc.patch({'image': [(0, dms)]})
+        d = self.datasrc.data['dm'][0][zind * self.xsize * self.ysize:
+                                       (zind + 1) * self.xsize * self.ysize]
+        self.datasrc.patch({'image': [(0, d.reshape((self.ysize, self.xsize)))]})
 
-    def update_cbar(self, zind):
+        if self.autoscale:
+            self._update_cbar()
+
+    def _update_cbar(self):
 
         """
         Update the colour scale (needed when the data for display changes).
         """
 
-        if self.autoscale:
-            d = self.datasrc.data['dm'][0][zind * self.xsize * self.ysize:
-                                           (zind + 1) * self.xsize * self.ysize]
-            min_val, max_val = get_min_max(d, self.cbdelta)
-            self.cmap.low = min_val
-            self.cmap.high = max_val
-
-    def update_title(self, zind):
-
-        if self.datasrc.data['z'][0].size > 1:
-            self.plot.title.text = self.title_root + ', ' + \
-                self.zlab + ' = ' + str(self.datasrc.data['z'][0][zind])
-        else:
-            self.plot.title.text = self.title_root
-
-    def input_change(self, attrname, old, new):
-
-        """
-        Callback for use with e.g. sliders.
-        """
-
-        self.change_slice(new)
-        self.update_cbar(new)
-        self.update_title(new)
+        d = self.datasrc.data['image'][0]
+        min_val, max_val = get_min_max(d, self.cbdelta)
+        self.cmap.low = min_val
+        self.cmap.high = max_val

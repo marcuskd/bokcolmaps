@@ -35,8 +35,7 @@ D = numpy.zeros((z.size, ns))
 for n in range(ns):
     D[:, n] = Dg[:, yi[n], xi[n]]
 
-sp = SpotPlotLPSlider(x, y, z, D, cfile='../jet.txt',
-                      xlab='x val', ylab='y val', zlab='power val',
-                      dmlab='Function val')
+sp = SpotPlotLPSlider(x, y, z, D, xlab='x val', ylab='y val',
+                      zlab='power val', dmlab='Function val')
 
 curdoc().add_root(sp)

@@ -30,12 +30,11 @@ class ColourMapLPSlider(Column):
     def __init__(self, x, y, z, dm, **kwargs):
 
         """
-        All init arguments same as for ColourMapLP (apart from scbutton flag -
-        assumed here as ColourMapLPSlider needs the Bokeh Server)
+        All init arguments same as for ColourMapLP.
         """
 
-        palette, cfile, revcols, xlab, ylab, zlab,\
-            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+        palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
+            rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
 
         cmheight = kwargs.get('cmheight', 575)
         cmwidth = kwargs.get('cmwidth', 500)
@@ -43,6 +42,7 @@ class ColourMapLPSlider(Column):
         lpwidth = kwargs.get('lpwidth', 300)
         revz = kwargs.get('revz', False)
         hoverdisp = kwargs.get('hoverdisp', True)
+        scbutton = kwargs.get('scbutton', False)
 
         super().__init__()
 
@@ -55,12 +55,13 @@ class ColourMapLPSlider(Column):
                                   cmheight=cmheight, cmwidth=cmwidth,
                                   lpheight=lpheight, lpwidth=lpwidth,
                                   rmin=rmin, rmax=rmax, xran=xran, yran=yran,
-                                  revz=revz, hoverdisp=hoverdisp)
+                                  revz=revz, hoverdisp=hoverdisp, scbutton=scbutton,
+                                  alpha=alpha, nan_colour=nan_colour)
 
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal')
 
-        self.zslider.on_change('value', self.cmaplp.cmplot.input_change)
+        self.zslider.js_on_change('value', self.cmaplp.cmplot.cjs_slider)
 
         self.children.append(Column(self.zslider, width=self.width))
         self.children.append(self.cmaplp)

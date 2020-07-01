@@ -49,8 +49,8 @@ class SpotPlotLP(Row):
         revz: reverse z axis in line plot if True.
         """
 
-        palette, cfile, revcols, xlab, ylab, zlab,\
-            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+        palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
+            rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
 
         spheight = kwargs.get('spheight', 575)
         spwidth = kwargs.get('spwidth', 500)
@@ -83,7 +83,8 @@ class SpotPlotLP(Row):
                                palette=palette, cfile=cfile, revcols=revcols,
                                xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                height=spheight, width=spwidth, rmin=rmin,
-                               rmax=rmax, xran=xran, yran=yran)
+                               rmax=rmax, xran=xran, yran=yran,
+                               alpha=alpha, nan_colour=nan_colour)
 
         update_lp = CustomJS(args={'dsource': self.lpds,
                                    'psource': self.spplot.plot.renderers[0].data_source},

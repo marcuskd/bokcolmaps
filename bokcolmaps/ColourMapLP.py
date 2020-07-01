@@ -56,8 +56,8 @@ class ColourMapLP(Row):
                   ColourMapLP not used with Bokeh Server)
         """
 
-        palette, cfile, revcols, xlab, ylab, zlab,\
-            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+        palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
+            rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
 
         cmheight = kwargs.get('cmheight', 575)
         cmwidth = kwargs.get('cmwidth', 500)
@@ -65,7 +65,7 @@ class ColourMapLP(Row):
         lpwidth = kwargs.get('lpwidth', 300)
         revz = kwargs.get('revz', False)
         hoverdisp = kwargs.get('hoverdisp', True)
-        scbutton = kwargs.get('scbutton', True)
+        scbutton = kwargs.get('scbutton', False)
 
         super().__init__()
 
@@ -78,10 +78,10 @@ class ColourMapLP(Row):
                                 palette=palette, cfile=cfile, revcols=revcols,
                                 xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                 height=cmheight, width=cmwidth, rmin=rmin,
-                                rmax=rmax, xran=xran, yran=yran, hover=False)
+                                rmax=rmax, xran=xran, yran=yran, hover=False,
+                                alpha=alpha, nan_colour=nan_colour)
 
         # Custom hover tool to render profile at cursor position in line plot
-        # JS code appended to existing code in ColourMap
 
         self.js_hover = self.cmplot.js_hover + """
         var lpdata = lpsrc.data;

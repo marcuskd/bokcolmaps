@@ -19,9 +19,11 @@ def get_common_kwargs(**kwargs):
         rmax: maximum value for the colour scale
         xran: x axis range
         yran: y axis range
+        alpha: global image alpha
+        nan_colour: NaN colour
     """
 
-    palette = kwargs.get('palette', 'Viridis256')
+    palette = kwargs.get('palette', 'Turbo256')
     cfile = kwargs.get('cfile', None)
     revcols = kwargs.get('revcols', False)
     xlab = kwargs.get('xlab', 'x')
@@ -32,6 +34,8 @@ def get_common_kwargs(**kwargs):
     rmax = kwargs.get('rmax', None)
     xran = kwargs.get('xran', None)
     yran = kwargs.get('yran', None)
+    alpha = kwargs.get('alpha', 1)
+    nan_colour = kwargs.get('nan_colour', 'Grey')
 
-    return palette, cfile, revcols, xlab, ylab, zlab,\
-        dmlab, rmin, rmax, xran, yran
+    return palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
+        rmin, rmax, xran, yran, alpha, nan_colour

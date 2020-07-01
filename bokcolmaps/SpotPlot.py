@@ -61,8 +61,8 @@ class SpotPlot(Column):
             width: plot width (pixels)
         """
 
-        palette, cfile, revcols, xlab, ylab, zlab,\
-            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+        palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
+            rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
 
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
@@ -97,7 +97,7 @@ class SpotPlot(Column):
             if revcols:
                 self.cvals.data['colours'].reverse()
 
-        self.cmap = LinearColorMapper(palette=palette)
+        self.cmap = LinearColorMapper(palette=palette, nan_color=nan_colour)
 
         if revcols and (cfile is None):
             pal = list(self.cmap.palette)
@@ -111,7 +111,7 @@ class SpotPlot(Column):
             self.cvals = ColumnDataSource(data={'colours': self.cmap.palette})
 
         self.bg_col = 'black'
-        self.nan_col = 'grey'
+        self.nan_col = nan_colour
         self.sp_size = int(min(height, width) / 40)
 
         cols = [self.nan_col] * d.size  # Initially empty
@@ -136,8 +136,9 @@ class SpotPlot(Column):
                          source=self.coldatasrc,
                          nonselection_fill_color='cols',
                          selection_fill_color='cols',
-                         nonselection_fill_alpha=1, selection_fill_alpha=1,
-                         nonselection_line_alpha=0, selection_line_alpha=1,
+                         fill_alpha=alpha, line_alpha=alpha,
+                         nonselection_fill_alpha=alpha, selection_fill_alpha=alpha,
+                         nonselection_line_alpha=0, selection_line_alpha=alpha,
                          nonselection_line_color='cols',
                          selection_line_color='white', line_width=5)
 

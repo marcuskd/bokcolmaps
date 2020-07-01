@@ -11,8 +11,7 @@ from bokcolmaps.Examples import example_data
 
 x, y, z, D = example_data()
 
-cm = CMSlicer(x, y, z, D, cfile='../jet.txt',
-              xlab='x val', ylab='y val', zlab='power val',
-              dmlab='Function val')
+cm = CMSlicer(x, y, z, D, xlab='x val', ylab='y val',
+              zlab='power val', dmlab='Function val')
 
 curdoc().add_root(cm)

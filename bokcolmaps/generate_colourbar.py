@@ -15,8 +15,6 @@ def generate_colourbar(cmap, cbarwidth=25):
     cbar = ColorBar(color_mapper=cmap, location=(0, 0),
                     label_standoff=5, orientation='horizontal',
                     height=cbarwidth, ticker=AdaptiveTicker(),
-                    border_line_color=None, bar_line_color=None,
-                    major_tick_line_color='black',
-                    minor_tick_line_color=None)
+                    bar_line_color='Black', major_tick_line_color='Black')
 
     return cbar

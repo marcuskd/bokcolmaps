@@ -33,8 +33,8 @@ class SpotPlotLPSlider(Column):
         All init arguments same as for SpotPlotLP.
         """
 
-        palette, cfile, revcols, xlab, ylab, zlab,\
-            dmlab, rmin, rmax, xran, yran = get_common_kwargs(**kwargs)
+        palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
+            rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
 
         spheight = kwargs.get('spheight', 575)
         spwidth = kwargs.get('spwidth', 500)
@@ -53,7 +53,7 @@ class SpotPlotLPSlider(Column):
                                   spheight=spheight, spwidth=spwidth,
                                   lpheight=lpheight, lpwidth=lpwidth,
                                   rmin=rmin, rmax=rmax, xran=xran, yran=yran,
-                                  revz=revz)
+                                  revz=revz, alpha=alpha, nan_colour=nan_colour)
 
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal')
