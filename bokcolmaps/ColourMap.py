@@ -121,6 +121,7 @@ class ColourMap(Column):
 
         # All variables stored as single item lists in order to be the same
         # length (as required by ColumnDataSource)
+
         self.datasrc = ColumnDataSource(data={'x': [x], 'y': [y], 'z': [z],
                                               'image': [d], 'dm': [dm],
                                               'xp': [0], 'yp': [0], 'dp': [0]})
@@ -157,16 +158,6 @@ class ColourMap(Column):
         cmplot.title.text = title_root + ', ' + zlab + ' = ' + z[dind].toString();
         """
 
-        self.revcols = revcols
-        self.get_cmap(cfile, palette, nan_colour)
-
-        if xran is None:  # Default to whole range unless externally controlled
-            xran = Range1d(start=x[0], end=x[-1])
-        if yran is None:
-            yran = Range1d(start=y[0], end=y[-1])
-
-        ptools = ['reset, pan, wheel_zoom, box_zoom, save']
-
         # JS code defined whether or not hover tool used as may be needed in
         # class ColourMapLP
 
@@ -199,6 +190,8 @@ class ColourMap(Column):
         }
         """
 
+        ptools = ['reset, pan, wheel_zoom, box_zoom, save']
+
         if hover:
             cjs_hover = CustomJS(args={'datasrc': self.datasrc},
                                  code=self.js_hover)
@@ -207,6 +200,24 @@ class ColourMap(Column):
                                         (dmlab, '@dp{0.00}')],
                               callback=cjs_hover, point_policy='follow_mouse')
             ptools.append(htool)
+
+        # Default to whole range unless externally controlled
+
+        xoffs = (x[0] - x[1]) / 2
+        if xran is None:
+            xran = Range1d(start=x[0], end=x[-1])
+        else:
+            xoffs += x[0] - xran.start
+        yoffs = (y[0] - y[1]) / 2
+        if yran is None:
+            yran = Range1d(start=y[0], end=y[-1])
+        else:
+            yoffs += y[0] - yran.start
+
+        # Get the colourmap
+
+        self.revcols = revcols
+        self.get_cmap(cfile, palette, nan_colour)
 
         # Create the plot
 
@@ -220,7 +231,7 @@ class ColourMap(Column):
                                          'title_root': self.title_root, 'zlab': self.zlab},
                                    code=js_slider)
 
-#       Set the title
+        # Set the title
 
         if len(self.datasrc.data['z'][0]) > 1:
             self.plot.title.text = self.title_root + ', ' + \
@@ -236,26 +247,20 @@ class ColourMap(Column):
         # The image is displayed such that x and y coordinate values
         # correspond to the centres of rectangles
 
-        dx = abs(x[1] - x[0])
-        dy = abs(y[1] - y[0])
-
-        pw = abs(x[-1] - x[0]) + dx
-        ph = abs(y[-1] - y[0]) + dy
+        pw = abs(x[-1] - x[0]) + abs(x[1] - x[0])
+        ph = abs(y[-1] - y[0]) + abs(y[1] - y[0])
 
         xs = xran.start
         if xs is None:
             xs = 0
-        elif xran.end > xran.start:
-            xs -= dx / 2
         else:
-            xs += dx / 2
+            xs += xoffs
+
         ys = yran.start
         if ys is None:
             ys = 0
-        elif yran.end > yran.start:
-            ys -= dy / 2
         else:
-            ys += dy / 2
+            ys += yoffs
 
         self.plot.image('image', source=self.datasrc, x=xs, y=ys,
                         dw=pw, dh=ph, color_mapper=self.cmap, global_alpha=alpha)
