@@ -1,7 +1,5 @@
 /build
 /dist
-.project
-.pydevproject
 /bokcolmaps.egg-info
+/.idea
 __pycache__/
-
