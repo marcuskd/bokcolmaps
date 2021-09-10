@@ -2,6 +2,8 @@
 ColourMap class definition
 """
 
+import numpy
+
 from bokeh.plotting import Figure
 
 from bokeh.models import ColumnDataSource, Plot, ColorBar, HoverTool
@@ -88,19 +90,32 @@ class ColourMap(Column):
         self.title_root = dmlab
         self.zlab = zlab
 
-        self.rmin = rmin
-        self.rmax = rmax
-        self.autoscale = True
-        if (self.rmin is not None) and (self.rmax is not None):
-            self.autoscale = False
+        is3D = True if len(dm.shape) == 3 else False
 
-        if len(dm.shape) == 2:
+        self.autoscale = True
+        if (rmin is not None) and (rmax is not None):
+            self.autoscale = False
+        else:
+            if rmin is not None:
+                self.rmin = rmin
+            elif is3D:
+                self.rmin = numpy.min(dm[0])
+            else:
+                self.rmin = numpy.min(dm)
+            if rmax is not None:
+                self.rmax = rmax
+            elif is3D:
+                self.rmax = numpy.max(dm[0])
+            else:
+                self.rmax = numpy.max(dm)
+
+        if is3D:
+            self.zsize, self.ysize, self.xsize = dm.shape
+        else:
             self.ysize, self.xsize = dm.shape
             self.zsize = 1
-        elif len(dm.shape) == 3:
-            self.zsize, self.ysize, self.xsize = dm.shape
 
-        if len(dm.shape) > 2:  # Default to first slice
+        if is3D:  # Default to first slice
             d = dm[0]
         else:
             d = dm
@@ -299,6 +314,8 @@ class ColourMap(Column):
         if cfile is not None:
             self.read_cmap(cfile)
             palette = self.cvals.data['colours']
+        else:
+            self.cvals = ColumnDataSource(data={'colours': []})
 
         self.cmap = LinearColorMapper(palette=palette, nan_color=nan_colour)
 

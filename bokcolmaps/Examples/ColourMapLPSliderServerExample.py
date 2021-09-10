@@ -1,6 +1,6 @@
 """
 To run this example at the command line enter:
-bokeh serve --show ColourMapLPSliderExample.py
+bokeh serve --show ColourMapLPSliderServerExample.py
 
 To use the ColourMapSlider (i.e. without a line plot)
 just import and instantiate that instead (same init parameters)

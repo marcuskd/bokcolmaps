@@ -2,4 +2,5 @@
 /dist
 /bokcolmaps.egg-info
 /.idea
+sonar-project.properties
 __pycache__/

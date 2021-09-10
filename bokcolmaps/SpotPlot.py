@@ -74,13 +74,26 @@ class SpotPlot(Column):
         self.title_root = dmlab
         self.zlab = zlab
 
-        self.rmin = rmin
-        self.rmax = rmax
-        self.autoscale = True
-        if (self.rmin is not None) & (self.rmax is not None):
-            self.autoscale = False
+        is3D = True if z.size > 1 else False
 
-        if z.size > 1:  # Default to first 'slice'
+        self.autoscale = True
+        if (rmin is not None) and (rmax is not None):
+            self.autoscale = False
+        else:
+            if rmin is not None:
+                self.rmin = rmin
+            elif is3D:
+                self.rmin = numpy.min(dm[0])
+            else:
+                self.rmin = numpy.min(dm)
+            if rmax is not None:
+                self.rmax = rmax
+            elif is3D:
+                self.rmax = numpy.max(dm[0])
+            else:
+                self.rmax = numpy.max(dm)
+
+        if is3D:  # Default to first 'slice'
             d = dm[0]
         else:
             d = dm

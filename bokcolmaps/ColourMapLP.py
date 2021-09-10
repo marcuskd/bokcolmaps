@@ -6,8 +6,7 @@ import numpy
 
 from bokeh.plotting import Figure
 
-from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, \
-    NumeralTickFormatter
+from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, NumeralTickFormatter
 
 from bokeh.models.widgets import Button
 from bokeh.models.layouts import Column, Row
@@ -147,6 +146,8 @@ class ColourMapLP(Row):
             self.btn = Button(label='Snap to centre')
             self.btn.on_click(self.centre_lp)
             self.lpcon.children.append(self.btn)
+        else:
+            self.btn = Button()
 
         self.children.append(self.cmplot)
         self.children.append(self.lpcon)
