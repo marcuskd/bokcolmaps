@@ -6,12 +6,12 @@ bokeh serve --show CMSlicerExample3D.py
 
 from bokeh.io import curdoc
 
-from bokcolmaps.CMSlicer import CMSlicer
+from bokcolmaps.CMSlicer3D import CMSlicer3D
 from bokcolmaps.Examples import example_data
 
 x, y, z, D = example_data()
 
-cm = CMSlicer(x, y, z, D, xlab='x val', ylab='y val',
-              zlab='power val', dmlab='Function val')
+cm = CMSlicer3D(x, y, z, D, xlab='x val', ylab='y val',
+                zlab='power val', dmlab='Function val')
 
 curdoc().add_root(cm)

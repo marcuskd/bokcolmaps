@@ -6,8 +6,7 @@ import numpy
 from bokcolmaps.flip_data import flip_data
 
 
-def interp_data(x_t, y_t, data_t, nu_tol=0,
-                stat_box=None, interp_int_box=None):
+def interp_data(x_t, y_t, data_t, nu_tol=0, ax_int=None):
 
     """
     Conduct uniform interpolation (if needed according to tolerance).
@@ -19,11 +18,14 @@ def interp_data(x_t, y_t, data_t, nu_tol=0,
         nu_tol: non-uniform tolerance value
         stat_box: handle to Bokeh Div
         interp_int_box: handle to Bokeh TextInput
+        ax_int: interval for interpolation (if equal to None, the minimum interval along the interpolating axis will be used)
     returns...
         x_t, y_t, data_t: either x_t or y_t made uniform, and data_t interpolated accordingly.
     """
 
     # Check if interpolation needed
+
+    msg = None
 
     interp_x = interp_y = False
     if x_t.size > 1:
@@ -36,16 +38,12 @@ def interp_data(x_t, y_t, data_t, nu_tol=0,
             interp_y = True
 
     if not (interp_x or interp_y):  # Nothing to do
-        return x_t, y_t, data_t
+        msg = 'No interpolation required within tolerance'
+        return x_t, y_t, data_t, ax_int, msg
 
     if interp_x and interp_y:  # Can't do both
-        if stat_box is not None:
-            stat_box.text = '<font color="red">Error: more than one plot axis\
-            non-uniform, please choose a different plot option</font>'
-        return x_t, y_t, None
-
-    if stat_box is not None:
-        stat_box.text = '<font color="blue">Interpolating...</font>'
+        msg = 'Error: more than one plot axis non-uniform, please choose a different plot option'
+        return x_t, y_t, None, ax_int, msg
 
     if len(data_t.shape) == 3:
         is3d = True
@@ -80,31 +78,13 @@ def interp_data(x_t, y_t, data_t, nu_tol=0,
         ax_v = numpy.flipud(ax_v)  # Must be increasing for interpolation
         data_t = flip_data(interp_x, is3d, o_dims, data_t)
 
-    interp_auto = False
-    ax_int = None
-    if interp_int_box is not None:
-        try:  # Get interpolation interval if specified
-            ax_int = float(interp_int_box.value)
-            if stat_box is not None:
-                stat_box.text = '<font color="blue">Interpolating using \
-                specified interval...</font>'
-        except ValueError:
-            interp_auto = True
-    else:
-        interp_auto = True
-
+    interp_auto = True if ax_int is None else False
     if interp_auto:
         ax_int = numpy.min(numpy.abs(numpy.diff(ax_v)))
-        if stat_box is not None:
-            stat_box.text = '<font color="blue">No interval specified: interpolating \
-            using minimum available interval...</font>'
 
     n_pts = int(numpy.round(numpy.abs(ax_v[-1] - ax_v[0]) / ax_int)) + 1
     ax_v_i = numpy.linspace(ax_v[0], ax_v[-1], n_pts)
     ax_int = ax_v_i[1] - ax_v_i[0]
-
-    if interp_int_box is not None:
-        interp_int_box.value = str(ax_int)
 
     # Transpose and flatten for 1d interpolation
 
@@ -158,4 +138,4 @@ def interp_data(x_t, y_t, data_t, nu_tol=0,
     else:
         y_t = ax_v_i
 
-    return x_t, y_t, data_t
+    return x_t, y_t, data_t, ax_int, msg

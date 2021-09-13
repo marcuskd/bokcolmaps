@@ -66,7 +66,7 @@ def interp_2d_line(x, y, f, c_i, z=None, ax_int=None):
 
     xal = True
     yal = True
-    if (nc > 1):
+    if nc > 1:
         if xinc:
             if c_i[1, 0] < c_i[0, 0]:
                 xal = False
@@ -156,7 +156,7 @@ def interp_2d_line(x, y, f, c_i, z=None, ax_int=None):
         cn += 1
 
     if z is not None:
-        _, z_i, f_i = interp_data(numpy.arange(nc), z, f_i)
+        _, z_i, f_i, _, _ = interp_data(numpy.arange(nc), z, f_i, ax_int=ax_int)
     else:
         z_i = z
 

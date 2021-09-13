@@ -7,14 +7,14 @@ bokeh serve --show CMSlicerExample2D.py
 import numpy
 from bokeh.io import curdoc
 
-from bokcolmaps.CMSlicer import CMSlicer
+from bokcolmaps.CMSlicer2D import CMSlicer2D
 from bokcolmaps.Examples import example_data
 
 x, y, z, D = example_data()
 z = numpy.array([z[0]])
 D = D[0]
 
-cm = CMSlicer(x, y, z, D, xlab='x val', ylab='y val',
-              zlab='power val', dmlab='Function val')
+cm = CMSlicer2D(x, y, z, D, xlab='x val', ylab='y val',
+                zlab='power val', dmlab='Function val')
 
 curdoc().add_root(cm)

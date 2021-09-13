@@ -37,7 +37,7 @@ class Test_interp_data(unittest.TestCase):
         for yi in range(self.dims[1]):
             data_c[yi] = numpy.interp(x_t_i, x_t, data_t[yi])
 
-        test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
+        test_x_t, test_y_t, test_data_t, _, _ = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.max(numpy.abs(test_x_t - x_t_i)) < self.tol)
         self.assertTrue(numpy.array_equal(test_y_t, y_t))
@@ -58,7 +58,7 @@ class Test_interp_data(unittest.TestCase):
         for xi in range(self.dims[2]):
             data_c[:, xi] = numpy.interp(y_t_i, y_t, data_t[:, xi])
 
-        test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
+        test_x_t, test_y_t, test_data_t, _, _ = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.array_equal(test_x_t, x_t))
         self.assertTrue(numpy.max(numpy.abs(test_y_t - y_t_i)) < self.tol)
@@ -81,7 +81,7 @@ class Test_interp_data(unittest.TestCase):
 
         x_t_i = -x_t_i
 
-        test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
+        test_x_t, test_y_t, test_data_t, _, _ = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.max(numpy.abs(test_x_t - x_t_i)) < self.tol)
         self.assertTrue(numpy.array_equal(test_y_t, y_t))
@@ -104,7 +104,7 @@ class Test_interp_data(unittest.TestCase):
 
         y_t_i = -y_t_i
 
-        test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
+        test_x_t, test_y_t, test_data_t, _, _ = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.array_equal(test_x_t, x_t))
         self.assertTrue(numpy.max(numpy.abs(test_y_t - y_t_i)) < self.tol)
@@ -129,7 +129,7 @@ class Test_interp_data(unittest.TestCase):
         x_t_i = numpy.flipud(x_t_i)
         data_c = numpy.fliplr(data_c)
 
-        test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
+        test_x_t, test_y_t, test_data_t, _, _ = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.max(numpy.abs(test_x_t - x_t_i)) < self.tol)
         self.assertTrue(numpy.array_equal(test_y_t, y_t))
@@ -154,7 +154,7 @@ class Test_interp_data(unittest.TestCase):
         y_t_i = numpy.flipud(y_t_i)
         data_c = numpy.flipud(data_c)
 
-        test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
+        test_x_t, test_y_t, test_data_t, _, _ = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.array_equal(test_x_t, x_t))
         self.assertTrue(numpy.max(numpy.abs(test_y_t - y_t_i)) < self.tol)
@@ -178,7 +178,7 @@ class Test_interp_data(unittest.TestCase):
 
         x_t_i = -x_t_i
 
-        test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
+        test_x_t, test_y_t, test_data_t, _, _ = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.max(numpy.abs(test_x_t - x_t_i)) < self.tol)
         self.assertTrue(numpy.array_equal(test_y_t, y_t))
@@ -205,7 +205,7 @@ class Test_interp_data(unittest.TestCase):
         for zi in range(self.dims[0]):
             data_c[zi] = numpy.flipud(data_c[zi])
 
-        test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t)
+        test_x_t, test_y_t, test_data_t, _, _ = interp_data(x_t, y_t, data_t)
 
         self.assertTrue(numpy.array_equal(test_x_t, x_t))
         self.assertTrue(numpy.max(numpy.abs(test_y_t - y_t_i)) < self.tol)
@@ -234,8 +234,7 @@ class Test_interp_data(unittest.TestCase):
         t_orig = t1 - t0
 
         t0 = time()
-        test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t,
-                                                      nu_tol=1e-6)
+        test_x_t, test_y_t, test_data_t, _, _ = interp_data(x_t, y_t, data_t, nu_tol=1e-6)
         t1 = time()
         t_flat = t1 - t0
 
@@ -268,8 +267,7 @@ class Test_interp_data(unittest.TestCase):
         t_orig = t1 - t0
 
         t0 = time()
-        test_x_t, test_y_t, test_data_t = interp_data(x_t, y_t, data_t,
-                                                      nu_tol=1e-6)
+        test_x_t, test_y_t, test_data_t, _, _ = interp_data(x_t, y_t, data_t, nu_tol=1e-6)
         t1 = time()
         t_flat = t1 - t0
 
