@@ -8,7 +8,7 @@ from bokeh.plotting import Figure
 
 from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, NumeralTickFormatter
 
-from bokeh.models.widgets import Button
+from bokeh.models.widgets import Button, Div
 from bokeh.models.layouts import Column, Row
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.tools import HoverTool
@@ -140,7 +140,7 @@ class ColourMapLP(Row):
         self.lplot.yaxis.axis_label_text_font_size = '10pt'
         self.lplot.yaxis.axis_label_text_font_style = 'bold'
 
-        self.lpcon = Column(self.lplot)
+        self.lpcon = Column(Div(text='', width=lpwidth, height=5), self.lplot)
 
         if scbutton:
             self.btn = Button(label='Snap to centre')

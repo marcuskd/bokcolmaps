@@ -137,7 +137,7 @@ class CMSlicer3D(Row):
         y = self.cmap.cmaplp.cmplot.datasrc.data['y'][0]
         z = self.cmap.cmaplp.cmplot.datasrc.data['z'][0]
 
-        dm = self.cmap.cmaplp.cmplot.datasrc.data['dm'][0]
+        dm = self.cmap.cmaplp.cmplot.datasrc.data['dm'][0].copy()
         dm = numpy.reshape(dm, [z.size, y.size, x.size])
 
         dm_i, z_i = interp_2d_line(y, x, dm, c_i, z=z)
@@ -146,7 +146,7 @@ class CMSlicer3D(Row):
             z_i = numpy.flipud(z_i)
             dm_i = numpy.flipud(dm_i)
 
-        iplot = ColourMap(r_i, z_i, [0], dm_i, palette=self.cmap_params.data['palette'][0],
+        iplot = ColourMap(r_i, z_i, numpy.array([0]), dm_i, palette=self.cmap_params.data['palette'][0],
                           cfile=self.cmap_params.data['cfile'][0], revcols=self.cmap_params.data['revcols'][0],
                           xlab='Units', ylab=self.cmap_params.data['zlab'][0], dmlab=self.cmap_params.data['dmlab'][0],
                           height=self.cmap_params.data['cmheight'][0], width=self.cmap_params.data['cmwidth'][0],

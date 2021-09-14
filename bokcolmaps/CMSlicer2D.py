@@ -129,7 +129,7 @@ class CMSlicer2D(Row):
         x = self.cmap.datasrc.data['x'][0]
         y = self.cmap.datasrc.data['y'][0]
 
-        dm = self.cmap.datasrc.data['dm'][0]
+        dm = self.cmap.datasrc.data['dm'][0].copy()
         dm = numpy.reshape(dm, [y.size, x.size])
 
         dm_i, z_i = interp_2d_line(y, x, dm, c_i)

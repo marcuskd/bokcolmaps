@@ -196,12 +196,7 @@ class ColourMap(Column):
             data['xp'] = [x[xind]];
             data['yp'] = [y[yind]];
             var zind = yind*x.length + xind;
-            if (d.length == y.length) {
-                data['dp'] = [d[yind][xind]];
-            }
-            else {
-                data['dp'] = [d[zind]];
-            }
+            data['dp'] = [d[zind]];
         }
         """
 
