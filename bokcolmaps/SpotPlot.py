@@ -2,7 +2,7 @@
 
 import numpy
 
-from bokeh.plotting import Figure
+from bokeh.model import DataModel
 
 from bokeh.models import ColumnDataSource, Plot, ColorBar
 from bokeh.models.mappers import LinearColorMapper
@@ -10,25 +10,20 @@ from bokeh.models.layouts import Column
 
 from bokeh.core.properties import Instance, String, Int, Float, Bool
 
+from bokeh.plotting import figure
+
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 from bokcolmaps.generate_colourbar import generate_colourbar
 from bokcolmaps.read_colourmap import read_colourmap
 from bokcolmaps.get_min_max import get_min_max
 
 
-class SpotPlot(Column):
+class SpotPlot(Column, DataModel):
 
     """
     Like a scatter plot but with the points colour mapped with a
     user-defined colour scale.
     """
-
-    __view_model__ = 'Column'
-    __subtype__ = 'SpotPlot'
-
-    __view_module__ = 'bokeh'
-
-    __sizing_mode__ = 'stretch_both'
 
     plot = Instance(Plot)
     cbar = Instance(ColorBar)
@@ -38,15 +33,15 @@ class SpotPlot(Column):
     cvals = Instance(ColumnDataSource)
     cmap = Instance(LinearColorMapper)
 
-    title_root = String
-    zlab = String
-    bg_col = String
-    nan_col = String
-    sp_size = Int
-    rmin = Float
-    rmax = Float
-    autoscale = Bool
-    cbdelta = Float
+    _title_root = String
+    _zlab = String
+    _bg_col = String
+    _nan_col = String
+    _sp_size = Int
+    _rmin = Float
+    _rmax = Float
+    _autoscale = Bool
+    _cbdelta = Float
 
     def __init__(self, x, y, z, dm, **kwargs):
 
@@ -69,40 +64,40 @@ class SpotPlot(Column):
 
         super().__init__()
 
-        self.cbdelta = 0.01  # Min colourbar range (used if values are equal)
+        self._cbdelta = 0.01  # Min colourbar range (used if values are equal)
 
-        self.title_root = dmlab
-        self.zlab = zlab
+        self._title_root = dmlab
+        self._zlab = zlab
 
         is3D = True if z.size > 1 else False
 
-        self.autoscale = True
+        self._autoscale = True
         if (rmin is not None) and (rmax is not None):
-            self.autoscale = False
+            self._autoscale = False
         else:
             if rmin is not None:
-                self.rmin = rmin
+                self._rmin = rmin
             elif is3D:
-                self.rmin = numpy.min(dm[0])
+                self._rmin = numpy.min(dm[0])
             else:
-                self.rmin = numpy.min(dm)
+                self._rmin = numpy.min(dm)
             if rmax is not None:
-                self.rmax = rmax
+                self._rmax = rmax
             elif is3D:
-                self.rmax = numpy.max(dm[0])
+                self._rmax = numpy.max(dm[0])
             else:
-                self.rmax = numpy.max(dm)
+                self._rmax = numpy.max(dm)
 
         if is3D:  # Default to first 'slice'
             d = dm[0]
         else:
             d = dm
 
-        if self.autoscale:
-            min_val, max_val = get_min_max(d, self.cbdelta)
+        if self._autoscale:
+            min_val, max_val = get_min_max(d, self._cbdelta)
         else:
-            min_val = self.rmin
-            max_val = self.rmax
+            min_val = self._rmin
+            max_val = self._rmax
 
         if cfile is not None:
             self.read_cmap(cfile)
@@ -123,11 +118,11 @@ class SpotPlot(Column):
         if cfile is None:
             self.cvals = ColumnDataSource(data={'colours': self.cmap.palette})
 
-        self.bg_col = 'black'
-        self.nan_col = nan_colour
-        self.sp_size = int(min(height, width) / 40)
+        self._bg_col = 'black'
+        self._nan_col = nan_colour
+        self._sp_size = int(min(height, width) / 40)
 
-        cols = [self.nan_col] * d.size  # Initially empty
+        cols = [self._nan_col] * d.size  # Initially empty
         self.datasrc = ColumnDataSource(data={'z': [z], 'd': [d], 'dm': [dm]})
         self.coldatasrc = ColumnDataSource(data={'x': x, 'y': y, 'cols': cols})
 
@@ -139,13 +134,13 @@ class SpotPlot(Column):
         if yran is None:
             yran = [y.min(), y.max()]
 
-        self.plot = Figure(x_axis_label=xlab, y_axis_label=ylab,
+        self.plot = figure(x_axis_label=xlab, y_axis_label=ylab,
                            x_range=xran, y_range=yran,
-                           plot_height=height, plot_width=width,
-                           background_fill_color=self.bg_col,
+                           height=height, width=width,
+                           background_fill_color=self._bg_col,
                            tools=ptools, toolbar_location='right')
 
-        self.plot.circle('x', 'y', size=self.sp_size, color='cols',
+        self.plot.circle('x', 'y', size=self._sp_size, color='cols',
                          source=self.coldatasrc,
                          nonselection_fill_color='cols',
                          selection_fill_color='cols',
@@ -208,10 +203,10 @@ class SpotPlot(Column):
         Update the colour scale (needed when the data for display changes)
         """
 
-        if self.autoscale:
+        if self._autoscale:
 
             d = self.datasrc.data['d'][0]
-            min_val, max_val = get_min_max(d, self.cbdelta)
+            min_val, max_val = get_min_max(d, self._cbdelta)
 
             self.cmap.low = min_val
             self.cmap.high = max_val
@@ -248,7 +243,7 @@ class SpotPlot(Column):
 
             else:
 
-                cols[s] = self.nan_col
+                cols[s] = self._nan_col
 
         newdata['cols'] = cols
 
@@ -261,10 +256,10 @@ class SpotPlot(Column):
         """
 
         if self.datasrc.data['z'][0].size > 1:
-            self.plot.title.text = self.title_root + ', ' + \
-                self.zlab + ' = ' + str(self.datasrc.data['z'][0][zind])
+            self.plot.title.text = self._title_root + ', ' + \
+                self._zlab + ' = ' + str(self.datasrc.data['z'][0][zind])
         else:
-            self.plot.title.text = self.title_root
+            self.plot.title.text = self._title_root
 
     def input_change(self, attrname, old, new):
 

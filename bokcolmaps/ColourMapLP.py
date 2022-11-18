@@ -4,42 +4,38 @@ ColourMapLP class definition
 
 import numpy
 
-from bokeh.plotting import Figure
+from bokeh.model import DataModel
 
 from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, NumeralTickFormatter
-
-from bokeh.models.widgets import Button, Div
+from bokeh.models.widgets import Button
 from bokeh.models.layouts import Column, Row
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.tools import HoverTool
 
 from bokeh.core.properties import Instance, String
 
+from bokeh.plotting import figure
+
 from bokcolmaps.ColourMap import ColourMap
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
-class ColourMapLP(Row):
+class ColourMapLP(Row, DataModel):
 
     """
     A ColourMap and a line plot of the data against z at the x and y
     coordinates linked to a custom hover tool.
     """
 
-    __view_model__ = 'Row'
-    __subtype__ = 'ColourMapLP'
-
-    __view_module__ = 'bokeh'
-
     cmplot = Instance(ColourMap)
     lpcon = Instance(Column)
     btn = Instance(Button)
     lplot = Instance(Plot)
     lpds = Instance(ColumnDataSource)
-    cmxlab = String
-    cmylab = String
-    js_hover = String
+    _cmxlab = String
+    _cmylab = String
+    _js_hover = String
 
     def __init__(self, x, y, z, dm, **kwargs):
 
@@ -82,7 +78,7 @@ class ColourMapLP(Row):
 
         # Custom hover tool to render profile at cursor position in line plot
 
-        self.js_hover = self.cmplot.js_hover + """
+        self._js_hover = self.cmplot._js_hover + """
         var lpdata = lpsrc.data;
 
         if ((xind < x.length) && (yind < y.length)) {
@@ -100,7 +96,7 @@ class ColourMapLP(Row):
 
         cjs = CustomJS(args={'datasrc': self.cmplot.datasrc,
                              'lpsrc': self.lpds},
-                       code=self.js_hover)
+                       code=self._js_hover)
         if hoverdisp:
             htool = HoverTool(tooltips=[(xlab, '@xp{0.00}'),
                                         (ylab, '@yp{0.00}'),
@@ -111,8 +107,8 @@ class ColourMapLP(Row):
 
         self.cmplot.plot.add_tools(htool)
 
-        self.lplot = Figure(x_axis_label=dmlab, y_axis_label=zlab,
-                            plot_height=lpheight, plot_width=lpwidth,
+        self.lplot = figure(x_axis_label=dmlab, y_axis_label=zlab,
+                            height=lpheight, width=lpwidth,
                             tools=['reset, pan, wheel_zoom, box_zoom, save'],
                             toolbar_location='right')
 
@@ -140,10 +136,10 @@ class ColourMapLP(Row):
         self.lplot.yaxis.axis_label_text_font_size = '10pt'
         self.lplot.yaxis.axis_label_text_font_style = 'bold'
 
-        self.lpcon = Column(Div(text='', width=lpwidth, height=5), self.lplot)
+        self.lpcon = Column(self.lplot)
 
         if scbutton:
-            self.btn = Button(label='Snap to centre')
+            self.btn = Button(label='Snap to centre', align='center')
             self.btn.on_click(self.centre_lp)
             self.lpcon.children.append(self.btn)
         else:
@@ -152,8 +148,8 @@ class ColourMapLP(Row):
         self.children.append(self.cmplot)
         self.children.append(self.lpcon)
 
-        self.cmxlab = xlab
-        self.cmylab = ylab
+        self._cmxlab = xlab
+        self._cmylab = ylab
 
         self.centre_lp()
 
@@ -175,6 +171,7 @@ class ColourMapLP(Row):
         xa = ds['x'][0]
         ya = ds['y'][0]
         xi, = numpy.where(xa >= x)
+        xind = yind = 0
         if xi.size > 0:
             xind = xi[0]
             if (xind > 0) and (abs(xa[xind - 1] - x) < abs(xa[xind] - x)):

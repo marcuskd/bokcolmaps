@@ -2,6 +2,8 @@
 ColourMapLPSlider class definition
 """
 
+from bokeh.model import DataModel
+
 from bokeh.models.widgets import Slider
 from bokeh.models.layouts import Column
 
@@ -12,17 +14,12 @@ from bokcolmaps.ColourMapLP import ColourMapLP
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
-class ColourMapLPSlider(Column):
+class ColourMapLPSlider(Column, DataModel):
 
     """
     A ColourMapLP with a slider linked to the z coordinate
     (i.e. the 2D slice being displayed).
     """
-
-    __view_model__ = 'Column'
-    __subtype__ = 'ColourMapLPSlider'
-
-    __view_module__ = 'bokeh'
 
     cmaplp = Instance(ColourMapLP)
     zslider = Instance(Slider)
@@ -59,7 +56,8 @@ class ColourMapLPSlider(Column):
                                   alpha=alpha, nan_colour=nan_colour)
 
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
-                              step=1, value=0, orientation='horizontal')
+                              step=1, value=0, orientation='horizontal',
+                              width=self.cmaplp.cmplot.plot.width)
 
         self.zslider.js_on_change('value', self.cmaplp.cmplot.cjs_slider)
 
