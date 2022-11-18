@@ -20,7 +20,7 @@ setup(name='bokcolmaps',
                 ],
       packages=find_packages(),
       install_requires=['numpy >= 1.20',
-                        'bokeh >= 2.3'
+                        'bokeh >= 3'
                         ],
       include_package_data=True,
       )
