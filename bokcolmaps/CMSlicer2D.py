@@ -4,11 +4,13 @@ CMSlicer2D class definition
 
 import numpy
 
-from bokeh.layouts import Column
+from bokeh.model import DataModel
+
+from bokeh.models.layouts import Column
 from bokeh.models.widgets import Div
 from bokeh.events import Tap
 from bokeh.core.properties import Instance
-from bokeh.plotting import Figure
+from bokeh.plotting import figure
 from bokeh.models.glyphs import Line
 
 from bokcolmaps.CMSlicer import CMSlicer
@@ -17,14 +19,11 @@ from bokcolmaps.ColourMap import ColourMap
 from bokcolmaps.interp_2d_line import interp_2d_line
 
 
-class CMSlicer2D(CMSlicer):
+class CMSlicer2D(CMSlicer, DataModel):
 
     """
     A ColourMap with the ability to slice the plot with a line through the x-y plane to give a separate line plot.
     """
-
-    __view_model__ = CMSlicer.__view_model__
-    __subtype__ = 'CMSlicer2D'
 
     cmap = Instance(ColourMap)
 
@@ -47,20 +46,20 @@ class CMSlicer2D(CMSlicer):
 
         self.cmap.plot.on_event(Tap, self.toggle_select)
 
-        self.lr = self.cmap.plot.add_glyph(self.sl_src, glyph=Line(x='x', y='y', line_color='white',
-                                           line_width=5, line_dash='dashed', line_alpha=1))
+        self.lr = self.cmap.plot.add_glyph(self.sl_src, Line(x='x', y='y', line_color='white',
+                                                             line_width=5, line_dash='dashed', line_alpha=1))
 
         self.children.append(self.cmap)
 
         self.children.append(Column(children=[Div(text='', width=params['cmwidth'][0], height=0),
-                                              Figure(toolbar_location=None)]))
+                                              figure(toolbar_location=None)]))
 
         self.change_slice()
 
     def change_slice(self):
 
         """
-        Change the slice displayed in the separate ColourMap
+        Change the slice displayed in the separate figure
         """
 
         c_i, r_i = self.get_interp_coords(self.cmap.datasrc)
@@ -73,8 +72,8 @@ class CMSlicer2D(CMSlicer):
 
         dm_i, z_i = interp_2d_line(y, x, dm, c_i)
 
-        iplot = Figure(x_axis_label='Units', y_axis_label=self.cmap_params.data['zlab'][0],
-                       plot_height=self.cmap_params.data['cmheight'][0], plot_width=self.cmap_params.data['cmwidth'][0],
+        iplot = figure(x_axis_label='Units', y_axis_label=self.cmap_params.data['zlab'][0],
+                       height=self.cmap_params.data['cmheight'][0], width=self.cmap_params.data['cmwidth'][0],
                        x_range=[r_i[0], r_i[-1]], toolbar_location='right')
 
         iplot.line(r_i, dm_i, line_color='blue', line_width=2, line_alpha=1)

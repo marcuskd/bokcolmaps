@@ -54,6 +54,7 @@ def interp_data(x_t, y_t, data_t, nu_tol=0, ax_int=None):
 
     # Find the transpose order
 
+    t_ord = None
     if is3d:
         if interp_x:
             t_ord = [0, 1, 2]

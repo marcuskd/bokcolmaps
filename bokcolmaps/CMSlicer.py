@@ -4,33 +4,32 @@ CMSlicer class definition
 
 import numpy
 
+from bokeh.model import DataModel
+
 from bokeh.models.sources import ColumnDataSource
-from bokeh.layouts import Row
-from bokeh.core.properties import Instance, Bool
+from bokeh.models.layouts import Row
 from bokeh.models.renderers import GlyphRenderer
 from bokeh.models.glyphs import Line
+
+from bokeh.core.properties import Instance, Bool
+
+from bokcolmaps.ColourMapLPSlider import ColourMapLPSlider
+from bokcolmaps.ColourMap import ColourMap
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
-class CMSlicer(Row):
+class CMSlicer(Row, DataModel):
 
     """
     Base class for CMSlicer2D and CMSlicer3D.
     """
 
-    __view_model__ = 'Row'
-    __subtype__ = 'CMSlicer'
-
-    __view_module__ = 'bokeh'
-
-    nu_tol_default = 1.
-
     sl_src = Instance(ColumnDataSource)
     cmap_params = Instance(ColumnDataSource)
     lr = Instance(GlyphRenderer)
 
-    is_selecting = Bool
+    _is_selecting = Bool
 
     def __init__(self, x, y, **kwargs):
 
@@ -46,8 +45,6 @@ class CMSlicer(Row):
         cmheight = kwargs.get('cmheight', 575)
         cmwidth = kwargs.get('cmwidth', 500)
         lpwidth = kwargs.get('lpwidth', 300)
-        revz = kwargs.get('revz', False)
-        hoverdisp = kwargs.get('hoverdisp', True)
 
         self.height = cmheight
         self.width = int((2 * cmwidth + lpwidth) * 1.1)
@@ -55,25 +52,15 @@ class CMSlicer(Row):
         x0, x1 = x[0], x[-1]
         ymean = (y[0] + y[-1]) / 2
         y0, y1 = ymean, ymean
-        self.sl_src = ColumnDataSource(data={'x': [x0, x1], 'y': [y0, y1]})
+        self.sl_src = ColumnDataSource({'x': [x0, x1], 'y': [y0, y1]})
 
-        self.cmap_params = ColumnDataSource(data={'palette': [palette],
-                                                  'cfile': [cfile],
-                                                  'revcols': [revcols],
-                                                  'xlab': [xlab],
-                                                  'ylab': [ylab],
-                                                  'zlab': [zlab],
-                                                  'dmlab': [dmlab],
-                                                  'rmin': [rmin],
-                                                  'rmax': [rmax],
-                                                  'xran': [xran],
-                                                  'yran': [yran],
-                                                  'alpha': [alpha],
-                                                  'nan_colour': [nan_colour],
-                                                  'cmheight': [cmheight],
-                                                  'cmwidth': [cmwidth]})
+        self.cmap_params = ColumnDataSource({'palette': [palette], 'cfile': [cfile], 'revcols': [revcols],
+                                             'xlab': [xlab], 'ylab': [ylab], 'zlab': [zlab], 'dmlab': [dmlab],
+                                             'rmin': [rmin], 'rmax': [rmax], 'xran': [xran], 'yran': [yran],
+                                             'alpha': [alpha], 'nan_colour': [nan_colour],
+                                             'cmheight': [cmheight], 'cmwidth': [cmwidth]})
 
-        self.is_selecting = False
+        self._is_selecting = False
 
     def get_interp_coords(self, datasrc):
 
@@ -116,20 +103,26 @@ class CMSlicer(Row):
         Handle Tap events for slice change
         """
 
-        if self.is_selecting:
+        if self._is_selecting:
 
-            self.is_selecting = False
+            self._is_selecting = False
             self.sl_src.data['x'][1] = event.x
             self.sl_src.data['y'][1] = event.y
+            self.sl_src.trigger('data', None, self.sl_src.data)
 
-            self.cmap.renderers.remove(self.lr)
-            self.lr = self.cmap.add_glyph(self.sl_src, glyph=Line(x='x', y='y', line_color='white', line_width=5,
-                                                                  line_dash='dashed', line_alpha=1))
+            if type(self.cmap) is ColourMap:  # Subclass is CMSlicer2D
+                self.cmap.plot.renderers.remove(self.lr)
+                self.lr = self.cmap.plot.add_glyph(self.sl_src, Line(x='x', y='y', line_color='white', line_width=5,
+                                                                     line_dash='dashed', line_alpha=1))
+            elif type(self.cmap) is ColourMapLPSlider:  # Subclass is CMSlicer3D
+                self.cmap.cmaplp.cmplot.plot.renderers.remove(self.lr)
+                self.lr = self.cmap.cmaplp.cmplot.plot.add_glyph(self.sl_src, Line(x='x', y='y', line_color='white', line_width=5,
+                                                                                   line_dash='dashed', line_alpha=1))
 
             self.change_slice()
 
         else:
 
-            self.is_selecting = True
+            self._is_selecting = True
             self.sl_src.data['x'][0] = event.x
             self.sl_src.data['y'][0] = event.y

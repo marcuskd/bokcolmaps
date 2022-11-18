@@ -4,7 +4,7 @@ ColourMap class definition
 
 import numpy
 
-from bokeh.plotting import Figure
+from bokeh.model import DataModel
 
 from bokeh.models import ColumnDataSource, Plot, ColorBar, HoverTool
 from bokeh.models.mappers import LinearColorMapper
@@ -14,26 +14,21 @@ from bokeh.models.callbacks import CustomJS
 
 from bokeh.core.properties import Instance, String, Float, Bool, Int
 
+from bokeh.plotting import figure
+
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 from bokcolmaps.generate_colourbar import generate_colourbar
 from bokcolmaps.read_colourmap import read_colourmap
 from bokcolmaps.get_min_max import get_min_max
 
 
-class ColourMap(Column):
+class ColourMap(Column, DataModel):
 
     """
     Plots an image as a colour map with a user-defined colour scale and
     creates a hover readout. The image must be on a uniform grid to be
     rendered correctly and for the data cursor to provide correct readout.
     """
-
-    __view_model__ = 'Column'
-    __subtype__ = 'ColourMap'
-
-    __view_module__ = 'bokeh'
-
-    __sizing_mode__ = 'stretch_both'
 
     plot = Instance(Plot)
     cbar = Instance(ColorBar)
@@ -44,21 +39,21 @@ class ColourMap(Column):
 
     cmap = Instance(LinearColorMapper)
 
-    title_root = String
-    zlab = String
+    _title_root = String
+    _zlab = String
 
-    rmin = Float
-    rmax = Float
-    autoscale = Bool
-    revcols = Bool
+    _rmin = Float
+    _rmax = Float
+    _autoscale = Bool
+    _revcols = Bool
 
-    xsize = Int
-    ysize = Int
-    zsize = Int
+    _xsize = Int
+    _ysize = Int
+    _zsize = Int
 
-    cbdelta = Float
+    _cbdelta = Float
 
-    js_hover = String
+    _js_hover = String
 
     cjs_slider = Instance(CustomJS)
 
@@ -85,35 +80,35 @@ class ColourMap(Column):
 
         super().__init__()
 
-        self.cbdelta = 0.01  # Min colourbar range (used if values are equal)
+        self._cbdelta = 0.01  # Min colourbar range (used if values are equal)
 
-        self.title_root = dmlab
-        self.zlab = zlab
+        self._title_root = dmlab
+        self._zlab = zlab
 
         is3D = True if len(dm.shape) == 3 else False
 
-        self.autoscale = True
+        self._autoscale = True
         if (rmin is not None) and (rmax is not None):
-            self.autoscale = False
+            self._autoscale = False
         else:
             if rmin is not None:
-                self.rmin = rmin
+                self._rmin = rmin
             elif is3D:
-                self.rmin = numpy.min(dm[0])
+                self._rmin = numpy.min(dm[0])
             else:
-                self.rmin = numpy.min(dm)
+                self._rmin = numpy.min(dm)
             if rmax is not None:
-                self.rmax = rmax
+                self._rmax = rmax
             elif is3D:
-                self.rmax = numpy.max(dm[0])
+                self._rmax = numpy.max(dm[0])
             else:
-                self.rmax = numpy.max(dm)
+                self._rmax = numpy.max(dm)
 
         if is3D:
-            self.zsize, self.ysize, self.xsize = dm.shape
+            self._zsize, self._ysize, self._xsize = dm.shape
         else:
-            self.ysize, self.xsize = dm.shape
-            self.zsize = 1
+            self._ysize, self._xsize = dm.shape
+            self._zsize = 1
 
         if is3D:  # Default to first slice
             d = dm[0]
@@ -122,14 +117,14 @@ class ColourMap(Column):
 
         # Get minimum and maximum values for the colour mapping
 
-        if self.autoscale:
-            minvals = [None] * self.zsize
-            maxvals = [None] * self.zsize
-            for zind in range(self.zsize):
-                minvals[zind], maxvals[zind] = get_min_max(dm[zind], self.cbdelta)
+        if self._autoscale:
+            minvals = [None] * self._zsize
+            maxvals = [None] * self._zsize
+            for zind in range(self._zsize):
+                minvals[zind], maxvals[zind] = get_min_max(dm[zind], self._cbdelta)
         else:
-            minvals = [rmin] * self.zsize
-            maxvals = [rmax] * self.zsize
+            minvals = [rmin] * self._zsize
+            maxvals = [rmax] * self._zsize
         self.mmsrc = ColumnDataSource(data={'minvals': minvals, 'maxvals': maxvals})
 
         dm = dm.flatten()
@@ -176,7 +171,7 @@ class ColourMap(Column):
         # JS code defined whether or not hover tool used as may be needed in
         # class ColourMapLP
 
-        self.js_hover = """
+        self._js_hover = """
         var geom = cb_data['geometry'];
         var data = datasrc.data;
 
@@ -209,7 +204,7 @@ class ColourMap(Column):
 
         if hover:
             cjs_hover = CustomJS(args={'datasrc': self.datasrc},
-                                 code=self.js_hover)
+                                 code=self._js_hover)
             htool = HoverTool(tooltips=[(xlab, '@xp{0.00}'),
                                         (ylab, '@yp{0.00}'),
                                         (dmlab, '@dp{0.00}')],
@@ -231,28 +226,28 @@ class ColourMap(Column):
 
         # Get the colourmap
 
-        self.revcols = revcols
+        self._revcols = revcols
         self.get_cmap(cfile, palette, nan_colour)
 
         # Create the plot
 
-        self.plot = Figure(x_axis_label=xlab, y_axis_label=ylab,
+        self.plot = figure(x_axis_label=xlab, y_axis_label=ylab,
                            x_range=xran, y_range=yran,
-                           plot_height=height, plot_width=width,
+                           height=height, width=width,
                            tools=ptools, toolbar_location='right')
 
         self.cjs_slider = CustomJS(args={'datasrc': self.datasrc, 'mmsrc': self.mmsrc,
                                          'cmap': self.cmap, 'cmplot': self.plot,
-                                         'title_root': self.title_root, 'zlab': self.zlab},
+                                         'title_root': self._title_root, 'zlab': self._zlab},
                                    code=js_slider)
 
         # Set the title
 
         if len(self.datasrc.data['z'][0]) > 1:
-            self.plot.title.text = self.title_root + ', ' + \
-                self.zlab + ' = ' + str(self.datasrc.data['z'][0][0])
+            self.plot.title.text = self._title_root + ', ' + \
+                self._zlab + ' = ' + str(self.datasrc.data['z'][0][0])
         else:
-            self.plot.title.text = self.title_root
+            self.plot.title.text = self._title_root
 
         self.plot.title.text_font = 'garamond'
         self.plot.title.text_font_size = '12pt'
@@ -304,12 +299,12 @@ class ColourMap(Column):
         Get the colour mapper
         """
 
-        if self.autoscale:
+        if self._autoscale:
             min_val, max_val = get_min_max(self.datasrc.data['image'][0],
-                                           self.cbdelta)
+                                           self._cbdelta)
         else:
-            min_val = self.rmin
-            max_val = self.rmax
+            min_val = self._rmin
+            max_val = self._rmax
 
         if cfile is not None:
             self.read_cmap(cfile)
@@ -319,7 +314,7 @@ class ColourMap(Column):
 
         self.cmap = LinearColorMapper(palette=palette, nan_color=nan_colour)
 
-        if self.revcols:
+        if self._revcols:
             pal = list(self.cmap.palette)
             pal.reverse()
             self.cmap.palette = tuple(pal)
@@ -342,11 +337,11 @@ class ColourMap(Column):
         (e.g. for Bokeh Server applications)
         """
 
-        d = self.datasrc.data['dm'][0][zind * self.xsize * self.ysize:
-                                       (zind + 1) * self.xsize * self.ysize]
-        self.datasrc.patch({'image': [(0, d.reshape((self.ysize, self.xsize)))]})
+        d = self.datasrc.data['dm'][0][zind * self._xsize * self._ysize:
+                                       (zind + 1) * self._xsize * self._ysize]
+        self.datasrc.patch({'image': [(0, d.reshape((self._ysize, self._xsize)))]})
 
-        if self.autoscale:
+        if self._autoscale:
             self._update_cbar()
 
     def _update_cbar(self):
@@ -356,6 +351,6 @@ class ColourMap(Column):
         """
 
         d = self.datasrc.data['image'][0]
-        min_val, max_val = get_min_max(d, self.cbdelta)
+        min_val, max_val = get_min_max(d, self._cbdelta)
         self.cmap.low = min_val
         self.cmap.high = max_val

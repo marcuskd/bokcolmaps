@@ -2,6 +2,8 @@
 SplotPlotSlider class definition
 """
 
+from bokeh.model import DataModel
+
 from bokeh.models.widgets import Slider
 from bokeh.models.layouts import Column
 
@@ -12,7 +14,7 @@ from bokcolmaps.SpotPlot import SpotPlot
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
-class SpotPlotSlider(Column):
+class SpotPlotSlider(Column, DataModel):
 
     """
     A SpotPlot with a slider linked to the z coordinate
@@ -21,11 +23,6 @@ class SpotPlotSlider(Column):
 
     splot = Instance(SpotPlot)
     zslider = Instance(Slider)
-
-    __view_model__ = 'Column'
-    __subtype__ = 'SpotPlotSlider'
-
-    __view_module__ = 'bokeh'
 
     def __init__(self, x, y, z, dm, **kwargs):
 
@@ -52,7 +49,8 @@ class SpotPlotSlider(Column):
                               alpha=alpha, nan_colour=nan_colour)
 
         self.zslider = Slider(title='z index', start=0, end=z.size - 1,
-                              step=1, value=0, orientation='horizontal')
+                              step=1, value=0, orientation='horizontal',
+                              width=self.splot.plot.width)
 
         self.zslider.on_change('value', self.splot.input_change)
 

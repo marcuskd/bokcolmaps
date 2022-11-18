@@ -4,11 +4,13 @@ CMSlicer3D class definition
 
 import numpy
 
-from bokeh.layouts import Column
+from bokeh.model import DataModel
+
+from bokeh.models.layouts import Column
 from bokeh.models.widgets import Div
 from bokeh.events import Tap
 from bokeh.core.properties import Instance
-from bokeh.plotting import Figure
+from bokeh.plotting import figure
 from bokeh.models.glyphs import Line
 
 from bokcolmaps.CMSlicer import CMSlicer
@@ -18,15 +20,12 @@ from bokcolmaps.ColourMap import ColourMap
 from bokcolmaps.interp_2d_line import interp_2d_line
 
 
-class CMSlicer3D(CMSlicer):
+class CMSlicer3D(CMSlicer, DataModel):
 
     """
     A ColourMapLPSlider with the ability to slice the plot with a line through the x-y plane which gives the
     profile against z along the line as a separate ColourMap.
     """
-
-    __view_model__ = CMSlicer.__view_model__
-    __subtype__ = 'CMSlicer3D'
 
     cmap = Instance(ColourMapLPSlider)
 
@@ -63,7 +62,7 @@ class CMSlicer3D(CMSlicer):
         self.children.append(self.cmap)
 
         self.children.append(Column(children=[Div(text='', width=params['cmwidth'][0], height=35),
-                                              Figure(toolbar_location=None)]))
+                                              figure(toolbar_location=None)]))
 
         self.change_slice()
 

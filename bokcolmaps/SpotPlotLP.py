@@ -2,7 +2,7 @@
 SplotPlotLP class definition
 """
 
-from bokeh.plotting import Figure
+from bokeh.model import DataModel
 
 from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, \
     NumeralTickFormatter
@@ -11,32 +11,26 @@ from bokeh.models.callbacks import CustomJS
 from bokeh.models.tools import TapTool
 from bokeh.models.widgets.markups import Paragraph
 
-from bokeh.core.properties import Instance, String
+from bokeh.core.properties import Instance
+
+from bokeh.plotting import figure
 
 from bokcolmaps.SpotPlot import SpotPlot
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
 
 
-class SpotPlotLP(Row):
+class SpotPlotLP(Row, DataModel):
 
     """
     A SpotPlot and a line plot of the data against z at the x and y coordinates
     linked to a custom tap tool.
     """
 
-    __view_model__ = 'Row'
-    __subtype__ = 'SpotPlotLP'
-
-    __view_module__ = 'bokeh'
-
     spplot = Instance(SpotPlot)
     lpcon = Instance(Column)
     lplot = Instance(Plot)
     lpds = Instance(ColumnDataSource)
-    cmxlab = String
-    cmylab = String
-    tstr = String
 
     def __init__(self, x, y, z, dm, **kwargs):
 
@@ -93,8 +87,8 @@ class SpotPlotLP(Row):
         ttool = TapTool(callback=update_lp)
         self.spplot.plot.tools.append(ttool)
 
-        self.lplot = Figure(x_axis_label=dmlab, y_axis_label=zlab,
-                            plot_height=lpheight, plot_width=lpwidth,
+        self.lplot = figure(x_axis_label=dmlab, y_axis_label=zlab,
+                            height=lpheight, width=lpwidth,
                             tools=['reset, pan, wheel_zoom, box_zoom, save'],
                             toolbar_location='right')
 
