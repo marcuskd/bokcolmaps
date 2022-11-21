@@ -16,11 +16,11 @@ def interp_data(x_t, y_t, data_t, nu_tol=0, ax_int=None):
         data_t: 2D or 3D NumPy array of data for interpolation, dimensions N (if 3D), y_t.size, x_t.size
     kwargs...
         nu_tol: non-uniform tolerance value
-        stat_box: handle to Bokeh Div
-        interp_int_box: handle to Bokeh TextInput
         ax_int: interval for interpolation (if equal to None, the minimum interval along the interpolating axis will be used)
     returns...
-        x_t, y_t, data_t: either x_t or y_t made uniform, and data_t interpolated accordingly.
+        x_t, y_t, data_t: either x_t or y_t made uniform, and data_t interpolated accordingly
+        ax_int: updated interval for interpolation
+        msg: interpolation message
     """
 
     # Check if interpolation needed

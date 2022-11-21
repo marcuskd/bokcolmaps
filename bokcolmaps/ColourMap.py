@@ -63,7 +63,7 @@ class ColourMap(Column, DataModel):
         args...
             x: 1D NumPy array of x coordinates
             y: 1D NumPy array of y coordinates
-            z: 1D NumPy array of y coordinates
+            z: 1D NumPy array of z coordinates
             dm: 3D NumPy array of the data for display, dimensions z.size, y.size, x.size
         kwargs: all in get_common_kwargs plus...
             height: plot height (pixels)
@@ -267,8 +267,19 @@ class ColourMap(Column, DataModel):
         else:
             ys += yoffs
 
+        orig_str_x = 'left'
+        orig_str_y = 'bottom'
+
+        if x[-1] < x[0]:
+            orig_str_x = 'right'
+        if y[-1] < y[0]:
+            orig_str_y = 'top'
+
+        origin = orig_str_y + '_' + orig_str_x
+
         self.plot.image('image', source=self.datasrc, x=xs, y=ys,
-                        dw=pw, dh=ph, color_mapper=self.cmap, global_alpha=alpha)
+                        dw=pw, dh=ph, color_mapper=self.cmap, global_alpha=alpha,
+                        origin=origin, anchor=origin)
 
         # Needed for HoverTool...
 

@@ -136,7 +136,7 @@ class ColourMapLP(Row, DataModel):
         self.lplot.yaxis.axis_label_text_font_size = '10pt'
         self.lplot.yaxis.axis_label_text_font_style = 'bold'
 
-        self.lpcon = Column(self.lplot)
+        self.lpcon = Column(self.lplot, align='center')
 
         if scbutton:
             self.btn = Button(label='Snap to centre', align='center')
