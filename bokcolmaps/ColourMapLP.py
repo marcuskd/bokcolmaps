@@ -9,6 +9,7 @@ from bokeh.model import DataModel
 from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, NumeralTickFormatter
 from bokeh.models.widgets import Button
 from bokeh.models.layouts import Column, Row
+from bokeh.models.widgets import Div
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.tools import HoverTool
 
@@ -49,6 +50,8 @@ class ColourMapLP(Row, DataModel):
         hoverdisp: display the hover tool readout if True
         scbutton: create a Snap to Centre button if True (set to False if
                   ColourMapLP not used with Bokeh Server)
+        padleft: padding (pixels) to left of line plot (default 0)
+        padabove: padding (pixels) above line plot (default 0)
         """
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
@@ -61,6 +64,8 @@ class ColourMapLP(Row, DataModel):
         revz = kwargs.get('revz', False)
         hoverdisp = kwargs.get('hoverdisp', True)
         scbutton = kwargs.get('scbutton', False)
+        padleft = kwargs.get('padleft', 0)
+        padabove = kwargs.get('padabove', 0)
 
         super().__init__()
 
@@ -125,6 +130,13 @@ class ColourMapLP(Row, DataModel):
         self.lplot.line('x', 'y', source=self.lpds, line_color='blue',
                         line_width=2, line_alpha=1)
 
+        self.lplot.title.text = 'Profile at cursor'
+
+        self.lplot.title.text_font = 'garamond'
+        self.lplot.title.text_font_size = '12pt'
+        self.lplot.title.text_font_style = 'bold'
+        self.lplot.title.align = 'center'
+
         self.lplot.xaxis.axis_label_text_font = 'garamond'
         self.lplot.xaxis.axis_label_text_font_size = '10pt'
         self.lplot.xaxis.axis_label_text_font_style = 'bold'
@@ -136,7 +148,7 @@ class ColourMapLP(Row, DataModel):
         self.lplot.yaxis.axis_label_text_font_size = '10pt'
         self.lplot.yaxis.axis_label_text_font_style = 'bold'
 
-        self.lpcon = Column(self.lplot, align='center')
+        self.lpcon = Column(Div(text='', width=lpwidth, height=padabove), self.lplot)
 
         if scbutton:
             self.btn = Button(label='Snap to centre', align='center')
@@ -146,6 +158,7 @@ class ColourMapLP(Row, DataModel):
             self.btn = Button()
 
         self.children.append(self.cmplot)
+        self.children.append(Div(text='', width=padleft, height=padabove + lpheight))
         self.children.append(self.lpcon)
 
         self._cmxlab = xlab

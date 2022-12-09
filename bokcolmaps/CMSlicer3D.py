@@ -6,7 +6,7 @@ import numpy
 
 from bokeh.model import DataModel
 
-from bokeh.models.layouts import Column
+from bokeh.models.layouts import Column, Row
 from bokeh.models.widgets import Div
 from bokeh.events import Tap
 from bokeh.core.properties import Instance
@@ -32,7 +32,12 @@ class CMSlicer3D(CMSlicer, DataModel):
     def __init__(self, x, y, z, dm, **kwargs):
 
         """
-        All init arguments same as for ColourMapLPSlider.
+        All init arguments same as for CMSlicer except for additional kwargs...
+        lpheight: line plot height (pixels) for ColourMapLP
+        lpwidth: line plot width (pixels) for ColourMapLP
+        sphoverdisp: display the hover tool readout in the slice plot if True
+        padleftlp: padding (pixels) to left of ColourMapLP line plot (default 0)
+        padabovelp: padding (pixels) above ColourMapLP line plot (default 0)
         """
 
         super().__init__(x, y, **kwargs)
@@ -41,8 +46,9 @@ class CMSlicer3D(CMSlicer, DataModel):
 
         params['lpheight'] = [kwargs.get('lpheight', 500)]
         params['lpwidth'] = [kwargs.get('lpwidth', 300)]
-        params['revz'] = [kwargs.get('revz', False)]
-        params['hoverdisp'] = [kwargs.get('hoverdisp', True)]
+        params['sphoverdisp'] = [kwargs.get('sphoverdisp', True)]
+        params['padleftlp'] = [kwargs.get('padleftlp', 0)]
+        params['padabovelp'] = [kwargs.get('padabovelp', 0)]
 
         self.cmap = ColourMapLPSlider(x, y, z, dm, palette=params['palette'][0], cfile=params['cfile'][0],
                                       revcols=params['revcols'][0], xlab=params['xlab'][0],
@@ -52,7 +58,8 @@ class CMSlicer3D(CMSlicer, DataModel):
                                       rmin=params['rmin'][0], rmax=params['rmax'][0],
                                       xran=params['xran'][0], yran=params['yran'][0],
                                       revz=params['revz'][0], hoverdisp=params['hoverdisp'][0], scbutton=True,
-                                      alpha=params['alpha'][0], nan_colour=params['nan_colour'][0])
+                                      alpha=params['alpha'][0], nan_colour=params['nan_colour'][0],
+                                      padleft=params['padleftlp'][0], padabove=params['padabovelp'][0])
 
         self.cmap.cmaplp.cmplot.plot.on_event(Tap, self.toggle_select)
 
@@ -61,8 +68,13 @@ class CMSlicer3D(CMSlicer, DataModel):
 
         self.children.append(self.cmap)
 
-        self.children.append(Column(children=[Div(text='', width=params['cmwidth'][0], height=35),
-                                              figure(toolbar_location=None)]))
+        self.children.append(Column(children=[Div(text='',
+                                                  width=params['spwidth'][0] + params['padleft'][0],
+                                                  height=params['padabove'][0]),
+                                              Row(children=[Div(text='',
+                                                                width=params['padleft'][0],
+                                                                height=params['spheight'][0]),
+                                                            figure(toolbar_location=None)])]))
 
         self.change_slice()
 
@@ -89,9 +101,11 @@ class CMSlicer3D(CMSlicer, DataModel):
 
         iplot = ColourMap(r_i, z_i, [0], dm_i, palette=self.cmap_params.data['palette'][0],
                           cfile=self.cmap_params.data['cfile'][0], revcols=self.cmap_params.data['revcols'][0],
-                          xlab='Units', ylab=self.cmap_params.data['zlab'][0], dmlab=self.cmap_params.data['dmlab'][0],
-                          height=self.cmap_params.data['cmheight'][0], width=self.cmap_params.data['cmwidth'][0],
+                          xlab=self.cmap_params.data['splab'][0], ylab=self.cmap_params.data['zlab'][0],
+                          dmlab=self.cmap_params.data['dmlab'][0] + ' along track',
+                          height=self.cmap_params.data['spheight'][0], width=self.cmap_params.data['spwidth'][0],
                           rmin=self.cmap_params.data['rmin'][0], rmax=self.cmap_params.data['rmax'][0],
-                          alpha=self.cmap_params.data['alpha'][0], nan_colour=self.cmap_params.data['nan_colour'][0])
+                          alpha=self.cmap_params.data['alpha'][0], nan_colour=self.cmap_params.data['nan_colour'][0],
+                          hoverdisp=self.cmap_params.data['sphoverdisp'])
 
-        self.children[1].children[1] = iplot
+        self.children[1].children[1].children[1] = iplot

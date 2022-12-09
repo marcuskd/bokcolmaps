@@ -34,7 +34,19 @@ class CMSlicer(Row, DataModel):
     def __init__(self, x, y, **kwargs):
 
         """
-        All init arguments same as for ColourMapLPSlider
+        args...
+            x: 1D NumPy array of x coordinates
+            y: 1D NumPy array of y coordinates
+        kwargs...
+            cmheight: ColourMap height (pixels)
+            cmwidth: ColourMap width (pixels)
+            spheight: slice plot height (pixels)
+            spwidth: slice plot width (pixels)
+            splab: slice plot label
+            revz: reverse z axis in line plot if True
+            hoverdisp: display the hover tool readout if True
+            padleft: padding (pixels) to left of slice plot (default 0)
+            padabove: padding (pixels) above slice plot (default 0)
         """
 
         super().__init__()
@@ -44,10 +56,13 @@ class CMSlicer(Row, DataModel):
 
         cmheight = kwargs.get('cmheight', 575)
         cmwidth = kwargs.get('cmwidth', 500)
-        lpwidth = kwargs.get('lpwidth', 300)
-
-        self.height = cmheight
-        self.width = int((2 * cmwidth + lpwidth) * 1.1)
+        spheight = kwargs.get('spheight', cmheight)
+        spwidth = kwargs.get('spwidth', cmwidth)
+        splab = kwargs.get('splab', 'Units')
+        revz = kwargs.get('revz', False)
+        hoverdisp = kwargs.get('hoverdisp', True)
+        padleft = kwargs.get('padleft', 0)
+        padabove = kwargs.get('padabove', 0)
 
         x0, x1 = x[0], x[-1]
         ymean = (y[0] + y[-1]) / 2
@@ -57,8 +72,11 @@ class CMSlicer(Row, DataModel):
         self.cmap_params = ColumnDataSource({'palette': [palette], 'cfile': [cfile], 'revcols': [revcols],
                                              'xlab': [xlab], 'ylab': [ylab], 'zlab': [zlab], 'dmlab': [dmlab],
                                              'rmin': [rmin], 'rmax': [rmax], 'xran': [xran], 'yran': [yran],
-                                             'alpha': [alpha], 'nan_colour': [nan_colour],
-                                             'cmheight': [cmheight], 'cmwidth': [cmwidth]})
+                                             'alpha': [alpha], 'nan_colour': [nan_colour], 'splab': [splab],
+                                             'cmheight': [cmheight], 'cmwidth': [cmwidth],
+                                             'spheight': [spheight], 'spwidth': [spwidth],
+                                             'padleft': [padleft], 'padabove': [padabove],
+                                             'revz': [revz], 'hoverdisp': [hoverdisp]})
 
         self._is_selecting = False
 

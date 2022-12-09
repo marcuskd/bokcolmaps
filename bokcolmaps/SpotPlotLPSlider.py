@@ -27,7 +27,7 @@ class SpotPlotLPSlider(Column, DataModel):
     def __init__(self, x, y, z, dm, **kwargs):
 
         """
-        All init arguments same as for SpotPlotLP.
+        All init arguments same as for SpotPlotLP
         """
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
@@ -38,6 +38,8 @@ class SpotPlotLPSlider(Column, DataModel):
         lpheight = kwargs.get('lpheight', 500)
         lpwidth = kwargs.get('lpwidth', 300)
         revz = kwargs.get('revz', False)
+        padleft = kwargs.get('padleft', 0)
+        padabove = kwargs.get('padabove', 0)
 
         super(SpotPlotLPSlider, self).__init__()
 
@@ -50,7 +52,8 @@ class SpotPlotLPSlider(Column, DataModel):
                                   spheight=spheight, spwidth=spwidth,
                                   lpheight=lpheight, lpwidth=lpwidth,
                                   rmin=rmin, rmax=rmax, xran=xran, yran=yran,
-                                  revz=revz, alpha=alpha, nan_colour=nan_colour)
+                                  revz=revz, alpha=alpha, nan_colour=nan_colour,
+                                  padleft=padleft, padabove=padabove)
 
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal',

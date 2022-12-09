@@ -27,7 +27,7 @@ class ColourMapSlider(Column, DataModel):
     def __init__(self, x, y, z, dm, **kwargs):
 
         """
-        All init arguments same as for ColourMap.
+        All init arguments same as for ColourMap
         """
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
@@ -40,7 +40,7 @@ class ColourMapSlider(Column, DataModel):
         super().__init__()
 
         self.height = height
-        self.width = int(width * 1.1)
+        self.width = width
 
         self.cmap = ColourMap(x, y, z, dm,
                               palette=palette, cfile=cfile, revcols=revcols,

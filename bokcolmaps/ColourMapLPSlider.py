@@ -27,7 +27,7 @@ class ColourMapLPSlider(Column, DataModel):
     def __init__(self, x, y, z, dm, **kwargs):
 
         """
-        All init arguments same as for ColourMapLP.
+        All init arguments same as for ColourMapLP
         """
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
@@ -40,11 +40,13 @@ class ColourMapLPSlider(Column, DataModel):
         revz = kwargs.get('revz', False)
         hoverdisp = kwargs.get('hoverdisp', True)
         scbutton = kwargs.get('scbutton', False)
+        padleft = kwargs.get('padleft', 0)
+        padabove = kwargs.get('padabove', 0)
 
         super().__init__()
 
-        self.height = cmheight
-        self.width = int((cmwidth + lpwidth) * 1.1)
+        self.height = max(cmheight, lpheight)
+        self.width = cmwidth + lpwidth
 
         self.cmaplp = ColourMapLP(x, y, z, dm,
                                   palette=palette, cfile=cfile, revcols=revcols,
@@ -53,7 +55,8 @@ class ColourMapLPSlider(Column, DataModel):
                                   lpheight=lpheight, lpwidth=lpwidth,
                                   rmin=rmin, rmax=rmax, xran=xran, yran=yran,
                                   revz=revz, hoverdisp=hoverdisp, scbutton=scbutton,
-                                  alpha=alpha, nan_colour=nan_colour)
+                                  alpha=alpha, nan_colour=nan_colour,
+                                  padleft=padleft, padabove=padabove)
 
         self.zslider = Slider(title=zlab + ' index', start=0, end=z.size - 1,
                               step=1, value=0, orientation='horizontal',

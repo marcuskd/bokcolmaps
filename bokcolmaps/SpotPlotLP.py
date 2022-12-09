@@ -4,12 +4,11 @@ SplotPlotLP class definition
 
 from bokeh.model import DataModel
 
-from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, \
-    NumeralTickFormatter
+from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, NumeralTickFormatter
 from bokeh.models.layouts import Column, Row
 from bokeh.models.callbacks import CustomJS
 from bokeh.models.tools import TapTool
-from bokeh.models.widgets.markups import Paragraph
+from bokeh.models.widgets import Div
 
 from bokeh.core.properties import Instance
 
@@ -41,6 +40,8 @@ class SpotPlotLP(Row, DataModel):
         lpheight: line plot height (pixels)
         lpwidth: line plot width (pixels)
         revz: reverse z axis in line plot if True.
+        padleft: padding (pixels) to left of line plot (default 0)
+        padabove: padding (pixels) above line plot (default 0)
         """
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
@@ -51,6 +52,8 @@ class SpotPlotLP(Row, DataModel):
         lpheight = kwargs.get('lpheight', 500)
         lpwidth = kwargs.get('lpwidth', 300)
         revz = kwargs.get('revz', False)
+        padleft = kwargs.get('padleft', 0)
+        padabove = kwargs.get('padabove', 0)
 
         super().__init__()
 
@@ -119,7 +122,8 @@ class SpotPlotLP(Row, DataModel):
         self.lplot.yaxis.axis_label_text_font_size = '10pt'
         self.lplot.yaxis.axis_label_text_font_style = 'bold'
 
-        self.lpcon = Column(self.lplot, Paragraph(text=''))
+        self.lpcon = Column(Div(text='', width=lpwidth, height=padabove), self.lplot)
 
         self.children.append(self.spplot)
+        self.children.append(Div(text='', width=padleft, height=padabove + lpheight))
         self.children.append(self.lpcon)

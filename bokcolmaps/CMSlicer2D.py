@@ -6,7 +6,7 @@ import numpy
 
 from bokeh.model import DataModel
 
-from bokeh.models.layouts import Column
+from bokeh.models.layouts import Column, Row
 from bokeh.models.widgets import Div
 from bokeh.events import Tap
 from bokeh.core.properties import Instance
@@ -30,18 +30,20 @@ class CMSlicer2D(CMSlicer, DataModel):
     def __init__(self, x, y, z, dm, **kwargs):
 
         """
-        All init arguments same as for ColourMapLPSlider.
+        All init arguments same as for CMSlicer
         """
 
         super().__init__(x, y, **kwargs)
 
         params = self.cmap_params.data
+
         self.cmap = ColourMap(x, y, z, dm, palette=params['palette'][0], cfile=params['cfile'][0],
                               revcols=params['revcols'][0], xlab=params['xlab'][0],
                               ylab=params['ylab'][0], zlab=params['zlab'][0], dmlab=params['dmlab'][0],
                               height=params['cmheight'][0], width=params['cmwidth'][0],
                               rmin=params['rmin'][0], rmax=params['rmax'][0],
                               xran=params['xran'][0], yran=params['yran'][0],
+                              hover=params['hoverdisp'][0],
                               alpha=params['alpha'][0], nan_colour=params['nan_colour'][0])
 
         self.cmap.plot.on_event(Tap, self.toggle_select)
@@ -51,8 +53,13 @@ class CMSlicer2D(CMSlicer, DataModel):
 
         self.children.append(self.cmap)
 
-        self.children.append(Column(children=[Div(text='', width=params['cmwidth'][0], height=0),
-                                              figure(toolbar_location=None)]))
+        self.children.append(Column(children=[Div(text='',
+                                                  width=params['spwidth'][0] + params['padleft'][0],
+                                                  height=params['padabove'][0]),
+                                              Row(children=[Div(text='',
+                                                                width=params['padleft'][0],
+                                                                height=params['spheight'][0]),
+                                                            figure(toolbar_location=None)])]))
 
         self.change_slice()
 
@@ -72,10 +79,30 @@ class CMSlicer2D(CMSlicer, DataModel):
 
         dm_i, z_i = interp_2d_line(y, x, dm, c_i)
 
-        iplot = figure(x_axis_label='Units', y_axis_label=self.cmap_params.data['zlab'][0],
-                       height=self.cmap_params.data['cmheight'][0], width=self.cmap_params.data['cmwidth'][0],
+        iplot = figure(x_axis_label=self.cmap_params.data['splab'][0], y_axis_label=self.cmap_params.data['dmlab'][0],
+                       height=self.cmap_params.data['spheight'][0], width=self.cmap_params.data['spwidth'][0],
                        x_range=[r_i[0], r_i[-1]], toolbar_location='right')
 
         iplot.line(r_i, dm_i, line_color='blue', line_width=2, line_alpha=1)
 
-        self.children[1].children[1] = iplot
+        iplot.y_range.start = numpy.min(dm_i[numpy.isfinite(dm_i)])
+        iplot.y_range.end = numpy.max(dm_i[numpy.isfinite(dm_i)])
+
+        if self.cmap_params.data['revz'][0]:
+            iplot.y_range.start, iplot.y_range.end = iplot.y_range.end, iplot.y_range.start
+
+        iplot.title.text = self.cmap_params.data['dmlab'][0] + ' along track'
+
+        iplot.title.text_font = 'garamond'
+        iplot.title.text_font_size = '12pt'
+        iplot.title.text_font_style = 'bold'
+        iplot.title.align = 'center'
+
+        iplot.xaxis.axis_label_text_font = 'garamond'
+        iplot.xaxis.axis_label_text_font_size = '10pt'
+        iplot.xaxis.axis_label_text_font_style = 'bold'
+        iplot.yaxis.axis_label_text_font = 'garamond'
+        iplot.yaxis.axis_label_text_font_size = '10pt'
+        iplot.yaxis.axis_label_text_font_style = 'bold'
+
+        self.children[1].children[1].children[1] = iplot
