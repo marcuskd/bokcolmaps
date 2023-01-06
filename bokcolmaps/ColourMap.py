@@ -42,8 +42,6 @@ class ColourMap(Column, DataModel):
     _title_root = String
     _zlab = String
 
-    _rmin = Float
-    _rmax = Float
     _autoscale = Bool
     _revcols = Bool
 
@@ -91,18 +89,16 @@ class ColourMap(Column, DataModel):
         if (rmin is not None) and (rmax is not None):
             self._autoscale = False
         else:
-            if rmin is not None:
-                self._rmin = rmin
-            elif is3D:
-                self._rmin = numpy.min(dm[0])
-            else:
-                self._rmin = numpy.min(dm)
-            if rmax is not None:
-                self._rmax = rmax
-            elif is3D:
-                self._rmax = numpy.max(dm[0])
-            else:
-                self._rmax = numpy.max(dm)
+            if rmin is None:
+                if is3D:
+                    rmin = numpy.min(dm[0])
+                else:
+                    rmin = numpy.min(dm)
+            if rmax is None:
+                if is3D:
+                    rmax = numpy.max(dm[0])
+                else:
+                    rmax = numpy.max(dm)
 
         if is3D:
             self._zsize, self._ysize, self._xsize = dm.shape
@@ -222,7 +218,7 @@ class ColourMap(Column, DataModel):
         # Get the colourmap
 
         self._revcols = revcols
-        self.get_cmap(cfile, palette, nan_colour)
+        self.get_cmap(cfile, rmin, rmax, palette, nan_colour)
 
         # Create the plot
 
@@ -299,18 +295,17 @@ class ColourMap(Column, DataModel):
 
         self.children.append(self.plot)
 
-    def get_cmap(self, cfile, palette, nan_colour):
+    def get_cmap(self, cfile, rmin, rmax, palette, nan_colour):
 
         """
         Get the colour mapper
         """
 
         if self._autoscale:
-            min_val, max_val = get_min_max(self.datasrc.data['image'][0],
-                                           self._cbdelta)
+            min_val, max_val = get_min_max(self.datasrc.data['image'][0], self._cbdelta)
         else:
-            min_val = self._rmin
-            max_val = self._rmax
+            min_val = rmin
+            max_val = rmax
 
         if cfile is not None:
             self.read_cmap(cfile)
@@ -318,15 +313,12 @@ class ColourMap(Column, DataModel):
         else:
             self.cvals = ColumnDataSource(data={'colours': []})
 
-        self.cmap = LinearColorMapper(palette=palette, nan_color=nan_colour)
-
         if self._revcols:
-            pal = list(self.cmap.palette)
+            pal = list(palette)
             pal.reverse()
-            self.cmap.palette = tuple(pal)
+            palette = tuple(pal)
 
-        self.cmap.low = min_val
-        self.cmap.high = max_val
+        self.cmap = LinearColorMapper(palette=palette, nan_color=nan_colour, low=min_val, high=max_val)
 
     def read_cmap(self, fname):
 
