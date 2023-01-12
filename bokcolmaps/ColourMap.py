@@ -183,7 +183,7 @@ class ColourMap(Column, DataModel):
         var xind = Math.floor((hx + dx/2 - x[0])/dx);
         var yind = Math.floor((hy + dy/2 - y[0])/dy);
 
-        if ((xind < x.length) && (yind < y.length)) {
+        if ((xind >= 0) && (xind < x.length) && (yind >= 0) && (yind < y.length)) {
             data['xp'] = [x[xind]];
             data['yp'] = [y[yind]];
             var zind = yind*x.length + xind;

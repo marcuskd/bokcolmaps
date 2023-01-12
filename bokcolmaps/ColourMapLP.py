@@ -85,18 +85,22 @@ class ColourMapLP(Row, DataModel):
 
         self._js_hover = self.cmplot._js_hover + """
         var lpdata = lpsrc.data;
+        var lx = lpdata['x'];
 
-        if ((xind < x.length) && (yind < y.length)) {
+        if ((xind >= 0) && (xind < x.length) && (yind >= 0) && (yind < y.length)) {
             var dm = data['dm'][0];
-            var lx = lpdata['x'];
 
             var skip = x.length*y.length;
             for (var i = 0; i < lx.length; i++) {
                 lx[i] = dm[zind + i*skip];
             }
-
-            lpsrc.change.emit();
         }
+        else {
+            for (var i = 0; i < lx.length; i++) {
+                lx[i] = NaN;
+            }
+        }
+        lpsrc.change.emit();
         """
 
         cjs = CustomJS(args={'datasrc': self.cmplot.datasrc,
