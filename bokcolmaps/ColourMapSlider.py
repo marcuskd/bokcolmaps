@@ -53,7 +53,7 @@ class ColourMapSlider(Column, DataModel):
                               step=1, value=0, orientation='horizontal',
                               width=self.cmap.plot.width)
 
-        self.zslider.js_on_change('value', self._cmap.cjs_slider)
+        self.zslider.js_on_change('value', self.cmap.cjs_slider)
 
         self.children.append(Column(self.zslider, width=self.width))
         self.children.append(self.cmap)
