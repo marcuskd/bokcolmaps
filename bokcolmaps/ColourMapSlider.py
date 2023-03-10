@@ -12,6 +12,7 @@ from bokeh.core.properties import Instance
 from bokcolmaps.ColourMap import ColourMap
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
+from bokcolmaps.check_kwargs import check_kwargs
 
 
 class ColourMapSlider(Column, DataModel):
@@ -29,6 +30,8 @@ class ColourMapSlider(Column, DataModel):
         """
         All init arguments same as for ColourMap
         """
+
+        check_kwargs(kwargs, extra_kwargs=['height', 'width', 'hover'])
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
             rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)

@@ -17,6 +17,7 @@ from bokeh.plotting import figure
 from bokcolmaps.SpotPlot import SpotPlot
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
+from bokcolmaps.check_kwargs import check_kwargs
 
 
 class SpotPlotLP(Row, DataModel):
@@ -43,6 +44,8 @@ class SpotPlotLP(Row, DataModel):
         padleft: padding (pixels) to left of line plot (default 0)
         padabove: padding (pixels) above line plot (default 0)
         """
+
+        check_kwargs(kwargs, extra_kwargs=['spheight', 'spwidth', 'lpheight', 'lpwidth', 'revz', 'padleft', 'padabove'])
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
             rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)

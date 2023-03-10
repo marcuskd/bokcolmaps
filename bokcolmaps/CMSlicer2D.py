@@ -15,7 +15,6 @@ from bokeh.models.glyphs import Line
 
 from bokcolmaps.CMSlicer import CMSlicer
 from bokcolmaps.ColourMap import ColourMap
-
 from bokcolmaps.interp_2d_line import interp_2d_line
 
 

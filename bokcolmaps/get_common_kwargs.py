@@ -2,6 +2,8 @@
 get_common_kwargs function definition
 """
 
+common_kwargs = ['palette', 'cfile', 'revcols', 'xlab', 'ylab', 'zlab', 'dmlab', 'rmin', 'rmax', 'xran', 'yran', 'alpha', 'nan_colour']
+
 
 def get_common_kwargs(**kwargs):
 

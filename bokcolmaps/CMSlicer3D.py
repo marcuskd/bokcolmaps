@@ -16,8 +16,8 @@ from bokeh.models.glyphs import Line
 from bokcolmaps.CMSlicer import CMSlicer
 from bokcolmaps.ColourMapLPSlider import ColourMapLPSlider
 from bokcolmaps.ColourMap import ColourMap
-
 from bokcolmaps.interp_2d_line import interp_2d_line
+from bokcolmaps.check_kwargs import check_kwargs
 
 
 class CMSlicer3D(CMSlicer, DataModel):
@@ -41,6 +41,8 @@ class CMSlicer3D(CMSlicer, DataModel):
         """
 
         super().__init__(x, y, **kwargs)
+
+        check_kwargs(kwargs, extra_kwargs=['lpheight', 'lpwidth', 'sphoverdisp', 'padleftlp', 'padabovelp'])
 
         params = self.cmap_params.data
 
@@ -106,6 +108,6 @@ class CMSlicer3D(CMSlicer, DataModel):
                           height=self.cmap_params.data['spheight'][0], width=self.cmap_params.data['spwidth'][0],
                           rmin=self.cmap_params.data['rmin'][0], rmax=self.cmap_params.data['rmax'][0],
                           alpha=self.cmap_params.data['alpha'][0], nan_colour=self.cmap_params.data['nan_colour'][0],
-                          hoverdisp=self.cmap_params.data['sphoverdisp'])
+                          hover=self.cmap_params.data['sphoverdisp'])
 
         self.children[1].children[1].children[1] = iplot

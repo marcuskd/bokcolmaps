@@ -12,6 +12,7 @@ from bokeh.core.properties import Instance
 from bokcolmaps.SpotPlotLP import SpotPlotLP
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
+from bokcolmaps.check_kwargs import check_kwargs
 
 
 class SpotPlotLPSlider(Column, DataModel):
@@ -29,6 +30,8 @@ class SpotPlotLPSlider(Column, DataModel):
         """
         All init arguments same as for SpotPlotLP
         """
+
+        check_kwargs(kwargs, extra_kwargs=['spheight', 'spwidth', 'lpheight', 'lpwidth', 'revz', 'padleft', 'padabove'])
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
             rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)

@@ -1,4 +1,6 @@
-"""SpotPlot class definition"""
+"""
+SpotPlot class definition
+"""
 
 import numpy
 
@@ -13,6 +15,7 @@ from bokeh.core.properties import Instance, String, Int, Float, Bool
 from bokeh.plotting import figure
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
+from bokcolmaps.check_kwargs import check_kwargs
 from bokcolmaps.generate_colourbar import generate_colourbar
 from bokcolmaps.read_colourmap import read_colourmap
 from bokcolmaps.get_min_max import get_min_max
@@ -55,6 +58,8 @@ class SpotPlot(Column, DataModel):
             height: plot height (pixels)
             width: plot width (pixels)
         """
+
+        check_kwargs(kwargs, extra_kwargs=['height', 'width'])
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
             rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
@@ -100,7 +105,7 @@ class SpotPlot(Column, DataModel):
             max_val = self._rmax
 
         if cfile is not None:
-            self.read_cmap(cfile)
+            self._read_cmap(cfile)
             palette = self.cvals.data['colours']
             if revcols:
                 self.cvals.data['colours'].reverse()
@@ -172,7 +177,7 @@ class SpotPlot(Column, DataModel):
 
         self.children.append(self.plot)
 
-    def read_cmap(self, fname):
+    def _read_cmap(self, fname):
 
         """
         Read in the colour scale

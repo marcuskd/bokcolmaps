@@ -17,6 +17,7 @@ from bokeh.core.properties import Instance, String, Float, Bool, Int
 from bokeh.plotting import figure
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
+from bokcolmaps.check_kwargs import check_kwargs
 from bokcolmaps.generate_colourbar import generate_colourbar
 from bokcolmaps.read_colourmap import read_colourmap
 from bokcolmaps.get_min_max import get_min_max
@@ -68,6 +69,8 @@ class ColourMap(Column, DataModel):
             width: plot width (pixels)
             hover: Boolean to enable hover tool readout
         """
+
+        check_kwargs(kwargs, extra_kwargs=['height', 'width', 'hover'])
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
             rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
@@ -218,7 +221,7 @@ class ColourMap(Column, DataModel):
         # Get the colourmap
 
         self._revcols = revcols
-        self.get_cmap(cfile, rmin, rmax, palette, nan_colour)
+        self._get_cmap(cfile, rmin, rmax, palette, nan_colour)
 
         # Create the plot
 
@@ -295,7 +298,7 @@ class ColourMap(Column, DataModel):
 
         self.children.append(self.plot)
 
-    def get_cmap(self, cfile, rmin, rmax, palette, nan_colour):
+    def _get_cmap(self, cfile, rmin, rmax, palette, nan_colour):
 
         """
         Get the colour mapper
@@ -308,7 +311,7 @@ class ColourMap(Column, DataModel):
             max_val = rmax
 
         if cfile is not None:
-            self.read_cmap(cfile)
+            self._read_cmap(cfile)
             palette = self.cvals.data['colours']
         else:
             self.cvals = ColumnDataSource(data={'colours': []})
@@ -320,7 +323,7 @@ class ColourMap(Column, DataModel):
 
         self.cmap = LinearColorMapper(palette=palette, nan_color=nan_colour, low=min_val, high=max_val)
 
-    def read_cmap(self, fname):
+    def _read_cmap(self, fname):
 
         """
         Read in the colour scale.
@@ -352,3 +355,19 @@ class ColourMap(Column, DataModel):
         min_val, max_val = get_min_max(d, self._cbdelta)
         self.cmap.low = min_val
         self.cmap.high = max_val
+
+    def set_autoscale(self, val):
+
+        """
+        Switch autoscaling on or off
+        """
+
+        self._autoscale = val
+
+    def get_autoscale(self):
+
+        """
+        Return autoscaling setting
+        """
+
+        return self._autoscale

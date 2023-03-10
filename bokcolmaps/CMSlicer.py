@@ -17,6 +17,7 @@ from bokcolmaps.ColourMapLPSlider import ColourMapLPSlider
 from bokcolmaps.ColourMap import ColourMap
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
+from bokcolmaps.check_kwargs import check_kwargs
 
 
 class CMSlicer(Row, DataModel):
@@ -50,6 +51,8 @@ class CMSlicer(Row, DataModel):
         """
 
         super().__init__()
+
+        check_kwargs(kwargs, extra_kwargs=['cmheight', 'cmwidth', 'spheight', 'spwidth', 'splab', 'revz', 'hoverdisp', 'padleft', 'padabove'])
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
             rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)

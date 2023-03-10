@@ -20,6 +20,7 @@ from bokeh.plotting import figure
 from bokcolmaps.ColourMap import ColourMap
 
 from bokcolmaps.get_common_kwargs import get_common_kwargs
+from bokcolmaps.check_kwargs import check_kwargs
 
 
 class ColourMapLP(Row, DataModel):
@@ -53,6 +54,8 @@ class ColourMapLP(Row, DataModel):
         padleft: padding (pixels) to left of line plot (default 0)
         padabove: padding (pixels) above line plot (default 0)
         """
+
+        check_kwargs(kwargs, extra_kwargs=['cmheight', 'cmwidth', 'lpheight', 'lpwidth', 'revz', 'hoverdisp', 'scbutton', 'padleft', 'padabove'])
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
             rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
