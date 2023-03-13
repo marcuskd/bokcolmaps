@@ -17,7 +17,6 @@ from bokcolmaps.CMSlicer import CMSlicer
 from bokcolmaps.ColourMapLPSlider import ColourMapLPSlider
 from bokcolmaps.ColourMap import ColourMap
 from bokcolmaps.interp_2d_line import interp_2d_line
-from bokcolmaps.check_kwargs import check_kwargs
 
 
 class CMSlicer3D(CMSlicer, DataModel):
@@ -41,8 +40,6 @@ class CMSlicer3D(CMSlicer, DataModel):
         """
 
         super().__init__(x, y, **kwargs)
-
-        check_kwargs(kwargs, extra_kwargs=['lpheight', 'lpwidth', 'sphoverdisp', 'padleftlp', 'padabovelp'])
 
         params = self.cmap_params.data
 

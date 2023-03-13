@@ -4,6 +4,7 @@ CMSlicer class definition
 
 import numpy
 
+from bokeh.core.properties import List
 from bokeh.model import DataModel
 
 from bokeh.models.sources import ColumnDataSource
@@ -31,6 +32,7 @@ class CMSlicer(Row, DataModel):
     lr = Instance(GlyphRenderer)
 
     _is_selecting = Bool
+    _extra_kwargs = List
 
     def __init__(self, x, y, **kwargs):
 
@@ -52,7 +54,10 @@ class CMSlicer(Row, DataModel):
 
         super().__init__()
 
-        check_kwargs(kwargs, extra_kwargs=['cmheight', 'cmwidth', 'spheight', 'spwidth', 'splab', 'revz', 'hoverdisp', 'padleft', 'padabove'])
+        self._extra_kwargs = ['cmheight', 'cmwidth', 'spheight', 'spwidth', 'lpheight', 'lpwidth', 'splab', 'revz', 'hoverdisp', 'sphoverdisp',
+                              'padleft', 'padabove', 'padleftlp', 'padabovelp']
+
+        check_kwargs(kwargs, extra_kwargs=self._extra_kwargs)
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
             rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
