@@ -1,8 +1,25 @@
 from setuptools import setup, find_packages
 
 setup(name='bokcolmaps',
-      version='3.1.1',
+      version='3.1.2',
       description='Colour map plots based on the Bokeh visualisation library',
+      long_description="""
+# bokcolmaps
+
+### Colour map plots based on the Bokeh visualisation library
+
+----------
+
+Get started with:
+
+import numpy  
+from bokcolmaps.plot_colourmap import plot_colourmap  
+data = numpy.random.rand(3, 4, 5)  
+plot_colourmap(data)
+
+or see bokcolmaps.Examples.plot_colourmap_example
+      """,
+      long_description_content_type='text/markdown',
       author='Systems Engineering & Assessment Ltd.',
       author_email='Marcus.Donnelly@sea.co.uk',
       url='https://bitbucket.org/sea_dev/bokcolmaps',
