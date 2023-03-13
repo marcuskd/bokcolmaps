@@ -1,5 +1,6 @@
 """
-To run this example at the command line enter: python3 SpotPlotExample.py
+To run this example at the command line enter:
+python SpotPlotExample.py
 The example data is the 3D grid used in the ColourMap example. The SpotPlot
 class is for 1D data sections defined at arbitrary x and y coordinates on a
 common z grid, so we'll subsample the 3D grid at a number of random x and y

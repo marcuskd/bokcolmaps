@@ -1,6 +1,6 @@
 """
 To run this example at the command line enter:
-python3 ColourMap3LPSLiderExample.py
+python ColourMap3LPSLiderExample.py
 """
 
 from bokeh.plotting import show

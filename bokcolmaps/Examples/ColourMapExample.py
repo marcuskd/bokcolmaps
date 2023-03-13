@@ -1,6 +1,6 @@
 """
 To run this example at the command line enter:
-python3 ColourMapExample.py
+python ColourMapExample.py
 """
 
 import numpy

@@ -109,6 +109,9 @@ class ColourMap(Column, DataModel):
             self._ysize, self._xsize = dm.shape
             self._zsize = 1
 
+        if (x.size != self._xsize) or (y.size != self._ysize):
+            raise ValueError('x or y array size not consistent with dimensions of dm array')
+
         if is3D:  # Default to first slice
             d = dm[0]
         else:
@@ -343,9 +346,9 @@ class ColourMap(Column, DataModel):
         self.datasrc.patch({'image': [(0, d.reshape((self._ysize, self._xsize)))]})
 
         if self._autoscale:
-            self._update_cbar()
+            self.update_cbar()
 
-    def _update_cbar(self):
+    def update_cbar(self):
 
         """
         Update the colour scale (needed when the data for display changes).
