@@ -4,6 +4,7 @@ plot_colourmap function definition
 
 import numpy
 
+from bokeh.palettes import Turbo256
 from bokeh.plotting import show
 from bokeh.io import output_file
 
@@ -60,7 +61,7 @@ def plot_colourmap(data, **kwargs):
     rmax = kwargs.get('rmax', None)
     revz = kwargs.get('revz', False)
 
-    palette = kwargs.get('palette', 'Turbo256')
+    palette = kwargs.get('palette', Turbo256)
     revcols = kwargs.get('revcols', False)
     alpha = kwargs.get('alpha', 1)
     nan_colour = kwargs.get('nan_colour', 'Grey')

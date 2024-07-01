@@ -41,8 +41,6 @@ class SpotPlot(Column, DataModel):
     _bg_col = String
     _nan_col = String
     _sp_size = Int
-    _rmin = Float
-    _rmax = Float
     _autoscale = Bool
     _cbdelta = Float
 
@@ -57,15 +55,17 @@ class SpotPlot(Column, DataModel):
         kwargs: all in get_common_kwargs plus...
             height: plot height (pixels)
             width: plot width (pixels)
+            size: spot size (pixels)
         """
 
-        check_kwargs(kwargs, extra_kwargs=['height', 'width'])
+        check_kwargs(kwargs, extra_kwargs=['height', 'width', 'size'])
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
             rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
 
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
+        self._sp_size = kwargs.get('size', int(min(height, width) / 40))
 
         super().__init__()
 
@@ -101,8 +101,8 @@ class SpotPlot(Column, DataModel):
         if self._autoscale:
             min_val, max_val = get_min_max(d, self._cbdelta)
         else:
-            min_val = self._rmin
-            max_val = self._rmax
+            min_val = rmin
+            max_val = rmax
 
         if cfile is not None:
             self._read_cmap(cfile)
@@ -110,22 +110,18 @@ class SpotPlot(Column, DataModel):
             if revcols:
                 self.cvals.data['colours'].reverse()
 
-        self.cmap = LinearColorMapper(palette=palette, nan_color=nan_colour)
+        self.cmap = LinearColorMapper(palette=palette, nan_color=nan_colour, low=min_val, high=max_val)
 
         if revcols and (cfile is None):
             pal = list(self.cmap.palette)
             pal.reverse()
             self.cmap.palette = tuple(pal)
 
-        self.cmap.low = min_val
-        self.cmap.high = max_val
-
         if cfile is None:
             self.cvals = ColumnDataSource(data={'colours': self.cmap.palette})
 
         self._bg_col = 'black'
         self._nan_col = nan_colour
-        self._sp_size = int(min(height, width) / 40)
 
         cols = [self._nan_col] * d.size  # Initially empty
         self.datasrc = ColumnDataSource(data={'z': [z], 'd': [d], 'dm': [dm]})
@@ -154,6 +150,8 @@ class SpotPlot(Column, DataModel):
                          nonselection_line_alpha=0, selection_line_alpha=alpha,
                          nonselection_line_color='cols',
                          selection_line_color='white', line_width=5)
+
+        self.plot.grid.grid_line_color = 'grey'
 
         self.update_title(0)
 

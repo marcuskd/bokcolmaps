@@ -2,6 +2,8 @@
 get_common_kwargs function definition
 """
 
+from bokeh.palettes import Turbo256
+
 common_kwargs = ['palette', 'cfile', 'revcols', 'xlab', 'ylab', 'zlab', 'dmlab', 'rmin', 'rmax', 'xran', 'yran', 'alpha', 'nan_colour']
 
 
@@ -25,7 +27,7 @@ def get_common_kwargs(**kwargs):
         nan_colour: NaN colour
     """
 
-    palette = kwargs.get('palette', 'Turbo256')
+    palette = kwargs.get('palette', Turbo256)
     cfile = kwargs.get('cfile', None)
     revcols = kwargs.get('revcols', False)
     xlab = kwargs.get('xlab', 'x')
