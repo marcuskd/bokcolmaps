@@ -20,10 +20,10 @@ plot_colourmap(data)
 or see bokcolmaps.Examples.plot_colourmap_example
       """,
       long_description_content_type='text/markdown',
-      author='Systems Engineering & Assessment Ltd.',
-      author_email='Marcus.Donnelly@sea.co.uk',
-      url='https://bitbucket.org/sea_dev/bokcolmaps',
-      license='MIT',
+      author='Marcus Donnelly',
+      author_email='marcus.k.donnelly@gmail.com',
+      url='https://github.com/marcuskd/bokcolmaps',
+      license='BSD 3-Clause',
       classifiers=['Development Status :: 5 - Production/Stable',
                    'Intended Audience :: Science/Research',
                    'Intended Audience :: Developers',
@@ -36,7 +36,7 @@ or see bokcolmaps.Examples.plot_colourmap_example
                 '3D Plot'
                 ],
       packages=find_packages(),
-      install_requires=['numpy >= 1.20',
+      install_requires=['numpy >= 1.23',
                         'bokeh >= 3'
                         ],
       include_package_data=True,
