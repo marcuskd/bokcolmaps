@@ -5,7 +5,7 @@ read_colourmap function definition
 from bokeh.models import ColumnDataSource
 
 
-def read_colourmap(fname):
+def read_colourmap(fname: str) -> ColumnDataSource:
 
     """
     Read in the colour scale.

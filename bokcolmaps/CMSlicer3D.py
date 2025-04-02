@@ -28,15 +28,18 @@ class CMSlicer3D(CMSlicer, DataModel):
 
     cmap = Instance(ColourMapLPSlider)
 
-    def __init__(self, x, y, z, dm, **kwargs):
+    def __init__(self, x: numpy.array, y: numpy.array, z: numpy.array, dm: numpy.ndarray, **kwargs: dict) -> None:
 
         """
-        All init arguments same as for CMSlicer except for additional kwargs...
-        lpheight: line plot height (pixels) for ColourMapLP
-        lpwidth: line plot width (pixels) for ColourMapLP
-        sphoverdisp: display the hover tool readout in the slice plot if True
-        padleftlp: padding (pixels) to left of ColourMapLP line plot (default 0)
-        padabovelp: padding (pixels) above ColourMapLP line plot (default 0)
+        All init arguments same as for CMSlicer with additional args...
+            z: 1D NumPy array of z coordinates
+            dm: 3D NumPy array of the data for display, dimensions z.size, y.size, x.size
+        and additional kwargs...
+            lpheight: line plot height (pixels) for ColourMapLP
+            lpwidth: line plot width (pixels) for ColourMapLP
+            sphoverdisp: display the hover tool readout in the slice plot if True
+            padleftlp: padding (pixels) to left of ColourMapLP line plot (default 0)
+            padabovelp: padding (pixels) above ColourMapLP line plot (default 0)
         """
 
         super().__init__(x, y, **kwargs)
@@ -48,6 +51,7 @@ class CMSlicer3D(CMSlicer, DataModel):
         params['sphoverdisp'] = [kwargs.get('sphoverdisp', True)]
         params['padleftlp'] = [kwargs.get('padleftlp', 0)]
         params['padabovelp'] = [kwargs.get('padabovelp', 0)]
+        params['scbutton'] = [True]
 
         self.cmap = ColourMapLPSlider(x, y, z, dm, palette=params['palette'][0], cfile=params['cfile'][0],
                                       revcols=params['revcols'][0], xlab=params['xlab'][0],
@@ -56,7 +60,8 @@ class CMSlicer3D(CMSlicer, DataModel):
                                       lpheight=params['lpheight'][0], lpwidth=params['lpwidth'][0],
                                       rmin=params['rmin'][0], rmax=params['rmax'][0],
                                       xran=params['xran'][0], yran=params['yran'][0],
-                                      revz=params['revz'][0], hoverdisp=params['hoverdisp'][0], scbutton=True,
+                                      revz=params['revz'][0], hoverdisp=params['hoverdisp'][0],
+                                      scbutton=params['scbutton'][0],
                                       alpha=params['alpha'][0], nan_colour=params['nan_colour'][0],
                                       padleft=params['padleftlp'][0], padabove=params['padabovelp'][0])
 
@@ -75,9 +80,9 @@ class CMSlicer3D(CMSlicer, DataModel):
                                                                 height=params['spheight'][0]),
                                                             figure(toolbar_location=None)])]))
 
-        self.change_slice()
+        self._change_slice()
 
-    def change_slice(self):
+    def _change_slice(self) -> None:
 
         """
         Change the slice displayed in the separate line plot

@@ -2,6 +2,8 @@
 SplotPlotLP class definition
 """
 
+import numpy
+
 from bokeh.model import DataModel
 
 from bokeh.models import ColumnDataSource, Plot, AdaptiveTicker, NumeralTickFormatter
@@ -32,7 +34,7 @@ class SpotPlotLP(Row, DataModel):
     lplot = Instance(Plot)
     lpds = Instance(ColumnDataSource)
 
-    def __init__(self, x, y, z, dm, **kwargs):
+    def __init__(self, x: numpy.array, y: numpy.array, z: numpy.array, dm: numpy.ndarray, **kwargs: dict) -> None:
 
         """
         All init arguments same as for SpotPlot except for additional kwargs...

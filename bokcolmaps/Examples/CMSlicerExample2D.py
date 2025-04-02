@@ -14,7 +14,6 @@ x, y, z, D = example_data()
 z = numpy.array([z[0]])
 D = D[0]
 
-cm = CMSlicer2D(x, y, z, D, xlab='x val', ylab='y val',
-                zlab='power val', dmlab='Function val')
+cm = CMSlicer2D(x, y, z, D, xlab='x val', ylab='y val', zlab='power val', dmlab='Function val')
 
 curdoc().add_root(cm)

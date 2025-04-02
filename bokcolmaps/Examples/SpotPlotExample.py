@@ -33,8 +33,7 @@ for n in range(ns):
     D[n] = Dg[0, yi[n], xi[n]]  # Data for first value of z
 z = z[0]  # First value of z
 
-sp = SpotPlot(x, y, z, D, xlab='x val', ylab='y val',
-              zlab='power val', dmlab='Function val')
+sp = SpotPlot(x, y, z, D, xlab='x val', ylab='y val', zlab='power val', dmlab='Function val')
 
 # Calls below not needed, only added for code coverage test
 sp.changed(0)

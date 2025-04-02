@@ -7,7 +7,7 @@ from bokeh.palettes import Turbo256
 common_kwargs = ['palette', 'cfile', 'revcols', 'xlab', 'ylab', 'zlab', 'dmlab', 'rmin', 'rmax', 'xran', 'yran', 'alpha', 'nan_colour']
 
 
-def get_common_kwargs(**kwargs):
+def get_common_kwargs(**kwargs: dict) -> tuple:
 
     """
     Get common kwargs for the ColourMap/ColourMap3, SpotPlot and derived classes

@@ -44,7 +44,7 @@ class SpotPlot(Column, DataModel):
     _autoscale = Bool
     _cbdelta = Float
 
-    def __init__(self, x, y, z, dm, **kwargs):
+    def __init__(self, x: numpy.array, y: numpy.array, z: numpy.array, dm: numpy.ndarray, **kwargs: dict) -> None:
 
         """
         args...
@@ -175,7 +175,7 @@ class SpotPlot(Column, DataModel):
 
         self.children.append(self.plot)
 
-    def _read_cmap(self, fname):
+    def _read_cmap(self, fname: str) -> None:
 
         """
         Read in the colour scale
@@ -183,7 +183,7 @@ class SpotPlot(Column, DataModel):
 
         self.cvals = read_colourmap(fname)
 
-    def changed(self, zind):
+    def changed(self, zind: int) -> None:
 
         """
         Change the row of dm being displayed
@@ -200,7 +200,7 @@ class SpotPlot(Column, DataModel):
 
             self.datasrc.trigger('data', data, newdata)
 
-    def update_cbar(self):
+    def update_cbar(self) -> None:
 
         """
         Update the colour scale (needed when the data for display changes)
@@ -214,7 +214,7 @@ class SpotPlot(Column, DataModel):
             self.cmap.low = min_val
             self.cmap.high = max_val
 
-    def update_colours(self):
+    def update_colours(self) -> None:
 
         """
         Update the spot colours (needed when the data for display changes)
@@ -252,7 +252,7 @@ class SpotPlot(Column, DataModel):
 
         self.coldatasrc.trigger('data', data, newdata)
 
-    def update_title(self, zind):
+    def update_title(self, zind: int) -> None:
 
         """
         Update the plot title (needed when the z index changes)
@@ -264,7 +264,7 @@ class SpotPlot(Column, DataModel):
         else:
             self.plot.title.text = self._title_root
 
-    def input_change(self, attrname, old, new):
+    def input_change(self, attrname: str, old: int, new: int) -> None:
 
         """
         Callback for use with e.g. sliders

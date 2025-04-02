@@ -13,7 +13,7 @@ from bokcolmaps.ColourMapSlider import ColourMapSlider
 from bokcolmaps.ColourMapLPSlider import ColourMapLPSlider
 
 
-def plot_colourmap(data, **kwargs):
+def plot_colourmap(data: numpy.ndarray, **kwargs: dict) -> None:
 
     """
     A convenience function to quickly plot a colour map. The only required input is the data array,
@@ -104,9 +104,10 @@ def plot_colourmap(data, **kwargs):
 
     if lp:
 
-        cmap = cmap_class(x, y, z, data, cmheight=height, cmwidth=width, lpheight=height, lpwidth=width // 2,
+        cmap = cmap_class(x, y, z, data, cmheight=height, cmwidth=width, lpheight=height,
                           xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab, rmin=rmin, rmax=rmax, revz=revz,
                           palette=palette, revcols=revcols, alpha=alpha, nan_colour=nan_colour)
+
     else:
 
         cmap = cmap_class(x, y, z, data, height=height, width=width,

@@ -4,9 +4,10 @@ generate_colourbar function definition
 
 from bokeh.models import ColorBar
 from bokeh.models.tickers import AdaptiveTicker
+from bokeh.models.mappers import LinearColorMapper
 
 
-def generate_colourbar(cmap, cbarwidth=25):
+def generate_colourbar(cmap: LinearColorMapper, cbarwidth: float=25) -> ColorBar:
 
     """
     Generate a colourbar for the the ColourMap and SpotPlot classes

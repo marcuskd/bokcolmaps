@@ -26,10 +26,12 @@ class CMSlicer2D(CMSlicer, DataModel):
 
     cmap = Instance(ColourMap)
 
-    def __init__(self, x, y, z, dm, **kwargs):
+    def __init__(self, x: numpy.array, y: numpy.array, z: numpy.array, dm: numpy.ndarray, **kwargs: dict) -> None:
 
         """
-        All init arguments same as for CMSlicer
+        All init arguments same as for CMSlicer with additional args...
+            z: 1D NumPy array of z coordinates
+            dm: 2D NumPy array of the data for display, y.size, x.size
         """
 
         super().__init__(x, y, **kwargs)
@@ -60,9 +62,9 @@ class CMSlicer2D(CMSlicer, DataModel):
                                                                 height=params['spheight'][0]),
                                                             figure(toolbar_location=None)])]))
 
-        self.change_slice()
+        self._change_slice()
 
-    def change_slice(self):
+    def _change_slice(self) -> None:
 
         """
         Change the slice displayed in the separate figure

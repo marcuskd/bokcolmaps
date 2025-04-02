@@ -39,7 +39,7 @@ class ColourMapLP(Row, DataModel):
     _cmylab = String
     _js_hover = String
 
-    def __init__(self, x, y, z, dm, **kwargs):
+    def __init__(self, x: numpy.array, y: numpy.array, z: numpy.array, dm: numpy.ndarray, **kwargs: dict) -> None:
 
         """
         All init arguments same as for ColourMap except for additional kwargs...
@@ -69,6 +69,7 @@ class ColourMapLP(Row, DataModel):
         scbutton = kwargs.get('scbutton', False)
         padleft = kwargs.get('padleft', 0)
         padabove = kwargs.get('padabove', 0)
+        hover = kwargs.get('hover', True)
 
         super().__init__()
 
@@ -81,7 +82,7 @@ class ColourMapLP(Row, DataModel):
                                 palette=palette, cfile=cfile, revcols=revcols,
                                 xlab=xlab, ylab=ylab, zlab=zlab, dmlab=dmlab,
                                 height=cmheight, width=cmwidth, rmin=rmin,
-                                rmax=rmax, xran=xran, yran=yran, hover=False,
+                                rmax=rmax, xran=xran, yran=yran, hover=hover,
                                 alpha=alpha, nan_colour=nan_colour)
 
         # Custom hover tool to render profile at cursor position in line plot
@@ -173,7 +174,7 @@ class ColourMapLP(Row, DataModel):
 
         self.centre_lp()
 
-    def centre_lp(self):
+    def centre_lp(self) -> None:
 
         """
         When the button is clicked, update the line plot to correspond to the

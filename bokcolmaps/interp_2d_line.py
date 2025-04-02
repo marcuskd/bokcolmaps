@@ -6,7 +6,7 @@ import numpy
 from bokcolmaps.interp_data import interp_data
 
 
-def interp_2d_line(x, y, f, c_i, z=None, ax_int=None):
+def interp_2d_line(x: numpy.array, y: numpy.array, f: numpy.ndarray, c_i: numpy.ndarray, z: numpy.array=None, ax_int: float=None) -> tuple:
 
     """
     Performs 2D linear interpolation from a grid along a line.
@@ -25,12 +25,13 @@ def interp_2d_line(x, y, f, c_i, z=None, ax_int=None):
             interpolation will still work but will be slower.
     kwargs...
         z is the 1D axis array for the first dimension of f. If z is None or
-        f is 2D, interpolation over z will not be performed.
+            f is 2D, interpolation over z will not be performed.
         ax_int is the interval for interpolation over z. If equal to None,
-        the minimum interval in z will be used for interpolation.
+            the minimum interval in z will be used for interpolation.
     returns...
-        f_i, Numpy 2D array with dimensions (I, M) if f is a 3D array, otherwise
+        f_i: Numpy 2D array with dimensions (I, M) if f is a 3D array, otherwise
             1D array, length M.  I = N if ax_int is None.
+        z_i: Numpy array with new (or unchanged) z axis values
     """
 
     #  Check inputs

@@ -5,7 +5,7 @@ check_kwargs function definition
 from bokcolmaps.get_common_kwargs import common_kwargs
 
 
-def check_kwargs(kwargs, extra_kwargs=None):
+def check_kwargs(kwargs: dict, extra_kwargs: list=None) -> None:
 
     """
     Check for invalid kwargs

@@ -1,11 +1,13 @@
-'''Test_interp_2d_line definition'''
+"""
+Test_interp_2d_line definition
+"""
 
 import unittest
 import numpy
 from bokcolmaps.interp_2d_line import interp_2d_line
 
 
-class Test_interp_2d_line(unittest.TestCase):
+class TestInterp2dLine(unittest.TestCase):
 
     def test_single_2d_inc(self):
 
@@ -268,6 +270,7 @@ class Test_interp_2d_line(unittest.TestCase):
                            [-1, 2.25]])
         f_i, _ = interp_2d_line(x, y, f, c_i)
         self.assertTrue(numpy.all(numpy.isnan(f_i)))
+
 
 if __name__ == "__main__":
     unittest.main()

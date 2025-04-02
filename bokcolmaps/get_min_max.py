@@ -5,7 +5,7 @@ get_min_max function definition
 import numpy
 
 
-def get_min_max(d, delta):
+def get_min_max(d: numpy.ndarray, delta: float) -> tuple:
 
     """
     Get minimum and maximum values for colour mapping

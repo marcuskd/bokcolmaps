@@ -2,6 +2,8 @@
 SplotPlotSlider class definition
 """
 
+import numpy
+
 from bokeh.model import DataModel
 
 from bokeh.models.widgets import Slider
@@ -25,7 +27,7 @@ class SpotPlotSlider(Column, DataModel):
     splot = Instance(SpotPlot)
     zslider = Instance(Slider)
 
-    def __init__(self, x, y, z, dm, **kwargs):
+    def __init__(self, x: numpy.array, y: numpy.array, z: numpy.array, dm: numpy.ndarray, **kwargs: dict) -> None:
 
         """
         All init arguments same as for SpotPlot.

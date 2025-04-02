@@ -8,7 +8,7 @@ from bokcolmaps.interp_data import interp_data
 from time import time
 
 
-class Test_interp_data(unittest.TestCase):
+class TestInterpData(unittest.TestCase):
 
     def setUp(self):
 

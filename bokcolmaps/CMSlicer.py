@@ -6,6 +6,7 @@ import numpy
 
 from bokeh.core.properties import List
 from bokeh.model import DataModel
+from bokeh.events import Tap
 
 from bokeh.models.sources import ColumnDataSource
 from bokeh.models.layouts import Row
@@ -34,7 +35,7 @@ class CMSlicer(Row, DataModel):
     _is_selecting = Bool
     _extra_kwargs = List
 
-    def __init__(self, x, y, **kwargs):
+    def __init__(self, x: numpy.array, y: numpy.array, **kwargs: dict) -> None:
 
         """
         args...
@@ -88,7 +89,7 @@ class CMSlicer(Row, DataModel):
 
         self._is_selecting = False
 
-    def get_interp_coords(self, datasrc):
+    def get_interp_coords(self, datasrc: ColumnDataSource) -> tuple:
 
         """
         Get the interpolation coordinates and range values
@@ -115,15 +116,7 @@ class CMSlicer(Row, DataModel):
 
         return c_i, r_i
 
-    def change_slice(self):
-
-        """
-        Empty here as subclass-specific
-        """
-
-        pass
-
-    def toggle_select(self, event):
+    def toggle_select(self, event: Tap) -> None:
 
         """
         Handle Tap events for slice change
@@ -145,7 +138,7 @@ class CMSlicer(Row, DataModel):
                 self.lr = self.cmap.cmaplp.cmplot.plot.add_glyph(self.sl_src, Line(x='x', y='y', line_color='white', line_width=5,
                                                                                    line_dash='dashed', line_alpha=1))
 
-            self.change_slice()
+            self._change_slice()
 
         else:
 

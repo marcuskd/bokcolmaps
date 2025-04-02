@@ -56,7 +56,7 @@ class ColourMap(Column, DataModel):
 
     cjs_slider = Instance(CustomJS)
 
-    def __init__(self, x, y, z, dm, **kwargs):
+    def __init__(self, x: numpy.array, y: numpy.array, z: numpy.array, dm: numpy.ndarray, **kwargs: dict) -> None:
 
         """
         args...
@@ -301,7 +301,7 @@ class ColourMap(Column, DataModel):
 
         self.children.append(self.plot)
 
-    def _get_cmap(self, cfile, rmin, rmax, palette, nan_colour):
+    def _get_cmap(self, cfile: str, rmin: float, rmax: float, palette: list, nan_colour: str) -> None:
 
         """
         Get the colour mapper
@@ -326,7 +326,7 @@ class ColourMap(Column, DataModel):
 
         self.cmap = LinearColorMapper(palette=palette, nan_color=nan_colour, low=min_val, high=max_val)
 
-    def _read_cmap(self, fname):
+    def _read_cmap(self, fname: str) -> None:
 
         """
         Read in the colour scale.
@@ -334,7 +334,7 @@ class ColourMap(Column, DataModel):
 
         self.cvals = read_colourmap(fname)
 
-    def update_image(self, zind):
+    def update_image(self, zind: int) -> None:
 
         """
         Updates the data for display without slider movement
@@ -348,7 +348,7 @@ class ColourMap(Column, DataModel):
         if self._autoscale:
             self.update_cbar()
 
-    def update_cbar(self):
+    def update_cbar(self) -> None:
 
         """
         Update the colour scale (needed when the data for display changes).
@@ -359,7 +359,7 @@ class ColourMap(Column, DataModel):
         self.cmap.low = min_val
         self.cmap.high = max_val
 
-    def set_autoscale(self, val):
+    def set_autoscale(self, val: bool) -> None:
 
         """
         Switch autoscaling on or off
@@ -367,7 +367,7 @@ class ColourMap(Column, DataModel):
 
         self._autoscale = val
 
-    def get_autoscale(self):
+    def get_autoscale(self) -> bool:
 
         """
         Return autoscaling setting

@@ -6,7 +6,7 @@ import numpy
 from bokcolmaps.flip_data import flip_data
 
 
-def interp_data(x_t, y_t, data_t, nu_tol=0, ax_int=None):
+def interp_data(x_t: numpy.array, y_t: numpy.array, data_t: numpy.ndarray, nu_tol: float=0, ax_int: float=None) -> tuple:
 
     """
     Conduct uniform interpolation (if needed according to tolerance).

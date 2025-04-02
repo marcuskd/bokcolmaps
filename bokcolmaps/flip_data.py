@@ -5,7 +5,7 @@ flip_data function definition
 import numpy
 
 
-def flip_data(interp_x, is3d, o_dims, data_t):
+def flip_data(interp_x: bool, is3d: bool, o_dims: tuple, data_t: numpy.ndarray) -> numpy.ndarray:
 
     """
     Flip 2D or 3D data

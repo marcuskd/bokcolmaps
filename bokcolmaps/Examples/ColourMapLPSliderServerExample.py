@@ -14,8 +14,6 @@ from bokcolmaps.Examples import example_data
 
 x, y, z, D = example_data()
 
-cm = ColourMapLPSlider(x, y, z, D, xlab='x val', ylab='y val',
-                       zlab='power val', dmlab='Function val',
-                       scbutton=True)
+cm = ColourMapLPSlider(x, y, z, D, xlab='x val', ylab='y val', zlab='power val', dmlab='Function val', scbutton=True)
 
 curdoc().add_root(cm)
