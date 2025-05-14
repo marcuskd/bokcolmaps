@@ -11,9 +11,9 @@ class TestInterp2dLine(unittest.TestCase):
 
     def test_single_2d_inc(self):
 
-        x = numpy.array([0, 1])
-        y = numpy.array([2, 3])
-        f = numpy.array([[4, 6],
+        x = numpy.array([0., 1])
+        y = numpy.array([2., 3])
+        f = numpy.array([[4., 6],
                          [5, 7]])
         c_i = numpy.array([[0.25, 2.75]])
         f_i_ref = 5.75
@@ -23,9 +23,9 @@ class TestInterp2dLine(unittest.TestCase):
 
     def test_single_2d_dec(self):
 
-        x = numpy.array([1, 0])
-        y = numpy.array([3, 2])
-        f = numpy.array([[4, 6],
+        x = numpy.array([1., 0])
+        y = numpy.array([3., 2])
+        f = numpy.array([[4., 6],
                          [5, 7]])
         c_i = numpy.array([[0.25, 2.75]])
         f_i_ref = 5.25
@@ -35,9 +35,9 @@ class TestInterp2dLine(unittest.TestCase):
 
     def test_single_2d_inc_dec(self):
 
-        x = numpy.array([0, 1])
-        y = numpy.array([3, 2])
-        f = numpy.array([[4, 6],
+        x = numpy.array([0., 1])
+        y = numpy.array([3., 2])
+        f = numpy.array([[4., 6],
                          [5, 7]])
         c_i = numpy.array([[0.75, 2.25]])
         f_i_ref = 6.25
@@ -47,9 +47,9 @@ class TestInterp2dLine(unittest.TestCase):
 
     def test_single_2d_dec_inc(self):
 
-        x = numpy.array([1, 0])
-        y = numpy.array([2, 3])
-        f = numpy.array([[4, 6],
+        x = numpy.array([1., 0])
+        y = numpy.array([2., 3])
+        f = numpy.array([[4., 6],
                          [5, 7]])
         c_i = numpy.array([[0.75, 2.25]])
         f_i_ref = 4.75
@@ -59,9 +59,9 @@ class TestInterp2dLine(unittest.TestCase):
 
     def test_single_2d_inc_dec_neg_vals(self):
 
-        x = numpy.array([0, 1])
-        y = numpy.array([3, 2])
-        f = numpy.array([[-4, -6],
+        x = numpy.array([0., 1])
+        y = numpy.array([3., 2])
+        f = numpy.array([[-4., -6],
                          [-5, -7]])
         c_i = numpy.array([[0.75, 2.25]])
         f_i_ref = -6.25
@@ -71,9 +71,9 @@ class TestInterp2dLine(unittest.TestCase):
 
     def test_single_2d_dec_inc_neg_vals_axes(self):
 
-        x = numpy.array([-1, 0])
-        y = numpy.array([-2, -3])
-        f = numpy.array([[-4, -6],
+        x = numpy.array([-1., 0])
+        y = numpy.array([-2., -3])
+        f = numpy.array([[-4., -6],
                          [-5, -7]])
         c_i = numpy.array([[-0.75, -2.25]])
         f_i_ref = -4.75
@@ -83,9 +83,9 @@ class TestInterp2dLine(unittest.TestCase):
 
     def test_2by2_2d_inside(self):
 
-        x = numpy.array([0, 1])
-        y = numpy.array([2, 3])
-        f = numpy.array([[4, 6],
+        x = numpy.array([0., 1])
+        y = numpy.array([2., 3])
+        f = numpy.array([[4., 6],
                          [5, 7]])
         c_i = numpy.array([[0.25, 2.5],
                            [0.5, 2.75]])
@@ -96,9 +96,9 @@ class TestInterp2dLine(unittest.TestCase):
 
     def test_2by3_2d_outside(self):
 
-        x = numpy.array([0, 1])
-        y = numpy.array([2, 2.5, 3])
-        f = numpy.array([[4, 5, 6],
+        x = numpy.array([0., 1])
+        y = numpy.array([2., 2.5, 3])
+        f = numpy.array([[4., 5, 6],
                          [5, 6, 7]])
         c_i = numpy.array([[0.25, 2.5],
                            [0.5, 2.75]])
@@ -112,7 +112,7 @@ class TestInterp2dLine(unittest.TestCase):
         x = numpy.array([0, 0.5, 1])
         y = numpy.array([2, 2.5, 3])
         f = numpy.zeros([5, 3, 3])
-        seq = numpy.array([4, 3, 10, -1, 5])
+        seq = numpy.array([4., 3, 10, -1, 5])
         f[:, 0, 0] = seq
         f[:, 1, 0] = seq + 0.5
         f[:, 2, 0] = seq + 1
@@ -135,7 +135,7 @@ class TestInterp2dLine(unittest.TestCase):
         x = numpy.array([0, 0.5, 1, 1.5])
         y = numpy.array([2, 2.5, 3, 3.5])
         f = numpy.zeros([5, 4, 4])
-        seq = numpy.array([4, 3, 10, -1, 5])
+        seq = numpy.array([4., 3, 10, -1, 5])
         f[:, 0, 0] = seq
         f[:, 1, 0] = seq + 0.5
         f[:, 2, 0] = seq + 1
@@ -165,7 +165,7 @@ class TestInterp2dLine(unittest.TestCase):
         x = numpy.array([0, 0.5, 1, 1.5])
         y = numpy.array([2, 2.5, 3, 3.5])
         f = numpy.zeros([5, 4, 4])
-        seq = numpy.array([4, 3, 10, -1, 5])
+        seq = numpy.array([4., 3, 10, -1, 5])
         f[:, 0, 0] = seq
         f[:, 1, 0] = seq + 0.5
         f[:, 2, 0] = seq + 1
@@ -197,7 +197,7 @@ class TestInterp2dLine(unittest.TestCase):
         x = x[::-1]
         y = y[::-1]
         f = numpy.zeros([5, 4, 4])
-        seq = numpy.array([4, 3, 10, -1, 5])
+        seq = numpy.array([4., 3, 10, -1, 5])
         f[:, 0, 0] = seq
         f[:, 1, 0] = seq + 0.5
         f[:, 2, 0] = seq + 1
@@ -252,9 +252,9 @@ class TestInterp2dLine(unittest.TestCase):
 
     def test_single_2d_invalid(self):
 
-        x = numpy.array([0, 1])
-        y = numpy.array([2, 3])
-        f = numpy.array([[4, 6],
+        x = numpy.array([0., 1])
+        y = numpy.array([2., 3])
+        f = numpy.array([[4., 6],
                          [5, 7]])
         c_i = numpy.array([[1.25, 2.75]])
 

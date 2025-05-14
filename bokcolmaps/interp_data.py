@@ -3,6 +3,7 @@ interp_data function definition
 """
 
 import numpy
+from numba import njit, float64, prange
 from bokcolmaps.flip_data import flip_data
 
 
@@ -93,15 +94,12 @@ def interp_data(x_t: numpy.array, y_t: numpy.array, data_t: numpy.ndarray, nu_to
 
     # Interpolate
 
-    nreps = int(data_t.size / ax_v.size)
-    olen = ax_v.size
-    ilen = ax_v_i.size
-    data_t = numpy.zeros(ilen * nreps)
-    for rep in range(nreps):
-        ostart = rep * olen
-        istart = rep * ilen
-        data_t[istart:istart + ilen] = numpy.interp(ax_v_i, ax_v,
-                                                    data_v[ostart:ostart + olen])
+    if is3d:
+        data_t = _interp3D(data_t.__array__().astype(float), ax_v.__array__().astype(float), ax_v_i.__array__().astype(float),
+                           data_v.__array__().astype(float))
+    else:
+        data_t = _interp2D(data_t.__array__().astype(float), ax_v.__array__().astype(float), ax_v_i.__array__().astype(float),
+                           data_v.__array__().astype(float))
 
     # Reshape and re-transpose
 
@@ -140,3 +138,41 @@ def interp_data(x_t: numpy.array, y_t: numpy.array, data_t: numpy.ndarray, nu_to
         y_t = ax_v_i
 
     return x_t, y_t, data_t, ax_int, msg
+
+
+@njit(float64[:](float64[:, :], float64[:], float64[:], float64[:]), parallel=True)
+def _interp2D(data_t, ax_v, ax_v_i, data_v):
+
+    nreps = int(data_t.size / ax_v.size)
+    olen = ax_v.size
+    ilen = ax_v_i.size
+
+    data_t = numpy.zeros(ilen * nreps)
+
+    for rep in prange(nreps):
+
+        ostart = rep * olen
+        istart = rep * ilen
+        data_t[istart:istart + ilen] = numpy.interp(ax_v_i, ax_v,
+                                                    data_v[ostart:ostart + olen])
+
+    return data_t
+
+
+@njit(float64[:](float64[:, :, :], float64[:], float64[:], float64[:]), parallel=True)
+def _interp3D(data_t, ax_v, ax_v_i, data_v):
+
+    nreps = int(data_t.size / ax_v.size)
+    olen = ax_v.size
+    ilen = ax_v_i.size
+
+    data_t = numpy.zeros(ilen * nreps)
+
+    for rep in prange(nreps):
+
+        ostart = rep * olen
+        istart = rep * ilen
+        data_t[istart:istart + ilen] = numpy.interp(ax_v_i, ax_v,
+                                                    data_v[ostart:ostart + olen])
+
+    return data_t

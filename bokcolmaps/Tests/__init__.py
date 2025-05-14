@@ -1,4 +1,4 @@
 __all__ = (
-    'TestInterp2dLine.py',
-    'TestInterpData.py'
+    'TestInterp2dLine',
+    'TestInterpData'
 )

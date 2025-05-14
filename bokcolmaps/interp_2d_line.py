@@ -3,6 +3,7 @@ interp_2d_line function definition
 """
 
 import numpy
+from numba import njit, float64, int64, boolean
 from bokcolmaps.interp_data import interp_data
 
 
@@ -83,7 +84,25 @@ def interp_2d_line(x: numpy.array, y: numpy.array, f: numpy.ndarray, c_i: numpy.
 
     # Interpolate
 
-    f_i = numpy.ones(out_dims) * numpy.nan
+    if is3d:
+        f_i = _interp3D(out_dims[0], out_dims[1], nc, c_i, xal, yal, xinc, nx, x.__array__().astype(float), yinc, ny, y.__array__().astype(float),
+                        f.__array__().astype(float))
+    else:
+        f_i = _interp2D(out_dims, nc, c_i, xal, yal, xinc, nx, x.__array__().astype(float), yinc, ny, y.__array__().astype(float),
+                        f.__array__().astype(float))
+
+    if z is not None:
+        _, z_i, f_i, _, _ = interp_data(numpy.arange(nc), z, f_i, ax_int=ax_int)
+    else:
+        z_i = z
+
+    return f_i, z_i
+
+
+@njit(float64[:](int64, int64, float64[:, :], boolean, boolean, boolean, int64, float64[:], boolean, int64, float64[:], float64[:, :]))
+def _interp2D(out_dim, nc, c_i, xal, yal, xinc, nx, x, yinc, ny, y, f):
+
+    f_i = numpy.ones(out_dim) * numpy.nan
 
     xn = yn = cn = 0
 
@@ -134,31 +153,87 @@ def interp_2d_line(x: numpy.array, y: numpy.array, f: numpy.ndarray, c_i: numpy.
                 xfact = (xc - x[xn]) / (x[xn + 1] - x[xn])
                 yfact = (yc - y[yn]) / (y[yn + 1] - y[yn])
 
-                if is3d:
-                    f00 = f[:, xn, yn]
-                    f01 = f[:, xn, yn + 1]
-                    f10 = f[:, xn + 1, yn]
-                    f11 = f[:, xn + 1, yn + 1]
-                else:
-                    f00 = f[xn, yn]
-                    f01 = f[xn, yn + 1]
-                    f10 = f[xn + 1, yn]
-                    f11 = f[xn + 1, yn + 1]
+                f00 = f[xn, yn]
+                f01 = f[xn, yn + 1]
+                f10 = f[xn + 1, yn]
+                f11 = f[xn + 1, yn + 1]
 
                 fx0 = f00 + xfact * (f10 - f00)
                 fx1 = f01 + xfact * (f11 - f01)
                 fy = fx0 + yfact * (fx1 - fx0)
 
-                if is3d:
-                    f_i[:, cn] = fy
-                else:
-                    f_i[cn] = fy
+                f_i[cn] = fy
 
         cn += 1
 
-    if z is not None:
-        _, z_i, f_i, _, _ = interp_data(numpy.arange(nc), z, f_i, ax_int=ax_int)
-    else:
-        z_i = z
+    return f_i
 
-    return f_i, z_i
+
+@njit(float64[:, :](int64, int64, int64, float64[:, :], boolean, boolean, boolean, int64, float64[:], boolean, int64, float64[:], float64[:, :, :]))
+def _interp3D(outdim1, outdim2, nc, c_i, xal, yal, xinc, nx, x, yinc, ny, y, f):
+
+    f_i = numpy.ones((outdim1, outdim2)) * numpy.nan
+
+    xn = yn = cn = 0
+
+    while cn < nc:
+
+        xc, yc = c_i[cn]
+
+        if not xal:
+            xn = 0
+        if not yal:
+            yn = 0
+
+        if xinc:
+            while (xn < nx) and (x[xn] < xc):
+                xn += 1
+            if xn > 0:
+                xn -= 1
+        else:
+            while (xn < nx) and (x[xn] > xc):
+                xn += 1
+            if xn > 0:
+                xn -= 1
+
+        if yinc:
+            while (yn < ny) and (y[yn] < yc):
+                yn += 1
+            if yn > 0:
+                yn -= 1
+        else:
+            while (yn < ny) and (y[yn] > yc):
+                yn += 1
+            if yn > 0:
+                yn -= 1
+
+        if (xn < nx - 1) and (yn < ny - 1):
+
+            if xinc:
+                x0, x1 = xn, xn + 1
+            else:
+                x0, x1 = xn + 1, xn
+            if yinc:
+                y0, y1 = yn, yn + 1
+            else:
+                y0, y1 = yn + 1, yn
+
+            if (x[x0] <= xc <= x[x1]) and (y[y0] <= yc <= y[y1]):
+
+                xfact = (xc - x[xn]) / (x[xn + 1] - x[xn])
+                yfact = (yc - y[yn]) / (y[yn + 1] - y[yn])
+
+                f00 = f[:, xn, yn]
+                f01 = f[:, xn, yn + 1]
+                f10 = f[:, xn + 1, yn]
+                f11 = f[:, xn + 1, yn + 1]
+
+                fx0 = f00 + xfact * (f10 - f00)
+                fx1 = f01 + xfact * (f11 - f01)
+                fy = fx0 + yfact * (fx1 - fx0)
+
+                f_i[:, cn] = fy
+
+        cn += 1
+
+    return f_i
