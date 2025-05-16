@@ -5,7 +5,6 @@ CMSlicer2D class definition
 import numpy
 
 from bokeh.model import DataModel
-
 from bokeh.models.layouts import Column, Row
 from bokeh.models.widgets import Div
 from bokeh.events import Tap
@@ -13,9 +12,10 @@ from bokeh.core.properties import Instance
 from bokeh.plotting import figure
 from bokeh.models.glyphs import Line
 
+from interpg.interp_2d_line import interp_2d_line
+
 from bokcolmaps.CMSlicer import CMSlicer
 from bokcolmaps.ColourMap import ColourMap
-from bokcolmaps.interp_2d_line import interp_2d_line
 
 
 class CMSlicer2D(CMSlicer, DataModel):

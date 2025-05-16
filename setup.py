@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='bokcolmaps',
-      version='4.0.0',
+      version='4.1.0',
       description='Colour map plots based on the Bokeh visualisation library',
       long_description="""
 # bokcolmaps
@@ -38,7 +38,8 @@ or see bokcolmaps.Examples.plot_colourmap_example
       packages=find_packages(),
       install_requires=['numpy >= 1.26',
                         'numba >= 0.61',
-                        'bokeh >= 3.6'
+                        'bokeh >= 3.6',
+                        'interpg >= 1'
                         ],
       include_package_data=True,
       )

@@ -10,12 +10,9 @@ __all__ = (
     'SpotPlotSlider',
     'SpotPlotLP',
     'SpotPlotLPSlider',
-    'flip_data',
     'generate_colourbar',
     'get_common_kwargs',
     'get_min_max',
-    'interp_2d_line',
-    'interp_data',
     'read_colourmap',
     'check_kwargs',
     'plot_colourmap'
