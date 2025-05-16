@@ -37,7 +37,6 @@ or see bokcolmaps.Examples.plot_colourmap_example
                 ],
       packages=find_packages(),
       install_requires=['numpy >= 1.26',
-                        'numba >= 0.61',
                         'bokeh >= 3.6',
                         'interpg >= 1'
                         ],

@@ -55,7 +55,7 @@ class SpotPlot(Column, DataModel):
         kwargs: all in get_common_kwargs plus...
             height: plot height (pixels)
             width: plot width (pixels)
-            size: spot size (pixels)
+            size: spot size (data units)
         """
 
         check_kwargs(kwargs, extra_kwargs=['height', 'width', 'size'])
