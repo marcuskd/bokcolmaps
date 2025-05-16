@@ -10,7 +10,7 @@ from bokeh.models import ColumnDataSource, Plot, ColorBar
 from bokeh.models.mappers import LinearColorMapper
 from bokeh.models.layouts import Column
 
-from bokeh.core.properties import Instance, String, Int, Float, Bool
+from bokeh.core.properties import Instance, String, Float, Bool
 
 from bokeh.plotting import figure
 
@@ -40,7 +40,7 @@ class SpotPlot(Column, DataModel):
     _zlab = String
     _bg_col = String
     _nan_col = String
-    _sp_size = Int
+    _sp_size = Float
     _autoscale = Bool
     _cbdelta = Float
 
@@ -65,7 +65,8 @@ class SpotPlot(Column, DataModel):
 
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
-        self._sp_size = kwargs.get('size', int(min(height, width) / 40))
+
+        self._sp_size = kwargs.get('size', max((x.max() - x.min()), (y.max() - y.min())) / 150)
 
         super().__init__()
 
@@ -141,7 +142,7 @@ class SpotPlot(Column, DataModel):
                            background_fill_color=self._bg_col,
                            tools=ptools, toolbar_location='right')
 
-        self.plot.circle('x', 'y', size=self._sp_size, color='cols',
+        self.plot.circle('x', 'y', radius=self._sp_size, color='cols',
                          source=self.coldatasrc,
                          nonselection_fill_color='cols',
                          selection_fill_color='cols',
