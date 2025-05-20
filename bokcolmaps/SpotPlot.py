@@ -66,7 +66,7 @@ class SpotPlot(Column, DataModel):
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
 
-        self._sp_size = kwargs.get('size', max((x.max() - x.min()), (y.max() - y.min())) / 150)
+        self._sp_size = kwargs.get('size', max((x.max() - x.min()), (y.max() - y.min())) / 75)
 
         super().__init__()
 
@@ -142,7 +142,7 @@ class SpotPlot(Column, DataModel):
                            background_fill_color=self._bg_col,
                            tools=ptools, toolbar_location='right')
 
-        self.plot.circle('x', 'y', radius=self._sp_size, color='cols',
+        self.plot.circle('x', 'y', radius=self._sp_size / 2, color='cols',
                          source=self.coldatasrc,
                          nonselection_fill_color='cols',
                          selection_fill_color='cols',
