@@ -40,7 +40,8 @@ class SpotPlot(Column, DataModel):
     _zlab = String
     _bg_col = String
     _nan_col = String
-    _sp_size = Int
+    _sp_size_i = Int
+    _sp_size_f = Float
     _marker = String
     _autoscale = Bool
     _cbdelta = Float
@@ -56,7 +57,7 @@ class SpotPlot(Column, DataModel):
         kwargs: all in get_common_kwargs plus...
             height: plot height (pixels)
             width: plot width (pixels)
-            size: spot size (pixels)
+            size: spot size (pixels as int or data units as float)
             marker: data marker (string)
         """
 
@@ -68,7 +69,12 @@ class SpotPlot(Column, DataModel):
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
 
-        self._sp_size = kwargs.get('size', 10)
+        size = kwargs.get('size', 10)
+        if type(size) is int:
+            self._sp_size_i = size
+        else:
+            self._sp_size_f = size
+
         self._marker = kwargs.get('marker', 'circle')
 
         super().__init__()
@@ -142,10 +148,16 @@ class SpotPlot(Column, DataModel):
         self.plot = figure(x_axis_label=xlab, y_axis_label=ylab, x_range=xran, y_range=yran, height=height, width=width,
                            background_fill_color=self._bg_col, tools=ptools, toolbar_location='right')
 
-        self.plot.scatter('x', 'y', marker=self._marker, size=self._sp_size, color='cols', source=self.coldatasrc,
-                          nonselection_fill_color='cols', selection_fill_color='cols', fill_alpha=alpha, line_alpha=alpha,
-                          nonselection_fill_alpha=alpha, selection_fill_alpha=alpha, nonselection_line_alpha=0, selection_line_alpha=alpha,
-                          nonselection_line_color='cols', selection_line_color='white', line_width=5)
+        if type(size) is int:
+            self.plot.scatter('x', 'y', marker=self._marker, size=self._sp_size_i, color='cols', source=self.coldatasrc,
+                              nonselection_fill_color='cols', selection_fill_color='cols', fill_alpha=alpha, line_alpha=alpha,
+                              nonselection_fill_alpha=alpha, selection_fill_alpha=alpha, nonselection_line_alpha=0, selection_line_alpha=alpha,
+                              nonselection_line_color='cols', selection_line_color='white', line_width=5)
+        else:
+            self.plot.circle('x', 'y', radius=self._sp_size_f / 2, color='cols', source=self.coldatasrc,
+                             nonselection_fill_color='cols', selection_fill_color='cols', fill_alpha=alpha, line_alpha=alpha,
+                             nonselection_fill_alpha=alpha, selection_fill_alpha=alpha, nonselection_line_alpha=0, selection_line_alpha=alpha,
+                             nonselection_line_color='cols', selection_line_color='white', line_width=5)
 
         self.plot.grid.grid_line_color = 'grey'
 

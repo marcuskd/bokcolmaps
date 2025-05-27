@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='bokcolmaps',
-      version='4.2.0',
+      version='4.3.0',
       description='Colour map plots based on the Bokeh visualisation library',
       long_description="""
 # bokcolmaps
