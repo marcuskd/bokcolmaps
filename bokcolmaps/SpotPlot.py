@@ -10,7 +10,7 @@ from bokeh.models import ColumnDataSource, Plot, ColorBar
 from bokeh.models.mappers import LinearColorMapper
 from bokeh.models.layouts import Column
 
-from bokeh.core.properties import Instance, String, Float, Bool
+from bokeh.core.properties import Instance, String, Int, Float, Bool
 
 from bokeh.plotting import figure
 
@@ -40,7 +40,8 @@ class SpotPlot(Column, DataModel):
     _zlab = String
     _bg_col = String
     _nan_col = String
-    _sp_size = Float
+    _sp_size = Int
+    _marker = String
     _autoscale = Bool
     _cbdelta = Float
 
@@ -55,10 +56,11 @@ class SpotPlot(Column, DataModel):
         kwargs: all in get_common_kwargs plus...
             height: plot height (pixels)
             width: plot width (pixels)
-            size: spot size (data units)
+            size: spot size (pixels)
+            marker: data marker (string)
         """
 
-        check_kwargs(kwargs, extra_kwargs=['height', 'width', 'size'])
+        check_kwargs(kwargs, extra_kwargs=['height', 'width', 'size', 'marker'])
 
         palette, cfile, revcols, xlab, ylab, zlab, dmlab, \
             rmin, rmax, xran, yran, alpha, nan_colour = get_common_kwargs(**kwargs)
@@ -66,7 +68,8 @@ class SpotPlot(Column, DataModel):
         height = kwargs.get('height', 575)
         width = kwargs.get('width', 500)
 
-        self._sp_size = kwargs.get('size', max((x.max() - x.min()), (y.max() - y.min())) / 75)
+        self._sp_size = kwargs.get('size', 10)
+        self._marker = kwargs.get('marker', 'circle')
 
         super().__init__()
 
@@ -136,21 +139,13 @@ class SpotPlot(Column, DataModel):
         if yran is None:
             yran = [y.min(), y.max()]
 
-        self.plot = figure(x_axis_label=xlab, y_axis_label=ylab,
-                           x_range=xran, y_range=yran,
-                           height=height, width=width,
-                           background_fill_color=self._bg_col,
-                           tools=ptools, toolbar_location='right')
+        self.plot = figure(x_axis_label=xlab, y_axis_label=ylab, x_range=xran, y_range=yran, height=height, width=width,
+                           background_fill_color=self._bg_col, tools=ptools, toolbar_location='right')
 
-        self.plot.circle('x', 'y', radius=self._sp_size / 2, color='cols',
-                         source=self.coldatasrc,
-                         nonselection_fill_color='cols',
-                         selection_fill_color='cols',
-                         fill_alpha=alpha, line_alpha=alpha,
-                         nonselection_fill_alpha=alpha, selection_fill_alpha=alpha,
-                         nonselection_line_alpha=0, selection_line_alpha=alpha,
-                         nonselection_line_color='cols',
-                         selection_line_color='white', line_width=5)
+        self.plot.scatter('x', 'y', marker=self._marker, size=self._sp_size, color='cols', source=self.coldatasrc,
+                          nonselection_fill_color='cols', selection_fill_color='cols', fill_alpha=alpha, line_alpha=alpha,
+                          nonselection_fill_alpha=alpha, selection_fill_alpha=alpha, nonselection_line_alpha=0, selection_line_alpha=alpha,
+                          nonselection_line_color='cols', selection_line_color='white', line_width=5)
 
         self.plot.grid.grid_line_color = 'grey'
 
